@@ -1,0 +1,44 @@
+import { Gift } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const Footer = () => {
+  return (
+    <footer className="bg-foreground text-primary-foreground py-12">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between gap-8">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Gift className="w-5 h-5" />
+              <span className="font-display text-lg font-semibold">GiftLux</span>
+            </div>
+            <p className="text-primary-foreground/70 text-sm max-w-xs">
+              Curated gifts for every occasion. Handpicked with love, delivered with care.
+            </p>
+          </div>
+          <div className="flex gap-12">
+            <div>
+              <h4 className="font-display font-semibold mb-3">Shop</h4>
+              <div className="flex flex-col gap-2 text-sm text-primary-foreground/70">
+                <Link to="/shop" className="hover:text-primary-foreground transition-colors">All Gifts</Link>
+                <Link to="/shop?category=birthday" className="hover:text-primary-foreground transition-colors">Birthday</Link>
+                <Link to="/shop?category=wedding" className="hover:text-primary-foreground transition-colors">Wedding</Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-display font-semibold mb-3">Contact</h4>
+              <div className="flex flex-col gap-2 text-sm text-primary-foreground/70">
+                <a href="https://wa.me/1234567890" target="_blank" rel="noreferrer" className="hover:text-primary-foreground transition-colors">WhatsApp</a>
+                <span>hello@giftlux.com</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-primary-foreground/20 mt-8 pt-6 text-center text-sm text-primary-foreground/50">
+          © 2026 GiftLux. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
