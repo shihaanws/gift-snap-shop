@@ -29,7 +29,7 @@ const Navbar = () => {
           <img src="/epp1.png" alt="Emotion Plus" className="h-8 w-18" />
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 flex-1 ml-8">
+        <div className="hidden md:flex items-center gap-5 flex-1 ml-8 min-w-0">
           <NavLink
             to="/"
             className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
@@ -54,11 +54,13 @@ const Navbar = () => {
           <Link to="/shop?category=corporate" className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white">
             Bulk Solutions
           </Link>
-          <SearchBar />
+          <div className="ml-auto hidden mr-auto lg:block w-full max-w-[20px] xl:max-w-sm">
+            <SearchBar />
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/shop?category=corporate" className="hidden md:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+          <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
             <Building2 className="w-4 h-4" />
             Bulk Orders
           </Link>
