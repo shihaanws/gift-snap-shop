@@ -1,0 +1,7 @@
+id,name,price,description,category,images,variants,gstRate,listPrice,discountPercent,availableColors,productCode,material,packingType,masterCarton,customized,minOrderQty
+travel-backpack,Travel Backpack,3393.25,Travel backpack for daily and short trip usage,bags,https://example.com/backpack1.jpg|https://example.com/backpack2.jpg,22L|28L,18,4847.5,30,Black|Grey,H1512,PU Leather,PP Packing,Master Carton:20pcs | Weight:22kg | Size:72X56X62CM,"Yes, Logo Branding",7
+gold-plated-corporate-gift-set,Gold Plated Corporate Gift Set,32,Executive set with metallic pen card holder and keychain in a premium presentation box,gift-sets,https://example.com/image1.jpg|https://example.com/image2.jpg,Black Box|Navy Box|Walnut Box,18,45,28,Black|Navy,G1010,Metal + Leather,Premium Box,Master Carton:10pcs | Weight:8kg | Size:45X33X24CM,Yes, Logo Branding,5
+
+
+
+

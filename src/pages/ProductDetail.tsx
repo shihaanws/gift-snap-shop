@@ -1,16 +1,18 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle, ArrowLeft, Check } from "lucide-react";
+import { MessageCircle, ArrowLeft, Check, Plus, Minus, Heart, ArrowLeftRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { products } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { products } = useProducts();
   const product = products.find((p) => p.id === id);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [quantity, setQuantity] = useState(product?.minOrderQty ?? 1);
 
   if (!product) {
     return (
@@ -25,10 +27,20 @@ const ProductDetail = () => {
     );
   }
 
+  const currency = product.currency ?? "INR";
+  const formatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 2,
+  });
+  const gstAmount = product.gstRate ? (product.price * product.gstRate) / 100 : null;
+  const discountedFromList =
+    typeof product.listPrice === "number" && typeof product.discountPercent === "number";
+
   const whatsappMessage = encodeURIComponent(
-    `Hi! I'd like to order:\n\n🎁 *${product.name}*\n${product.variants ? `📦 Variant: ${product.variants[selectedVariant]}` : ""}\n💰 Price: $${product.price.toFixed(2)}\n\nPlease let me know the next steps!`
+    `Hi! I'd like to order:\n\n🎁 *${product.name}*\n${product.variants?.length ? `📦 Variant: ${product.variants[selectedVariant]}` : ""}\nQuantity: ${quantity}\nPrice: ${formatter.format(product.price * quantity)}\n\nPlease let me know the next steps!`
   );
-  const whatsappUrl = `https://wa.me/1234567890?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/7598089483?text=${whatsappMessage}`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,19 +92,41 @@ const ProductDetail = () => {
             <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
               {product.name}
             </h1>
-            <p className="text-2xl font-semibold text-primary mb-6">
-              ${product.price.toFixed(2)}
-            </p>
+            <p className="text-2xl font-semibold text-primary">{formatter.format(product.price)}</p>
+            {product.gstRate && gstAmount !== null && (
+              <p className="text-sm text-muted-foreground mb-1">GST @ {product.gstRate}% ({formatter.format(gstAmount)})</p>
+            )}
+            {!product.gstRate && <p className="text-sm text-muted-foreground mb-1">GST: N/A</p>}
+            {discountedFromList && (
+              <p className="text-sm text-muted-foreground mb-6">
+                {formatter.format(product.listPrice!)} {product.discountPercent}% Discount
+              </p>
+            )}
+            {!discountedFromList && <p className="text-sm text-muted-foreground mb-6">List Price / Discount: N/A</p>}
             <p className="text-muted-foreground leading-relaxed mb-8">
               {product.description}
             </p>
 
             {/* Variants */}
-            {product.variants && (
-              <div className="mb-8">
-                <p className="text-sm font-medium text-foreground mb-3">Select Option</p>
-                <div className="flex flex-wrap gap-2">
-                  {product.variants.map((v, i) => (
+            <div className="mb-8">
+              <p className="text-sm font-medium text-foreground mb-3">Available Options</p>
+              <div className="mb-4">
+                <p className="text-xs font-semibold text-muted-foreground mb-2">Colors</p>
+                {product.availableColors && product.availableColors.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {product.availableColors.map((color) => (
+                      <span key={color} className="rounded-lg border border-border px-3 py-1 text-sm">
+                        {color}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">N/A</p>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {product.variants?.length ? (
+                  product.variants.map((v, i) => (
                     <button
                       key={v}
                       onClick={() => setSelectedVariant(i)}
@@ -105,10 +139,65 @@ const ProductDetail = () => {
                       {selectedVariant === i && <Check className="w-3 h-3" />}
                       {v}
                     </button>
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">No variant options</p>
+                )}
               </div>
-            )}
+            </div>
+
+            <div className="mb-8 rounded-lg border border-border bg-card p-4 text-sm">
+              <p className="mb-2 text-muted-foreground">Product Code: {product.productCode || "N/A"}</p>
+              <p className="mb-2 text-muted-foreground">
+                Color: {product.availableColors?.length ? product.availableColors.join(", ") : "N/A"}
+              </p>
+              <p className="mb-2 text-muted-foreground">Material: {product.material || "N/A"}</p>
+              <p className="mb-2 text-muted-foreground">Packing Type: {product.packingType || "N/A"}</p>
+              <p className="mb-2 text-muted-foreground">Master Carton: {product.masterCarton || "N/A"}</p>
+              <p className="text-muted-foreground">Customized: {product.customized || "N/A"}</p>
+            </div>
+
+            {/* Quantity Selection */}
+            <div className="mb-8">
+              <p className="text-sm font-medium text-foreground mb-3">Quantity</p>
+              <div className="flex items-center gap-4 w-fit border border-border rounded-lg p-2">
+                <button
+                  onClick={() => setQuantity(Math.max(product.minOrderQty ?? 1, quantity - 1))}
+                  className="p-2 hover:bg-secondary rounded-lg transition-colors"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="text-lg font-semibold min-w-8 text-center">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-2 hover:bg-secondary rounded-lg transition-colors"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+              {product.minOrderQty && (
+                <p className="mt-2 text-xs text-muted-foreground">Minimum order quantity: {product.minOrderQty}</p>
+              )}
+            </div>
+
+            <div className="mb-8 flex flex-wrap gap-3">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
+              >
+                <Heart className="w-4 h-4" />
+                Add to wishlist
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
+              >
+                <ArrowLeftRight className="w-4 h-4" />
+                Add to compare
+              </button>
+            </div>
 
             {/* WhatsApp Order Button */}
             <a

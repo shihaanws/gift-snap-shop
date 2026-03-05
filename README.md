@@ -71,3 +71,22 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Bulk import products from Excel
+
+Use this when you need to add many items to `src/data/products.ts`.
+
+1. Copy `scripts/products-template.csv` and open it in Excel.
+2. Fill rows with columns:
+   - `id`, `name`, `price`, `description`, `category`, `images`, `variants`
+   - Optional extended fields: `gstRate`, `listPrice`, `discountPercent`, `availableColors`, `productCode`, `material`, `packingType`, `masterCarton`, `customized`, `minOrderQty`
+3. For `images` and `variants`, separate multiple values with `|` (pipe).
+4. Export as CSV.
+5. Run:
+
+```sh
+npm run import:products -- ./path/to/your-products.csv --out ./src/data/products.import.ts
+```
+
+Then copy the generated array from `src/data/products.import.ts` into `src/data/products.ts` (replace the `products` list).
+npm run import:products -- ./path/to/your-products.csv --out ./src/data/products.import.ts

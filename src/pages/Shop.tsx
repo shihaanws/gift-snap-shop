@@ -1,25 +1,27 @@
 import { useSearchParams } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products, categories } from "@/data/products";
+import { categories } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "all";
+  const { products } = useProducts();
 
   const filtered = useMemo(() => {
     if (activeCategory === "all") return products;
     return products.filter((p) => p.category === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, products]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 py-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">Our Collection</h1>
-        <p className="text-muted-foreground mb-8">Browse our curated gifts for every occasion</p>
+        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">Corporate Product Catalog</h1>
+        <p className="text-muted-foreground mb-8">Explore bulk gifting products for clients, teams, and events</p>
 
         {/* Category filters */}
         <div className="flex flex-wrap gap-2 mb-10">

@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "import:products": "node scripts/import-products-from-csv.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
