@@ -28,7 +28,7 @@ const Footer = () => {
             <div>
               <h4 className="font-display font-semibold mb-3">Contact</h4>
               <div className="flex flex-col gap-2 text-sm text-primary-foreground/70">
-                <a href="https://wa.me/7598089483" target="_blank" rel="noreferrer" className="hover:text-primary-foreground transition-colors">WhatsApp</a>
+                <a href="https://wa.me/9074145962" target="_blank" rel="noreferrer" className="hover:text-primary-foreground transition-colors">WhatsApp</a>
                 <span>hello@emotionplus.com</span>
               </div>
             </div>

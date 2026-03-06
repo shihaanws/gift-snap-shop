@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 import type { Product } from "@/data/products";
+import { useCart } from "@/hooks/use-cart";
 
 interface ProductCardProps {
   product: Product;
@@ -8,6 +11,10 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
+  const navigate = useNavigate();
+  const { addItem, items } = useCart();
+  const isInCart = items.some((item) => item.productId === product.id);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -29,6 +36,21 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
         <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{product.description}</p>
         <p className="text-primary font-semibold mt-2">${product.price.toFixed(2)}</p>
       </Link>
+      <button
+        type="button"
+        onClick={() => {
+          if (isInCart) {
+            navigate("/cart");
+            return;
+          }
+          addItem({ productId: product.id, quantity: 1 });
+          toast.success(`${product.name} added to cart`);
+        }}
+        className="mt-3 inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-secondary"
+      >
+        <ShoppingCart className="h-4 w-4" />
+        {isInCart ? "Go to Cart" : "Add to Cart"}
+      </button>
     </motion.div>
   );
 };

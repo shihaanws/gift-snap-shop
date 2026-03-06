@@ -1,12 +1,66 @@
 import { Link } from "react-router-dom";
-import { Building2, ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
 import { NavLink } from "./NavLink";
+import { useCart } from "@/hooks/use-cart";
+
+const subNavItems = [
+  {
+    label: "Gift Sets",
+    groups: [
+      { title: "Giftset Types", items: ["2 in 1 Gift Set", "3 in 1 Gift Set", "4 in 1 Gift Set", "5 in 1 Gift Set", "6 in 1 Gift Set"] },
+      { title: "Festival Packs", items: ["Diwali Deluxe", "New Year Pack", "Onam Hamper", "Holiday Box"] },
+      { title: "Joining Kits", items: ["Starter Kit", "Welcome Box", "Employee Delight", "Team Bundle"] },
+    ],
+  },
+  {
+    label: "Bags & Travel",
+    groups: [
+      { title: "Laptop Bags", items: ["15 inch Series", "Slim Pro", "Messenger Classic", "Urban Executive"] },
+      { title: "Backpacks", items: ["Commute Pack", "Travel Pack", "Hybrid Office", "Rolltop Utility"] },
+      { title: "Accessories", items: ["Pouch Set", "Organizer Kit", "Cable Holder", "Passport Sleeve"] },
+    ],
+  },
+  {
+    label: "Drinkware",
+    groups: [
+      { title: "Bottles", items: ["Steel 750ml", "Copper Edition", "Thermal Flask", "Smart Bottle"] },
+      { title: "Mugs", items: ["Travel Mug", "Ceramic Mug", "Vacuum Tumbler", "Sipper Cup"] },
+      { title: "Branding", items: ["Laser Engraving", "UV Print", "Custom Sleeve", "Gift Box Pack"] },
+    ],
+  },
+  {
+    label: "Office Essentials",
+    groups: [
+      { title: "Diaries", items: ["A5 Planner", "Undated Journal", "Hardbound Pro", "Pocket Notes"] },
+      { title: "Pens", items: ["Metal Pen", "Roller Pen", "Signature Set", "Stylus Pen"] },
+      { title: "Desk", items: ["Clock Stand", "Pen Holder", "Table Organizer", "Desk Utility"] },
+    ],
+  },
+  {
+    label: "Tech Gifts",
+    groups: [
+      { title: "Charging", items: ["Wireless Pad", "Power Bank", "Cable Kit", "Multi Charger"] },
+      { title: "Audio", items: ["Mini Speaker", "Earbuds Case", "Bluetooth Pod", "Sound Bar Mini"] },
+      { title: "Utility", items: ["USB Hub", "Card Reader", "Smart Stand", "Mouse Pad Pro"] },
+    ],
+  },
+  {
+    label: "By Occasion",
+    groups: [
+      { title: "Celebration", items: ["Anniversary Gifts", "Reward Packs", "Milestone Box", "Team Festive"] },
+      { title: "Campaigns", items: ["Conference Kit", "Expo Swag", "Sales Gifting", "Partner Box"] },
+      { title: "Custom", items: ["MOQ Packs", "Brand Collection", "Event Bundle", "Combo Builder"] },
+    ],
+  },
+];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openSubNav, setOpenSubNav] = useState<string | null>(null);
+  const { itemCount } = useCart();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/20 bg-[#0E2A4A]/95 backdrop-blur-md">
@@ -14,7 +68,7 @@ const Navbar = () => {
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs text-white/80">
           <p className="hidden sm:block">Bulk corporate gifting for teams, clients, and events</p>
           <a
-            href="https://wa.me/7598089483"
+            href="https://wa.me/9074145962"
             target="_blank"
             rel="noreferrer"
             className="font-semibold text-gold-light transition hover:text-white"
@@ -51,27 +105,90 @@ const Navbar = () => {
           >
             Manage Products
           </NavLink>
-          <Link to="/shop?category=corporate" className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white">
-            Bulk Solutions
-          </Link>
-          <div className="ml-auto hidden mr-auto lg:block w-full max-w-[20px] xl:max-w-sm">
+          
+          <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm">
             <SearchBar />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-            <Building2 className="w-4 h-4" />
-            Bulk Orders
+            <DownloadIcon className="w-4 h-4" />
+            Download Brochure 
           </Link>
-          <Link to="/shop" className="hidden lg:flex items-center gap-2 rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]">
-            <ShoppingBag className="w-4 h-4" />
-            Shop Gifts
+          
+          <Link
+            to="/cart"
+            className="relative hidden md:inline-flex items-center justify-center rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
+            aria-label="View cart"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            {itemCount > 0 && (
+              <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                {itemCount}
+              </span>
+            )}
           </Link>
           <button className="text-white md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
+      </div>
+
+      <div
+        className="relative hidden md:block border-t border-white/10 bg-[#12365A]/95"
+        onMouseLeave={() => setOpenSubNav(null)}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none">
+            {subNavItems.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onMouseEnter={() => setOpenSubNav(item.label)}
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
+                  openSubNav === item.label ? "text-white" : "text-white/75 hover:text-white"
+                }`}
+              >
+                {item.label}
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {openSubNav && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="absolute left-0 right-0 top-full z-[70] border-t border-white/10 bg-[#173E64] shadow-2xl"
+            >
+              <div className="container mx-auto grid gap-6 px-4 py-5 md:grid-cols-3">
+                {subNavItems
+                  .find((item) => item.label === openSubNav)
+                  ?.groups.map((group) => (
+                    <div key={group.title}>
+                      <p className="mb-2 text-sm font-semibold text-gold-light">{group.title}</p>
+                      <div className="space-y-1.5">
+                        {group.items.map((entry) => (
+                          <Link
+                            key={entry}
+                            to="/shop"
+                            className="block text-sm text-white/80 transition-colors hover:text-white"
+                          >
+                            {entry}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <AnimatePresence>
@@ -88,6 +205,24 @@ const Navbar = () => {
               <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Bulk Solutions</Link>
               <Link to="/shop" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Catalog</Link>
               <Link to="/manage-products" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Manage Products</Link>
+              <Link to="/cart" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">
+                Cart ({itemCount})
+              </Link>
+              <div className="rounded-lg border border-white/15 p-3">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {subNavItems.map((item) => (
+                    <Link
+                      key={item.label}
+                      to="/shop"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
               <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
                 Request Bulk Quote
               </Link>

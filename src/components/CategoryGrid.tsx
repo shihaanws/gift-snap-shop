@@ -1,10 +1,33 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import { categories } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
+
+const GIFT_SETS_HOMEPAGE_IMAGE =
+"https://5.imimg.com/data5/SELLER/Default/2025/9/548695791/ZK/KE/YN/226888128/customized-corporate-gift-1000x1000.jpg"
 
 const CategoryGrid = () => {
+  const { products } = useProducts();
+
+  
+  const categoryImageById = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const category of categories) {
+      const match = products.find(
+        (product) => product.category === category.id && product.images.length > 0
+      );
+      map[category.id] = match?.images[0] || category.image;
+    }
+    map["gift-sets"] = GIFT_SETS_HOMEPAGE_IMAGE;
+    map["pens"] = "https://m.media-amazon.com/images/I/71pwFw7Lz5L._AC_UF1000,1000_QL80_.jpg";
+    map["diaries"] = "https://m.media-amazon.com/images/I/71YplvYxbYL._AC_SX679_.jpg";
+    map["keychains"] =  "https://seedballs.in/cdn/shop/files/Premiummetalkeychainforpromotionalbrandingandbulkorders.png?v=1766291952"
+    return map;
+  }, [products]);
+
   return (
-    <section className="relative py-20">
+    <section className="relative py-10">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-transparent" />
       <div className="container relative mx-auto px-4">
       <div className="text-center mb-12">
@@ -27,7 +50,7 @@ const CategoryGrid = () => {
               className="group block relative overflow-hidden rounded-2xl border border-border/60 shadow-lg shadow-black/5"
             >
               <img
-                src={cat.image}
+                src={categoryImageById[cat.id]}
                 alt={cat.name}
                 className="aspect-square h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
