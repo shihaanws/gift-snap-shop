@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-const STORAGE_KEY = "gift-snap-shop-cart";
+const STORAGE_KEY_PREFIX = "gift-snap-shop-cart";
 const SESSION_STORAGE_KEY = "gift-snap-shop-cart-session-id";
 
 type CartItemInsert = Database["public"]["Tables"]["cart_items"]["Insert"];
@@ -31,13 +31,13 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function readInitialCart(): CartItem[] {
+function readCachedCart(ownerKey: string): CartItem[] {
   if (typeof window === "undefined") {
     return [];
   }
 
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(`${STORAGE_KEY_PREFIX}:${ownerKey}`);
     if (!raw) {
       return [];
     }
@@ -93,18 +93,49 @@ function getOrCreateSessionId() {
 }
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const sessionId = useMemo(() => getOrCreateSessionId(), []);
-  const [items, setItems] = useState<CartItem[]>(() => readInitialCart());
+  const guestSessionId = useMemo(() => getOrCreateSessionId(), []);
+  const [ownerKey, setOwnerKey] = useState<string | null>(null);
+  const [items, setItems] = useState<CartItem[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
+    const setOwnerFromSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!mounted) {
+        return;
+      }
+      const userId = data.session?.user?.id ?? null;
+      setOwnerKey(userId ? `user:${userId}` : `guest:${guestSessionId}`);
+    };
+
+    void setOwnerFromSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      const userId = session?.user?.id ?? null;
+      setOwnerKey(userId ? `user:${userId}` : `guest:${guestSessionId}`);
+    });
+
+    return () => {
+      mounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, [guestSessionId]);
+
+  useEffect(() => {
+    if (!ownerKey) {
+      return;
+    }
     let isMounted = true;
+    setIsHydrated(false);
+    setItems(readCachedCart(ownerKey));
 
     const loadRemoteCart = async () => {
       const { data, error } = await supabase
         .from("cart_items")
         .select("id, product_id, quantity, variant")
-        .eq("session_id", sessionId);
+        .eq("session_id", ownerKey);
 
       if (error) {
         console.error("Failed to load cart from Supabase", error);
@@ -118,7 +149,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      if (data && data.length > 0) {
+      if (data) {
         setItems(
           data.map((row) => ({
             id: row.id,
@@ -136,19 +167,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       isMounted = false;
     };
-  }, [sessionId]);
+  }, [ownerKey]);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    if (!ownerKey) {
+      return;
+    }
+    window.localStorage.setItem(`${STORAGE_KEY_PREFIX}:${ownerKey}`, JSON.stringify(items));
+  }, [items, ownerKey]);
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || !ownerKey) {
       return;
     }
 
     const syncCart = async () => {
-      const { error: deleteError } = await supabase.from("cart_items").delete().eq("session_id", sessionId);
+      const { error: deleteError } = await supabase.from("cart_items").delete().eq("session_id", ownerKey);
       if (deleteError) {
         console.error("Failed to clear remote cart before sync", deleteError);
         return;
@@ -159,7 +193,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const rows: CartItemInsert[] = items.map((item) => ({
-        session_id: sessionId,
+        session_id: ownerKey,
         id: item.id,
         product_id: item.productId,
         quantity: item.quantity,
@@ -173,7 +207,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     void syncCart();
-  }, [items, isHydrated, sessionId]);
+  }, [items, isHydrated, ownerKey]);
 
   const value = useMemo<CartContextValue>(
     () => ({
