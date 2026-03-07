@@ -141,7 +141,9 @@ const Navbar = () => {
               <span className="max-w-36 truncate text-sm font-medium text-white/90">{user?.name}</span>
               <button
                 type="button"
-                onClick={logout}
+                onClick={() => {
+                  void logout();
+                }}
                 className="inline-flex items-center gap-1 rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
               >
                 <LogOut className="h-4 w-4" />
@@ -268,7 +270,7 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    logout();
+                    void logout();
                     setMobileOpen(false);
                   }}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-white"

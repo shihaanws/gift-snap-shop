@@ -13,6 +13,7 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
@@ -20,9 +21,11 @@ const Login = () => {
 
   const redirectPath = location.state?.from?.pathname ?? "/";
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = login(email, password);
+    setIsSubmitting(true);
+    const result = await login(email, password);
+    setIsSubmitting(false);
     if (!result.ok) {
       toast.error(result.message ?? "Unable to login.");
       return;
@@ -67,7 +70,7 @@ const Login = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               Login
             </Button>
           </form>

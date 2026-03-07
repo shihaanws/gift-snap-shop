@@ -87,7 +87,7 @@ const ProductDetail = () => {
               <img
                 src={product.images[selectedImage]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full"
               />
             </div>
             {product.images.length > 1 && (
@@ -180,43 +180,67 @@ const ProductDetail = () => {
               </div>
             </div>
 
-           <div className="mb-2 rounded-lg border border-border bg-card px-2 text-sm">
-  <table className="w-full border-collapse">
-    <tbody className="divide-y divide-border">
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground w-1/3">Product Code</td>
-        <td className="py-2 text-muted-foreground">{product.productCode || "N/A"}</td>
-      </tr>
+            <div className="mb-2 rounded-lg border border-border bg-card px-2 text-sm">
+              <table className="w-full border-collapse">
+                <tbody className="divide-y divide-border">
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground w-1/3">
+                      Product Code
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.productCode || "N/A"}
+                    </td>
+                  </tr>
 
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground">Color</td>
-        <td className="py-2 text-muted-foreground">
-          {product.availableColors?.length ? product.availableColors.join(", ") : "N/A"}
-        </td>
-      </tr>
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground">
+                      Color
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.availableColors?.length
+                        ? product.availableColors.join(", ")
+                        : "N/A"}
+                    </td>
+                  </tr>
 
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground">Material</td>
-        <td className="py-2 text-muted-foreground">{product.material || "N/A"}</td>
-      </tr>
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground">
+                      Material
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.material || "N/A"}
+                    </td>
+                  </tr>
 
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground">Packing Type</td>
-        <td className="py-2 text-muted-foreground">{product.packingType || "N/A"}</td>
-      </tr>
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground">
+                      Packing Type
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.packingType || "N/A"}
+                    </td>
+                  </tr>
 
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground">Master Carton</td>
-        <td className="py-2 text-muted-foreground">{product.masterCarton || "N/A"}</td>
-      </tr>
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground">
+                      Master Carton
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.masterCarton || "N/A"}
+                    </td>
+                  </tr>
 
-      <tr>
-        <td className="py-2 font-semibold text-muted-foreground">Customized</td>
-        <td className="py-2 text-muted-foreground">{product.customized || "N/A"}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+                  <tr>
+                    <td className="py-2 font-semibold text-muted-foreground">
+                      Customized
+                    </td>
+                    <td className="py-2 text-muted-foreground">
+                      {product.customized || "N/A"}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             {/* Quantity Selection */}
             <div className="mb-2">
               <p className="text-sm font-medium text-foreground mb-2">

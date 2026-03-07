@@ -14,12 +14,13 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -27,13 +28,20 @@ const Signup = () => {
       return;
     }
 
-    const result = signup({ name, email, password });
+    setIsSubmitting(true);
+    const result = await signup({ name, email, password });
+    setIsSubmitting(false);
     if (!result.ok) {
       toast.error(result.message ?? "Unable to create account.");
       return;
     }
 
-    toast.success("Account created successfully.");
+    const message = result.message ?? "Account created successfully.";
+    toast.success(message);
+    if (message.toLowerCase().includes("verify your email")) {
+      navigate("/login", { replace: true });
+      return;
+    }
     navigate("/", { replace: true });
   };
 
@@ -99,7 +107,7 @@ const Signup = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               Create Account
             </Button>
           </form>
