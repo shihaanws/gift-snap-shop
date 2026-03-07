@@ -1,68 +1,131 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { products as seedProducts } from "@/data/products";
 import type { Product } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
-const STORAGE_KEY = "gift-snap-shop-products";
+type ProductRow = Database["public"]["Tables"]["products"]["Row"];
+type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
 
 interface ProductContextValue {
   products: Product[];
-  addOrUpdateProduct: (product: Product) => void;
-  addOrUpdateMany: (nextProducts: Product[]) => { created: number; updated: number };
-  resetProducts: () => void;
+  addOrUpdateProduct: (product: Product) => Promise<void>;
+  addOrUpdateMany: (nextProducts: Product[]) => Promise<{ created: number; updated: number }>;
+  removeProduct: (productId: string) => Promise<void>;
+  resetProducts: () => Promise<void>;
 }
 
 const ProductContext = createContext<ProductContextValue | null>(null);
 
-function isProductLike(value: unknown): value is Product {
-  if (typeof value !== "object" || value === null) {
-    return false;
+function asStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
   }
-
-  const candidate = value as Partial<Product>;
+  return value.map((item) => String(item));
+}
+function mapRowToProduct(row: ProductRow): Product {
   return (
-    typeof candidate.id === "string" &&
-    typeof candidate.name === "string" &&
-    typeof candidate.price === "number" &&
-    typeof candidate.description === "string" &&
-    typeof candidate.category === "string" &&
-    Array.isArray(candidate.images)
+    {
+      id: row.id,
+      name: row.name,
+      price: Number(row.price),
+      description: row.description,
+      category: row.category,
+      images: asStringArray(row.images),
+      variants: row.variants ? asStringArray(row.variants) : undefined,
+      currency: row.currency === "USD" ? "USD" : "INR",
+      gstRate: row.gst_rate ?? undefined,
+      listPrice: row.list_price ?? undefined,
+      discountPercent: row.discount_percent ?? undefined,
+      availableColors: row.available_colors ? asStringArray(row.available_colors) : undefined,
+      productCode: row.product_code ?? undefined,
+      material: row.material ?? undefined,
+      packingType: row.packing_type ?? undefined,
+      masterCarton: row.master_carton ?? undefined,
+      customized: row.customized ?? undefined,
+      minOrderQty: row.min_order_qty ?? undefined,
+    }
   );
 }
 
-function loadProducts(): Product[] {
-  if (typeof window === "undefined") {
-    return seedProducts;
-  }
-
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return seedProducts;
-  }
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return seedProducts;
-    }
-
-    const valid = parsed.filter(isProductLike);
-    return valid.length > 0 ? valid : seedProducts;
-  } catch {
-    return seedProducts;
-  }
+function mapProductToInsert(product: Product): ProductInsert {
+  return {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    category: product.category,
+    images: product.images,
+    variants: product.variants ?? null,
+    currency: product.currency ?? "INR",
+    gst_rate: product.gstRate ?? null,
+    list_price: product.listPrice ?? null,
+    discount_percent: product.discountPercent ?? null,
+    available_colors: product.availableColors ?? null,
+    product_code: product.productCode ?? null,
+    material: product.material ?? null,
+    packing_type: product.packingType ?? null,
+    master_carton: product.masterCarton ?? null,
+    customized: product.customized ?? null,
+    min_order_qty: product.minOrderQty ?? null,
+  };
 }
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<Product[]>(() => loadProducts());
+  const [products, setProducts] = useState<Product[]>(seedProducts);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-  }, [products]);
+    let isMounted = true;
+
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Failed to fetch products from Supabase", error);
+        return;
+      }
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        const seedRows = seedProducts.map(mapProductToInsert);
+        const { error: seedError } = await supabase.from("products").upsert(seedRows, { onConflict: "id" });
+        if (seedError) {
+          console.error("Failed to seed products in Supabase", seedError);
+          setProducts(seedProducts);
+          return;
+        }
+
+        if (isMounted) {
+          setProducts(seedProducts);
+        }
+        return;
+      }
+
+      setProducts(data.map(mapRowToProduct));
+    };
+
+    void fetchProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const value = useMemo<ProductContextValue>(
     () => ({
       products,
-      addOrUpdateProduct: (product) => {
+      addOrUpdateProduct: async (product) => {
+        const row = mapProductToInsert(product);
+        const { error } = await supabase.from("products").upsert(row, { onConflict: "id" });
+        if (error) {
+          throw error;
+        }
         setProducts((current) => {
           const index = current.findIndex((p) => p.id === product.id);
           if (index === -1) {
@@ -74,7 +137,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
           return next;
         });
       },
-      addOrUpdateMany: (nextProducts) => {
+      addOrUpdateMany: async (nextProducts) => {
         let created = 0;
         let updated = 0;
         const map = new Map(products.map((item) => [item.id, item]));
@@ -88,11 +151,35 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
           map.set(product.id, product);
         }
 
+        const rows = nextProducts.map(mapProductToInsert);
+        const { error } = await supabase.from("products").upsert(rows, { onConflict: "id" });
+        if (error) {
+          throw error;
+        }
+
         setProducts(Array.from(map.values()));
 
         return { created, updated };
       },
-      resetProducts: () => setProducts(seedProducts),
+      removeProduct: async (productId) => {
+        const { error } = await supabase.from("products").delete().eq("id", productId);
+        if (error) {
+          throw error;
+        }
+        setProducts((current) => current.filter((item) => item.id !== productId));
+      },
+      resetProducts: async () => {
+        const { error: deleteError } = await supabase.from("products").delete().neq("id", "");
+        if (deleteError) {
+          throw deleteError;
+        }
+        const seedRows = seedProducts.map(mapProductToInsert);
+        const { error: insertError } = await supabase.from("products").insert(seedRows);
+        if (insertError) {
+          throw insertError;
+        }
+        setProducts(seedProducts);
+      },
     }),
     [products]
   );

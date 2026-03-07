@@ -1,5 +1,5 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
-import { Upload, PlusCircle, RotateCcw } from "lucide-react";
+import { Upload, PlusCircle, RotateCcw, Pencil, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -48,6 +48,28 @@ const initialFormState: ProductFormState = {
   customized: "",
   minOrderQty: "",
 };
+
+function mapProductToForm(product: Product): ProductFormState {
+  return {
+    id: product.id ?? "",
+    name: product.name ?? "",
+    price: String(product.price ?? ""),
+    description: product.description ?? "",
+    category: product.category ?? "",
+    images: product.images?.join("|") ?? "",
+    variants: product.variants?.join("|") ?? "",
+    gstRate: product.gstRate !== undefined ? String(product.gstRate) : "",
+    listPrice: product.listPrice !== undefined ? String(product.listPrice) : "",
+    discountPercent: product.discountPercent !== undefined ? String(product.discountPercent) : "",
+    availableColors: product.availableColors?.join("|") ?? "",
+    productCode: product.productCode ?? "",
+    material: product.material ?? "",
+    packingType: product.packingType ?? "",
+    masterCarton: product.masterCarton ?? "",
+    customized: product.customized ?? "",
+    minOrderQty: product.minOrderQty !== undefined ? String(product.minOrderQty) : "",
+  };
+}
 
 function parseCsv(csv: string): string[][] {
   const rows: string[][] = [];
@@ -240,9 +262,10 @@ function mapCsvToProducts(csv: string): Product[] {
 }
 
 const ManageProducts = () => {
-  const { products, addOrUpdateProduct, addOrUpdateMany, resetProducts } = useProducts();
+  const { products, addOrUpdateProduct, addOrUpdateMany, removeProduct, resetProducts } = useProducts();
   const [form, setForm] = useState<ProductFormState>(initialFormState);
   const [isUploading, setIsUploading] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
   const categoryOptions = useMemo(() => categories.map((cat) => cat.id), []);
 
@@ -250,16 +273,40 @@ const ManageProducts = () => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const onSubmitSingle = (event: FormEvent) => {
+  const onSubmitSingle = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
       const product = validateProductInput(form);
-      addOrUpdateProduct(product);
-      toast.success(`Saved product: ${product.name}`);
+      await addOrUpdateProduct(product);
+      toast.success(editingProductId ? `Updated product: ${product.name}` : `Saved product: ${product.name}`);
       setForm(initialFormState);
+      setEditingProductId(null);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to save product.");
+    }
+  };
+
+  const onEditProduct = (product: Product) => {
+    setForm(mapProductToForm(product));
+    setEditingProductId(product.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const onDeleteProduct = async (product: Product) => {
+    const shouldDelete = window.confirm(`Delete "${product.name}" (${product.id}) from shop products?`);
+    if (!shouldDelete) {
+      return;
+    }
+    try {
+      await removeProduct(product.id);
+      if (editingProductId === product.id) {
+        setForm(initialFormState);
+        setEditingProductId(null);
+      }
+      toast.success(`Deleted product: ${product.name}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete product.");
     }
   };
 
@@ -274,7 +321,7 @@ const ManageProducts = () => {
     try {
       const csv = await file.text();
       const parsed = mapCsvToProducts(csv);
-      const { created, updated } = addOrUpdateMany(parsed);
+      const { created, updated } = await addOrUpdateMany(parsed);
       toast.success(`Bulk upload complete. Created: ${created}, Updated: ${updated}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Bulk upload failed.");
@@ -297,8 +344,13 @@ const ManageProducts = () => {
           <form onSubmit={onSubmitSingle} className="rounded-xl border border-border bg-card p-6 space-y-4">
             <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
               <PlusCircle className="w-5 h-5" />
-              Add Single Product
+              {editingProductId ? "Edit Product" : "Add Single Product"}
             </h2>
+            {editingProductId && (
+              <div className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+                Editing product ID: <span className="font-semibold text-foreground">{editingProductId}</span>
+              </div>
+            )}
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="text-sm space-y-1">
@@ -477,13 +529,28 @@ const ManageProducts = () => {
               />
             </label>
 
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-            >
-              <PlusCircle className="w-4 h-4" />
-              Save Product
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              >
+                <PlusCircle className="w-4 h-4" />
+                {editingProductId ? "Update Product" : "Save Product"}
+              </button>
+              {editingProductId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingProductId(null);
+                    setForm(initialFormState);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
+                >
+                  <X className="w-4 h-4" />
+                  Cancel Edit
+                </button>
+              )}
+            </div>
           </form>
 
           <div className="rounded-xl border border-border bg-card p-6 space-y-5">
@@ -511,9 +578,13 @@ const ManageProducts = () => {
 
             <button
               type="button"
-              onClick={() => {
-                resetProducts();
-                toast.success("Product list reset to default seed data.");
+              onClick={async () => {
+                try {
+                  await resetProducts();
+                  toast.success("Product list reset to default seed data.");
+                } catch (error) {
+                  toast.error(error instanceof Error ? error.message : "Failed to reset products.");
+                }
               }}
               className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
             >
@@ -525,6 +596,55 @@ const ManageProducts = () => {
               <p className="text-sm text-muted-foreground">Current product count</p>
               <p className="text-2xl font-semibold text-foreground">{products.length}</p>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-xl border border-border bg-card p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">All Shop Products</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-muted-foreground">
+                  <th className="px-3 py-2 font-medium">ID</th>
+                  <th className="px-3 py-2 font-medium">Name</th>
+                  <th className="px-3 py-2 font-medium">Category</th>
+                  <th className="px-3 py-2 font-medium">Price</th>
+                  <th className="px-3 py-2 font-medium">Images</th>
+                  <th className="px-3 py-2 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id} className="border-b border-border/70">
+                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{product.id}</td>
+                    <td className="px-3 py-2 text-foreground">{product.name}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{product.category}</td>
+                    <td className="px-3 py-2 text-foreground">Rs. {product.price.toFixed(2)}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{product.images.length}</td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onEditProduct(product)}
+                          className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onDeleteProduct(product)}
+                          className="inline-flex items-center gap-1 rounded-md border border-destructive/40 px-2.5 py-1.5 text-xs font-medium text-destructive transition hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

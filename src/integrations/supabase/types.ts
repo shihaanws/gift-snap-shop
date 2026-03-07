@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          quantity: number
+          session_id: string
+          updated_at: string
+          variant: string | null
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          product_id: string
+          quantity?: number
+          session_id: string
+          updated_at?: string
+          variant?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          quantity?: number
+          session_id?: string
+          updated_at?: string
+          variant?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          available_colors: Json | null
+          category: string
+          created_at: string
+          currency: string | null
+          customized: string | null
+          description: string
+          discount_percent: number | null
+          gst_rate: number | null
+          id: string
+          images: Json
+          list_price: number | null
+          master_carton: string | null
+          material: string | null
+          min_order_qty: number | null
+          name: string
+          packing_type: string | null
+          price: number
+          product_code: string | null
+          updated_at: string
+          variants: Json | null
+        }
+        Insert: {
+          available_colors?: Json | null
+          category: string
+          created_at?: string
+          currency?: string | null
+          customized?: string | null
+          description: string
+          discount_percent?: number | null
+          gst_rate?: number | null
+          id: string
+          images: Json
+          list_price?: number | null
+          master_carton?: string | null
+          material?: string | null
+          min_order_qty?: number | null
+          name: string
+          packing_type?: string | null
+          price: number
+          product_code?: string | null
+          updated_at?: string
+          variants?: Json | null
+        }
+        Update: {
+          available_colors?: Json | null
+          category?: string
+          created_at?: string
+          currency?: string | null
+          customized?: string | null
+          description?: string
+          discount_percent?: number | null
+          gst_rate?: number | null
+          id?: string
+          images?: Json
+          list_price?: number | null
+          master_carton?: string | null
+          material?: string | null
+          min_order_qty?: number | null
+          name?: string
+          packing_type?: string | null
+          price?: number
+          product_code?: string | null
+          updated_at?: string
+          variants?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

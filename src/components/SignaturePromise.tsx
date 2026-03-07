@@ -22,7 +22,7 @@ const points = [
 
 const SignaturePromise = () => {
   return (
-    <section className="py-20">
+    <section id="about-us" className="py-20">
       <div className="container mx-auto px-4">
         <div className="mb-10 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Why Emotion Plus</p>

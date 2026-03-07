@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown } from "lucide-react";
+import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
 import { NavLink } from "./NavLink";
 import { useCart } from "@/hooks/use-cart";
+import { useAuth } from "@/hooks/use-auth";
 
 const subNavItems = [
   {
@@ -61,6 +62,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSubNav, setOpenSubNav] = useState<string | null>(null);
   const { itemCount } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/20 bg-[#0E2A4A]/95 backdrop-blur-md">
@@ -99,6 +101,13 @@ const Navbar = () => {
             Corporate Catalog
           </NavLink>
           <NavLink
+            to="/about"
+            className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
+            activeClassName="text-white"
+          >
+            About Us
+          </NavLink>
+          <NavLink
             to="/manage-products"
             className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
             activeClassName="text-white"
@@ -112,6 +121,35 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {!isAuthenticated ? (
+            <div className="hidden md:flex items-center gap-2">
+              <Link
+                to="/login"
+                className="rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
+              >
+                Sign Up
+              </Link>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-2">
+              <span className="max-w-36 truncate text-sm font-medium text-white/90">{user?.name}</span>
+              <button
+                type="button"
+                onClick={logout}
+                className="inline-flex items-center gap-1 rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </div>
+          )}
+
           <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
             <DownloadIcon className="w-4 h-4" />
             Download Brochure 
@@ -204,10 +242,41 @@ const Navbar = () => {
               <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Home</Link>
               <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Bulk Solutions</Link>
               <Link to="/shop" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Catalog</Link>
+              <Link to="/about" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">About Us</Link>
               <Link to="/manage-products" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Manage Products</Link>
               <Link to="/cart" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">
                 Cart ({itemCount})
               </Link>
+              {!isAuthenticated ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-lg border border-white/20 px-3 py-2 text-center text-sm font-medium text-white"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-lg bg-white px-3 py-2 text-center text-sm font-medium text-[#0E2A4A]"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMobileOpen(false);
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-white"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout {user?.name ? `(${user.name})` : ""}
+                </button>
+              )}
               <div className="rounded-lg border border-white/15 p-3">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
                 <div className="grid grid-cols-2 gap-2">

@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 const STORAGE_KEY = "gift-snap-shop-cart";
+const SESSION_STORAGE_KEY = "gift-snap-shop-cart-session-id";
+
+type CartItemInsert = Database["public"]["Tables"]["cart_items"]["Insert"];
 
 export interface CartItem {
   id: string;
@@ -74,12 +79,101 @@ function getItemId(productId: string, variant?: string) {
   return productId;
 }
 
+function getOrCreateSessionId() {
+  if (typeof window === "undefined") {
+    return "server-session";
+  }
+  const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
+  if (existing) {
+    return existing;
+  }
+  const next = crypto.randomUUID();
+  window.localStorage.setItem(SESSION_STORAGE_KEY, next);
+  return next;
+}
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const sessionId = useMemo(() => getOrCreateSessionId(), []);
   const [items, setItems] = useState<CartItem[]>(() => readInitialCart());
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadRemoteCart = async () => {
+      const { data, error } = await supabase
+        .from("cart_items")
+        .select("id, product_id, quantity, variant")
+        .eq("session_id", sessionId);
+
+      if (error) {
+        console.error("Failed to load cart from Supabase", error);
+        if (isMounted) {
+          setIsHydrated(true);
+        }
+        return;
+      }
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setItems(
+          data.map((row) => ({
+            id: row.id,
+            productId: row.product_id,
+            quantity: row.quantity,
+            variant: row.variant ?? undefined,
+          }))
+        );
+      }
+      setIsHydrated(true);
+    };
+
+    void loadRemoteCart();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [sessionId]);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
+
+  useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
+    const syncCart = async () => {
+      const { error: deleteError } = await supabase.from("cart_items").delete().eq("session_id", sessionId);
+      if (deleteError) {
+        console.error("Failed to clear remote cart before sync", deleteError);
+        return;
+      }
+
+      if (items.length === 0) {
+        return;
+      }
+
+      const rows: CartItemInsert[] = items.map((item) => ({
+        session_id: sessionId,
+        id: item.id,
+        product_id: item.productId,
+        quantity: item.quantity,
+        variant: item.variant ?? null,
+      }));
+
+      const { error: insertError } = await supabase.from("cart_items").insert(rows);
+      if (insertError) {
+        console.error("Failed to sync remote cart items", insertError);
+      }
+    };
+
+    void syncCart();
+  }, [items, isHydrated, sessionId]);
 
   const value = useMemo<CartContextValue>(
     () => ({

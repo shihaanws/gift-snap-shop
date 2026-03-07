@@ -6,6 +6,7 @@ import SignaturePromise from "@/components/SignaturePromise";
 import Footer from "@/components/Footer";
 import FestiveCarousel from "@/components/FestiveCarousel";
 import QuoteBanner from "@/components/QuoteBanner";
+import ReachStats from "@/components/ReachStats";
 
 const Index = () => {
   return (
@@ -16,7 +17,10 @@ const Index = () => {
       {/* <QuoteBanner /> */}
       {/* <HeroSection /> */}
       <FeaturedProducts />
+                  <ReachStats />
+
       <SignaturePromise />
+
       <Footer />
     </div>
   );

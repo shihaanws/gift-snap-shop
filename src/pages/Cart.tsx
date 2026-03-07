@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart, MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/hooks/use-cart";
 import { useProducts } from "@/hooks/use-products";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Cart = () => {
   const { items, updateQuantity, removeItem, clearCart } = useCart();
   const { products } = useProducts();
+  const whatsappPhone = "9074145962";
 
   const cartRows = items
     .map((item) => {
@@ -21,6 +33,19 @@ const Cart = () => {
     .filter(Boolean);
 
   const subtotal = cartRows.reduce((sum, row) => sum + row!.lineTotal, 0);
+  const whatsappMessage = encodeURIComponent(
+    `Hi! I'd like to place an order from my cart:\n\n${cartRows
+      .map(
+        (row, index) =>
+          `${index + 1}. ${row!.product.name}\nProduct ID: ${row!.item.productId}\nQuantity: ${row!.item.quantity}${row!.item.variant ? `\nVariant: ${row!.item.variant}` : ""}\nLine Total: Rs. ${row!.lineTotal.toFixed(2)}`
+      )
+      .join("\n\n")}\n\nSubtotal: Rs. ${subtotal.toFixed(2)}\n\nPlease let me know the next steps!`
+  );
+  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${whatsappMessage}`;
+
+  const openWhatsAppOrder = () => {
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -113,6 +138,41 @@ const Cart = () => {
               >
                 Add More Products
               </Link>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="mb-2 bg-[hsl(142,70%,40%)] inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-[hsl(0,0%,100%)] hover:opacity-90 transition-opacity shadow-lg"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Order via WhatsApp
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirm WhatsApp Order</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Please verify items before continuing to WhatsApp.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="max-h-64 overflow-y-auto rounded-lg border border-border p-3">
+                    <ul className="space-y-3 text-sm">
+                      {cartRows.map((row) => (
+                        <li key={row!.item.id} className="rounded-md bg-secondary/50 p-2">
+                          <p className="font-medium text-foreground">{row!.product.name}</p>
+                          <p className="text-muted-foreground">Product ID: {row!.item.productId}</p>
+                          <p className="text-muted-foreground">Quantity: {row!.item.quantity}</p>
+                          {row!.item.variant && <p className="text-muted-foreground">Variant: {row!.item.variant}</p>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={openWhatsAppOrder}>Continue to WhatsApp</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <button
                 type="button"
                 onClick={clearCart}
@@ -130,4 +190,3 @@ const Cart = () => {
 };
 
 export default Cart;
-

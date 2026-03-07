@@ -42,24 +42,6 @@ export const categories: Category[] = [
     image: giftCorporate,
   },
   {
-    id: "bags",
-    name: "Laptop & Office Bags",
-    description: "Durable branded bags for daily business use",
-    image: giftThankyou,
-  },
-  {
-    id: "diaries",
-    name: "Diaries & Notebooks",
-    description: "Executive diaries for meetings and planning",
-    image: giftWedding,
-  },
-  {
-    id: "bottles",
-    name: "Bottles & Tumblers",
-    description: "Reusable drinkware with custom logo options",
-    image: productSpa,
-  },
-  {
     id: "pens",
     name: "Pens",
     description: "Premium writing instruments for corporate gifting",
@@ -71,6 +53,26 @@ export const categories: Category[] = [
     description: "Practical and elegant keychain gift options",
     image: productChocolate,
   },
+   {
+            id: "diaries",
+            name: "Diaries & Notebooks",
+            description: "Executive diaries for meetings and planning",
+            image: giftWedding,
+          },
+  {
+    id: "bags",
+    name: "Laptop & Office Bags",
+    description: "Durable branded bags for daily business use",
+    image: giftThankyou,
+  },
+         
+  {
+    id: "bottles",
+    name: "Bottles & Tumblers",
+    description: "Reusable drinkware with custom logo options",
+    image: productSpa,
+  },
+  
   {
     id: "electronics",
     name: "Electronics",
