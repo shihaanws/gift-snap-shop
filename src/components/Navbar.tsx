@@ -6,6 +6,15 @@ import SearchBar from "./SearchBar";
 import { NavLink } from "./NavLink";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const subNavItems = [
   {
@@ -57,6 +66,19 @@ const subNavItems = [
     ],
   },
 ];
+
+function getInitials(name?: string) {
+  if (!name) {
+    return "U";
+  }
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return "U";
+  }
+  const first = parts[0]?.[0] ?? "";
+  const second = parts[1]?.[0] ?? "";
+  return `${first}${second}`.toUpperCase();
+}
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -115,13 +137,20 @@ const Navbar = () => {
             Manage Products
           </NavLink>
           
-          <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm">
+          <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
             <SearchBar />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {!isAuthenticated ? (
+        
+
+          <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+            <DownloadIcon className="w-4 h-4" />
+            Download Brochure 
+          </Link>
+
+            {!isAuthenticated ? (
             <div className="hidden md:flex items-center gap-2">
               <Link
                 to="/login"
@@ -137,25 +166,36 @@ const Navbar = () => {
               </Link>
             </div>
           ) : (
-            <div className="hidden md:flex items-center gap-2">
-              <span className="max-w-36 truncate text-sm font-medium text-white/90">{user?.name}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  void logout();
-                }}
-                className="inline-flex items-center gap-1 rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="hidden md:inline-flex items-center rounded-full border border-white/30 p-0.5 transition hover:border-white"
+                  aria-label="Open user menu"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-white text-xs font-semibold text-[#0E2A4A]">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user?.name ?? "User"}</DropdownMenuLabel>
+                {user?.email && <DropdownMenuLabel className="pt-0 text-xs font-normal text-muted-foreground">{user.email}</DropdownMenuLabel>}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    void logout();
+                  }}
+                  className="cursor-pointer"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-
-          <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-            <DownloadIcon className="w-4 h-4" />
-            Download Brochure 
-          </Link>
           
           <Link
             to="/cart"
