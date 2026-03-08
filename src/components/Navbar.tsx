@@ -3,6 +3,7 @@ import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut } from "lucide-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
+import FestiveCarousel from "./FestiveCarousel";
 import { NavLink } from "./NavLink";
 import { useCart } from "@/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
@@ -87,8 +88,9 @@ const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/20 bg-[#0E2A4A]/95 backdrop-blur-md">
-      <div className="border-b border-white/10 bg-[#0B223D]">
+    <>
+      <nav className="sticky top-0 z-50 border-b border-white/20 bg-[white]/95 backdrop-blur-md">
+        <div className="border-b border-white/10 bg-primary">
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs text-white/80">
           <p className="hidden sm:block">Bulk corporate gifting for teams, clients, and events</p>
           <a
@@ -101,38 +103,32 @@ const Navbar = () => {
           </a>
         </div>
       </div>
-      <div className="container mx-auto px-4 flex items-center justify-between h-16">
+      <div className="container mx-auto px-4 flex items-center justify-between h-20">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logg.png" alt="Emotion Plus" className="mb-2.5 h-8 w-18" />
-          <img src="/epp1.png" alt="Emotion Plus" className="h-8 w-18" />
+          {/* <img src="/logg.png" alt="Emotion Plus" className="mb-2.5 h-8 w-18" /> */}
+          <img src="/EMOTIONS.png" alt="Emotion Plus" className="h-16 w-auto my-6" />
         </Link>
 
         <div className="hidden md:flex items-center gap-5 flex-1 ml-8 min-w-0">
-          <NavLink
-            to="/"
-            className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
-            activeClassName="text-white"
-          >
-            Home
-          </NavLink>
-          <NavLink
+        
+          {/* <NavLink
             to="/shop"
             className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
             activeClassName="text-white"
           >
             Corporate Catalog
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/about"
-            className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
-            activeClassName="text-white"
+            className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
+            activeClassName="text-primary"
           >
             About Us
           </NavLink>
           <NavLink
             to="/manage-products"
-            className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
-            activeClassName="text-white"
+            className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
+            activeClassName="text-primary"
           >
             Manage Products
           </NavLink>
@@ -170,11 +166,11 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="hidden md:inline-flex items-center rounded-full border border-white/30 p-0.5 transition hover:border-white"
+                  className="hidden md:inline-flex items-center rounded-full border border-white/40 bg-white p-0.5 text-[#0E2A4A] transition hover:opacity-90"
                   aria-label="Open user menu"
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-white text-xs font-semibold text-[#0E2A4A]">
+                    <AvatarFallback className="bg-[#0E2A4A] text-xs font-semibold text-white">
                       {getInitials(user?.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -199,7 +195,7 @@ const Navbar = () => {
           
           <Link
             to="/cart"
-            className="relative hidden md:inline-flex items-center justify-center rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
+            className="relative hidden md:inline-flex items-center justify-center rounded-lg border border-white/40 bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
             aria-label="View cart"
           >
             <ShoppingBag className="h-4 w-4" />
@@ -216,7 +212,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className="relative hidden md:block border-t border-white/10 bg-[#12365A]/95"
+        className="relative hidden border-t border-border bg-white shadow-sm md:block"
         onMouseLeave={() => setOpenSubNav(null)}
       >
         <div className="container mx-auto px-4">
@@ -227,7 +223,7 @@ const Navbar = () => {
                 type="button"
                 onMouseEnter={() => setOpenSubNav(item.label)}
                 className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
-                  openSubNav === item.label ? "text-white" : "text-white/75 hover:text-white"
+                  openSubNav === item.label ? "text-[#0E2A4A]" : "text-[#0E2A4A]/75 hover:text-[#0E2A4A]"
                 }`}
               >
                 {item.label}
@@ -244,20 +240,20 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.18 }}
-              className="absolute left-0 right-0 top-full z-[70] border-t border-white/10 bg-[#173E64] shadow-2xl"
+              className="absolute left-0 right-0 top-full z-[70] border-t border-border bg-white shadow-lg"
             >
               <div className="container mx-auto grid gap-6 px-4 py-5 md:grid-cols-3">
                 {subNavItems
                   .find((item) => item.label === openSubNav)
                   ?.groups.map((group) => (
                     <div key={group.title}>
-                      <p className="mb-2 text-sm font-semibold text-gold-light">{group.title}</p>
-                      <div className="space-y-1.5">
+                      <p className="mb-2 text-sm font-semibold text-foreground">{group.title}</p>
+                      <div className="space-y-0.5">
                         {group.items.map((entry) => (
                           <Link
                             key={entry}
                             to="/shop"
-                            className="block text-sm text-white/80 transition-colors hover:text-white"
+                            className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
                           >
                             {entry}
                           </Link>
@@ -271,77 +267,79 @@ const Navbar = () => {
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-white/15 bg-[#0E2A4A] md:hidden"
-          >
-            <div className="flex flex-col gap-4 p-4">
-              <SearchBar />
-              <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Home</Link>
-              <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Bulk Solutions</Link>
-              <Link to="/shop" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Catalog</Link>
-              <Link to="/about" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">About Us</Link>
-              <Link to="/manage-products" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Manage Products</Link>
-              <Link to="/cart" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">
-                Cart ({itemCount})
-              </Link>
-              {!isAuthenticated ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg border border-white/20 px-3 py-2 text-center text-sm font-medium text-white"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg bg-white px-3 py-2 text-center text-sm font-medium text-[#0E2A4A]"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    void logout();
-                    setMobileOpen(false);
-                  }}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-white"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout {user?.name ? `(${user.name})` : ""}
-                </button>
-              )}
-              <div className="rounded-lg border border-white/15 p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {subNavItems.map((item) => (
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden border-t border-white/15 bg-[#0E2A4A] md:hidden"
+            >
+              <div className="flex flex-col gap-4 p-4">
+                <SearchBar />
+                <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Home</Link>
+                <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Bulk Solutions</Link>
+                <Link to="/shop" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Catalog</Link>
+                <Link to="/about" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">About Us</Link>
+                <Link to="/manage-products" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Manage Products</Link>
+                <Link to="/cart" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">
+                  Cart ({itemCount})
+                </Link>
+                {!isAuthenticated ? (
+                  <div className="grid grid-cols-2 gap-2">
                     <Link
-                      key={item.label}
-                      to="/shop"
+                      to="/login"
                       onClick={() => setMobileOpen(false)}
-                      className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
+                      className="rounded-lg border border-white/20 px-3 py-2 text-center text-sm font-medium text-white"
                     >
-                      {item.label}
+                      Login
                     </Link>
-                  ))}
+                    <Link
+                      to="/signup"
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-lg bg-white px-3 py-2 text-center text-sm font-medium text-[#0E2A4A]"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void logout();
+                      setMobileOpen(false);
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-white"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout {user?.name ? `(${user.name})` : ""}
+                  </button>
+                )}
+                <div className="rounded-lg border border-white/15 p-3">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {subNavItems.map((item) => (
+                      <Link
+                        key={item.label}
+                        to="/shop"
+                        onClick={() => setMobileOpen(false)}
+                        className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
+                <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
+                  Request Bulk Quote
+                </Link>
               </div>
-              <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
-                Request Bulk Quote
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+      {/* <FestiveCarousel /> */}
+    </>
   );
 };
 

@@ -1,11 +1,12 @@
-import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Upload, PlusCircle, RotateCcw, Pencil, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { categories } from "@/data/products";
-import type { Product } from "@/data/products";
+import type { Category, Product } from "@/data/products";
 import { useProducts } from "@/hooks/use-products";
+import { useCategories } from "@/hooks/use-categories";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CSV_REQUIRED_HEADERS = ["id", "name", "price", "description", "category", "images"];
 
@@ -34,7 +35,7 @@ const initialFormState: ProductFormState = {
   name: "",
   price: "",
   description: "",
-  category: categories[0]?.id ?? "gift-sets",
+  category: "",
   images: "",
   variants: "",
   gstRate: "",
@@ -48,6 +49,42 @@ const initialFormState: ProductFormState = {
   customized: "",
   minOrderQty: "",
 };
+
+type CategoryFormState = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+};
+
+const initialCategoryFormState: CategoryFormState = {
+  id: "",
+  name: "",
+  description: "",
+  image: "",
+};
+
+function mapCategoryToForm(category: Category): CategoryFormState {
+  return {
+    id: category.id,
+    name: category.name,
+    description: category.description,
+    image: category.image,
+  };
+}
+
+function validateCategoryInput(source: CategoryFormState): Category {
+  const name = source.name.trim();
+  const id = source.id.trim() || slugify(name);
+  const description = source.description.trim();
+  const image = source.image.trim();
+
+  if (!id || !name || !description || !image) {
+    throw new Error("Category ID/Name/Description/Image are required.");
+  }
+
+  return { id, name, description, image };
+}
 
 function mapProductToForm(product: Product): ProductFormState {
   return {
@@ -263,11 +300,21 @@ function mapCsvToProducts(csv: string): Product[] {
 
 const ManageProducts = () => {
   const { products, addOrUpdateProduct, addOrUpdateMany, removeProduct, resetProducts } = useProducts();
+  const { categories, addOrUpdateCategory, removeCategory } = useCategories();
   const [form, setForm] = useState<ProductFormState>(initialFormState);
+  const [categoryForm, setCategoryForm] = useState<CategoryFormState>(initialCategoryFormState);
   const [isUploading, setIsUploading] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
 
   const categoryOptions = useMemo(() => categories.map((cat) => cat.id), []);
+
+  useEffect(() => {
+    if (form.category || categoryOptions.length === 0) {
+      return;
+    }
+    setForm((current) => ({ ...current, category: categoryOptions[0] }));
+  }, [form.category, categoryOptions]);
 
   const onFormChange = (field: keyof ProductFormState, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -291,6 +338,46 @@ const ManageProducts = () => {
     setForm(mapProductToForm(product));
     setEditingProductId(product.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const onCategoryFormChange = (field: keyof CategoryFormState, value: string) => {
+    setCategoryForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const onSubmitCategory = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      const category = validateCategoryInput(categoryForm);
+      await addOrUpdateCategory(category);
+      toast.success(editingCategoryId ? `Updated category: ${category.name}` : `Saved category: ${category.name}`);
+      setCategoryForm(initialCategoryFormState);
+      setEditingCategoryId(null);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to save category.");
+    }
+  };
+
+  const onEditCategory = (category: Category) => {
+    setCategoryForm(mapCategoryToForm(category));
+    setEditingCategoryId(category.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const onDeleteCategory = async (category: Category) => {
+    const shouldDelete = window.confirm(`Delete category "${category.name}" (${category.id})?`);
+    if (!shouldDelete) {
+      return;
+    }
+    try {
+      await removeCategory(category.id);
+      if (editingCategoryId === category.id) {
+        setCategoryForm(initialCategoryFormState);
+        setEditingCategoryId(null);
+      }
+      toast.success(`Deleted category: ${category.name}`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete category.");
+    }
   };
 
   const onDeleteProduct = async (product: Product) => {
@@ -340,7 +427,14 @@ const ManageProducts = () => {
           <p className="text-muted-foreground">Add products manually or upload many products from CSV.</p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <Tabs defaultValue="products" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="categories">Categories</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="products">
+            <div className="grid gap-6 lg:grid-cols-2">
           <form onSubmit={onSubmitSingle} className="rounded-xl border border-border bg-card p-6 space-y-4">
             <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
               <PlusCircle className="w-5 h-5" />
@@ -399,11 +493,15 @@ const ManageProducts = () => {
                 onChange={(e) => onFormChange("category", e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2"
               >
-                {categoryOptions.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
+                {categoryOptions.length === 0 ? (
+                  <option value="">No categories available</option>
+                ) : (
+                  categoryOptions.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))
+                )}
               </select>
             </label>
 
@@ -597,35 +695,92 @@ const ManageProducts = () => {
               <p className="text-2xl font-semibold text-foreground">{products.length}</p>
             </div>
           </div>
-        </div>
+            </div>
+          </TabsContent>
 
-        <div className="mt-8 rounded-xl border border-border bg-card p-6">
-          <h2 className="mb-4 text-xl font-semibold text-foreground">All Shop Products</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-sm">
+          <TabsContent value="categories">
+            <div className="rounded-xl border border-border bg-card p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Manage Categories</h2>
+
+          <form onSubmit={onSubmitCategory} className="grid gap-3 md:grid-cols-2">
+            <label className="text-sm space-y-1">
+              <span className="text-muted-foreground">Category ID (optional)</span>
+              <input
+                value={categoryForm.id}
+                onChange={(e) => onCategoryFormChange("id", e.target.value)}
+                placeholder="auto-generated-from-name"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2"
+              />
+            </label>
+            <label className="text-sm space-y-1">
+              <span className="text-muted-foreground">Category Name *</span>
+              <input
+                value={categoryForm.name}
+                onChange={(e) => onCategoryFormChange("name", e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2"
+              />
+            </label>
+            <label className="text-sm space-y-1 md:col-span-2">
+              <span className="text-muted-foreground">Description *</span>
+              <input
+                value={categoryForm.description}
+                onChange={(e) => onCategoryFormChange("description", e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2"
+              />
+            </label>
+            <label className="text-sm space-y-1 md:col-span-2">
+              <span className="text-muted-foreground">Image URL *</span>
+              <input
+                value={categoryForm.image}
+                onChange={(e) => onCategoryFormChange("image", e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2"
+              />
+            </label>
+            <div className="flex flex-wrap gap-2 md:col-span-2">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              >
+                <PlusCircle className="w-4 h-4" />
+                {editingCategoryId ? "Update Category" : "Save Category"}
+              </button>
+              {editingCategoryId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingCategoryId(null);
+                    setCategoryForm(initialCategoryFormState);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
+                >
+                  <X className="w-4 h-4" />
+                  Cancel Edit
+                </button>
+              )}
+            </div>
+          </form>
+
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[680px] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-muted-foreground">
                   <th className="px-3 py-2 font-medium">ID</th>
                   <th className="px-3 py-2 font-medium">Name</th>
-                  <th className="px-3 py-2 font-medium">Category</th>
-                  <th className="px-3 py-2 font-medium">Price</th>
-                  <th className="px-3 py-2 font-medium">Images</th>
+                  <th className="px-3 py-2 font-medium">Description</th>
                   <th className="px-3 py-2 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="border-b border-border/70">
-                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{product.id}</td>
-                    <td className="px-3 py-2 text-foreground">{product.name}</td>
-                    <td className="px-3 py-2 text-muted-foreground">{product.category}</td>
-                    <td className="px-3 py-2 text-foreground">Rs. {product.price.toFixed(2)}</td>
-                    <td className="px-3 py-2 text-muted-foreground">{product.images.length}</td>
+                {categories.map((category) => (
+                  <tr key={category.id} className="border-b border-border/70">
+                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{category.id}</td>
+                    <td className="px-3 py-2 text-foreground">{category.name}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{category.description}</td>
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => onEditProduct(product)}
+                          onClick={() => onEditCategory(category)}
                           className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary"
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -633,7 +788,7 @@ const ManageProducts = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => onDeleteProduct(product)}
+                          onClick={() => onDeleteCategory(category)}
                           className="inline-flex items-center gap-1 rounded-md border border-destructive/40 px-2.5 py-1.5 text-xs font-medium text-destructive transition hover:bg-destructive/10"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -646,7 +801,60 @@ const ManageProducts = () => {
               </tbody>
             </table>
           </div>
-        </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="products">
+            <div className="mt-8 rounded-xl border border-border bg-card p-6">
+              <h2 className="mb-4 text-xl font-semibold text-foreground">All Shop Products</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px] border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-muted-foreground">
+                      <th className="px-3 py-2 font-medium">ID</th>
+                      <th className="px-3 py-2 font-medium">Name</th>
+                      <th className="px-3 py-2 font-medium">Category</th>
+                      <th className="px-3 py-2 font-medium">Price</th>
+                      <th className="px-3 py-2 font-medium">Images</th>
+                      <th className="px-3 py-2 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr key={product.id} className="border-b border-border/70">
+                        <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{product.id}</td>
+                        <td className="px-3 py-2 text-foreground">{product.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{product.category}</td>
+                        <td className="px-3 py-2 text-foreground">Rs. {product.price.toFixed(2)}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{product.images.length}</td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => onEditProduct(product)}
+                              className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onDeleteProduct(product)}
+                              className="inline-flex items-center gap-1 rounded-md border border-destructive/40 px-2.5 py-1.5 text-xs font-medium text-destructive transition hover:bg-destructive/10"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
       <Footer />
     </div>

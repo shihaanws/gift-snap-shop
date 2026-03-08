@@ -3,13 +3,14 @@ import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { categories } from "@/data/products";
 import { useProducts } from "@/hooks/use-products";
+import { useCategories } from "@/hooks/use-categories";
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "all";
   const { products } = useProducts();
+  const { categories } = useCategories();
 
   const filtered = useMemo(() => {
     if (activeCategory === "all") return products;

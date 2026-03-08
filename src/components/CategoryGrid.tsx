@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { categories } from "@/data/products";
 import { useProducts } from "@/hooks/use-products";
+import { useCategories } from "@/hooks/use-categories";
 
 const GIFT_SETS_HOMEPAGE_IMAGE =
 "https://5.imimg.com/data5/SELLER/Default/2025/9/548695791/ZK/KE/YN/226888128/customized-corporate-gift-1000x1000.jpg"
 
 const CategoryGrid = () => {
   const { products } = useProducts();
+  const { categories } = useCategories();
 
   
   const categoryImageById = useMemo(() => {
@@ -27,12 +28,12 @@ const CategoryGrid = () => {
   }, [products]);
 
   return (
-    <section className="relative py-10">
+    <section className="relative py-5">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-transparent" />
       <div className="container relative mx-auto px-4">
-      <div className="text-center mb-12">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Explore Collections</p>
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">Shop by Product Type</h2>
+      <div className="text-center mb-9">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Explore Collections</p>
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-1">Shop by Product Type</h2>
         <p className="text-muted-foreground text-lg">Corporate gifting essentials for bulk orders</p>
       </div>
 
@@ -56,7 +57,9 @@ const CategoryGrid = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                <h3 className="font-display text-lg md:text-xl font-semibold text-primary-foreground">{cat.name}</h3>
+                <h3 className="inline-flex rounded-md bg-white px-2.5 py-1 font-display text-lg font-semibold text-foreground shadow-md md:text-xl">
+                  {cat.name}
+                </h3>
                 <p className="text-sm text-primary-foreground/80 hidden md:block">{cat.description}</p>
               </div>
             </Link>

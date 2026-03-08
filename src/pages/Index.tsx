@@ -12,7 +12,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      {/* <FestiveCarousel /> */}
+      <FestiveCarousel />
       <CategoryGrid />
       {/* <QuoteBanner /> */}
       {/* <HeroSection /> */}
