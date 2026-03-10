@@ -8,6 +8,7 @@
   :root {
     --background: 36 33% 97%;
     --foreground: 30 10% 15%;
+    --listing-background: 36 31% 94%;
 
     --card: 36 30% 95%;
     --card-foreground: 30 10% 15%;
@@ -58,6 +59,7 @@
   .dark {
     --background: 30 10% 8%;
     --foreground: 36 30% 92%;
+    --listing-background: 30 10% 6%;
     --card: 30 10% 12%;
     --card-foreground: 36 30% 92%;
     --popover: 30 10% 8%;
@@ -97,5 +99,9 @@
 
   h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
+  }
+
+  .listing-background {
+    background-color: hsl(var(--listing-background));
   }
 }

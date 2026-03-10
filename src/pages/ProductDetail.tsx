@@ -1,6 +1,6 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useParams, Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
   ArrowLeft,
@@ -10,22 +10,30 @@ import {
   Heart,
   ArrowLeftRight,
   ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useProducts } from "@/hooks/use-products";
 import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
+import ProductCard from "@/components/ProductCard";
 
 const ProductDetail = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const { products } = useProducts();
-  const { addItem, items } = useCart();
+  const { addItem } = useCart();
   const product = products.find((p) => p.id === id);
+  const fallbackImages = product?.productCode ? [`/product-images/${product.productCode}.jpg`] : [];
+  const productImages = product?.images && product.images.length > 0 ? product.images : fallbackImages;
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(0);
   const [quantity, setQuantity] = useState(product?.minOrderQty ?? 1);
+  const [showNav, setShowNav] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!product) {
     return (
@@ -58,287 +66,371 @@ const ProductDetail = () => {
     typeof product.discountPercent === "number";
 
   const whatsappMessage = encodeURIComponent(
-    `Hi! I'd like to order:\n\n🎁 *${product.name}*\n${product.variants?.length ? `📦 Variant: ${product.variants[selectedVariant]}` : ""}\nQuantity: ${quantity}\nPrice: ${formatter.format(product.price * quantity)}\n\nPlease let me know the next steps!`,
+    `Hi! I'd like to order:\n\n🎁 *${product.name}*\n${product.variants?.length ? `📦 Variant: ${product.variants[selectedVariant]}` : ""}${
+      product.availableColors?.length ? `\n🎨 Color: ${product.availableColors[selectedColor]}` : ""
+    }\nQuantity: ${quantity}\nPrice: ${formatter.format(product.price * quantity)}\n\nPlease let me know the next steps!`,
   );
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
-  const isInCart = items.some((item) => item.productId === product.id);
+  const selectedColorName = product?.availableColors?.[selectedColor];
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container mx-auto px-4 py-4">
-        <Link
-          to="/shop"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to shop
-        </Link>
+    const byCategory = products.filter(
+      (p) => p.id !== product.id && p.category === product.category,
+    );
 
-        <div className="grid md:grid-cols-2 gap-1 md:gap-1">
-          {/* Image gallery */}
+    const byBundleSize = product.bundleSize
+      ? products.filter(
+          (p) =>
+            p.id !== product.id &&
+            p.bundleSize === product.bundleSize &&
+            p.category !== product.category,
+        )
+      : [];
+
+    const seen = new Set<string>();
+    return [...byCategory, ...byBundleSize]
+      .filter((p) => {
+        if (seen.has(p.id)) {
+          return false;
+        }
+        seen.add(p.id);
+        return true;
+      })
+      .slice(0, 6);
+  }, [products, product]);
+
+  
+return (
+  <div className="min-h-screen bg-background">
+    <Navbar />
+
+    <div className="container mx-auto px-4 py-6">
+      <Link
+        to="/shop"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to shop
+      </Link>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+
+        {/* IMAGE SECTION */}
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="md:max-w-[540px]"
+            transition={{ duration: 0.4 }}
+            className="flex flex-col md:flex-row gap-3"
+            onMouseEnter={() => setShowNav(true)}
+            onMouseLeave={() => setShowNav(false)}
           >
-            <div className="rounded-xl overflow-hidden bg-card aspect-[4/5] max-h-[890px] md:aspect-square md:max-h-[860px] mb-3">
-              <img
-                src={product.images[selectedImage]}
+          {productImages.length > 1 && (
+            <div className="hidden md:flex flex-col gap-2">
+              {productImages.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16  rounded-lg overflow-hidden border-2 ${
+                    selectedImage === i
+                      ? "border-primary"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-full h-full object-cover rounded-sm p-1 "
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div
+            className="relative w-full rounded-xl overflow-hidden bg-card aspect-[4/5] md:aspect-[3/4] max-h-[560px] shadow-sm border border-border cursor-zoom-in"
+            onClick={() => setLightboxOpen(true)}
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={selectedImage}
+                src={productImages[selectedImage]}
                 alt={product.name}
-                className="w-full h-full"
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -24 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 w-full h-full "
               />
-            </div>
-            {product.images.length > 1 && (
-              <div className="flex gap-2">
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === i
-                        ? "border-primary"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </motion.div>
+            </AnimatePresence>
 
-          {/* Product info */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-col"
-          >
-            <h1 className="font-display text-2xl md:text-2xl font-bold text-foreground mb-1">
-              {product.name}
-            </h1>
-            <p className="text-2xl font-semibold text-primary">
-              {formatter.format(product.price)}
-            </p>
-            {product.gstRate && gstAmount !== null && (
-              <p className="text-sm text-muted-foreground mb-1">
-                GST @ {product.gstRate}% ({formatter.format(gstAmount)})
-              </p>
-            )}
-            {!product.gstRate && (
-              <p className="text-sm text-muted-foreground mb-1">GST: N/A</p>
-            )}
-            {discountedFromList && (
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span className="text-sm text-muted-foreground line-through">
-                  {formatter.format(product.listPrice!)}
-                </span>
-                <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-bold tracking-wide text-primary-foreground shadow-sm">
-                  {product.discountPercent}% OFF
-                </span>
-              </div>
-            )}
-            {!discountedFromList && (
-              <p className="text-sm text-muted-foreground mb-1">
-                List Price / Discount: N/A
-              </p>
-            )}
-
-            {/* Variants */}
-            <div className="mb-2">
-              <p className="text-sm font-medium text-foreground mb-1">
-                Available Options
-              </p>
-              <div className="mb-2"></div>
-              <div className="flex flex-wrap gap-2">
-                {product.variants?.length ? (
-                  product.variants.map((v, i) => (
-                    <button
-                      key={v}
-                      onClick={() => setSelectedVariant(i)}
-                      className={`px-3 py-1 rounded-lg text-sm font-medium border transition-colors flex items-center gap-2 ${
-                        selectedVariant === i
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border text-muted-foreground hover:border-primary/50"
-                      }`}
-                    >
-                      {selectedVariant === i && <Check className="w-3 h-3" />}
-                      {v}
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No variant options
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="mb-2 rounded-lg border border-border bg-card px-2 text-sm">
-              <table className="w-full border-collapse">
-                <tbody className="divide-y divide-border">
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground w-1/3">
-                      Product Code
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.productCode || "N/A"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground">
-                      Color
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.availableColors?.length
-                        ? product.availableColors.join(", ")
-                        : "N/A"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground">
-                      Material
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.material || "N/A"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground">
-                      Packing Type
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.packingType || "N/A"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground">
-                      Master Carton
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.masterCarton || "N/A"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-2 font-semibold text-muted-foreground">
-                      Customized
-                    </td>
-                    <td className="py-2 text-muted-foreground">
-                      {product.customized || "N/A"}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {/* Quantity Selection */}
-            <div className="mb-2">
-              <p className="text-sm font-medium text-foreground mb-2">
-                Quantity
-              </p>
-              <div className="flex items-center gap-4 w-fit border border-border rounded-lg p-1">
+            {showNav && productImages.length > 1 && (
+              <>
                 <button
                   onClick={() =>
-                    setQuantity(
-                      Math.max(product.minOrderQty ?? 1, quantity - 1),
-                    )
+                    setSelectedImage((i) => (i === 0 ? productImages.length - 1 : i - 1))
                   }
-                  className="p-1 hover:bg-secondary rounded-lg transition-colors"
-                  aria-label="Decrease quantity"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 shadow-lg p-3 text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedImage((i) => (i === 0 ? productImages.length - 1 : i - 1));
+                  }}
                 >
-                  <Minus className="w-4 h-4" />
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
-                <span className="text-lg font-semibold min-w-8 text-center">
-                  {quantity}
-                </span>
+
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="p-1 hover:bg-secondary rounded-lg transition-colors"
-                  aria-label="Increase quantity"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedImage((i) => (i === productImages.length - 1 ? 0 : i + 1));
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 shadow-lg p-3 text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                 >
-                  <Plus className="w-4 h-4" />
+                  <ChevronRight className="w-6 h-6" />
                 </button>
-              </div>
-              {product.minOrderQty && (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Minimum order quantity: {product.minOrderQty}
-                </p>
-              )}
-            </div>
+          </>
+            )}
+          </div>
+        </motion.div>
 
-            <div className="mb-3 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  if (isInCart) {
-                    navigate("/cart");
-                    return;
-                  }
-                  addItem({
-                    productId: product.id,
-                    quantity,
-                    variant: product.variants?.[selectedVariant],
-                  });
-                  toast.success(`${product.name} added to cart`);
-                }}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                {isInCart ? "Go to cart" : "Add to cart"}
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
-              >
-                <Heart className="w-4 h-4" />
-                Add to wishlist
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
-              >
-                <ArrowLeftRight className="w-4 h-4" />
-                Add to compare
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/cart")}
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-secondary"
-              >
-                View cart
-              </button>
-            </div>
-
-            {/* WhatsApp Order Button */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-3 bg-[hsl(142,70%,40%)] text-[hsl(0,0%,100%)] px-8 py-4 rounded-xl text-lg font-semibold hover:opacity-90 transition-opacity shadow-lg"
+        {/* LIGHTBOX */}
+        {lightboxOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <button
+              type="button"
+              className="absolute top-4 right-4 rounded-full bg-white/90 text-foreground shadow-lg p-3 hover:bg-white transition-colors"
+              aria-label="Close full image"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxOpen(false);
+              }}
             >
-              <MessageCircle className="w-5 h-5" />
-              Order via WhatsApp
-            </a>
+              <X className="w-5 h-5" />
+            </button>
+            <img
+              src={productImages[selectedImage]}
+              alt={product.name}
+              className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl border border-border/50 bg-card"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
 
-            <p className="text-xs text-muted-foreground mt-3">
-              You'll be redirected to WhatsApp to complete your order
+        {/* PRODUCT INFO */}
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col"
+        >
+          <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold mb-1">
+            {product.name}
+          </h1>
+
+          <p className="text-xl sm:text-2xl font-semibold text-primary">
+            {formatter.format(product.price)}
+          </p>
+
+          {product.gstRate && (
+            <p className="text-sm text-muted-foreground">
+              GST @ {product.gstRate}% ({formatter.format(gstAmount)})
             </p>
-          </motion.div>
-        </div>
+          )}
+
+          {discountedFromList && (
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-sm line-through text-muted-foreground">
+                {formatter.format(product.listPrice)}
+              </span>
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">
+                {product.discountPercent}% OFF
+              </span>
+            </div>
+          )}
+
+          {/* COLORS */}
+
+          <div className="mt-2">
+            <p className="text-sm font-medium mb-2">Colors</p>
+
+            <div className="flex flex-wrap gap-2">
+              {product.availableColors?.map((c, i) => (
+                <button
+                  key={c}
+                  onClick={() => setSelectedColor(i)}
+                  className={`px-3 py-1 rounded-lg text-xs sm:text-sm border ${
+                    selectedColor === i
+                      ? "border-primary bg-primary/10"
+                      : "border-border"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* PRODUCT TABLE */}
+
+          <div className="mt-2 border rounded-lg overflow-x-auto px-3">
+            <table className="w-full min-w-[320px] text-sm ">
+              <tbody className="divide-y">
+                <tr>
+                  <td className="py-2 font-medium text-muted-foreground">
+                    Product Code
+                  </td>
+                  <td className="py-2">
+                    {product.productCode || "N/A"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td className="py-2 font-medium text-muted-foreground">
+                    Material
+                  </td>
+                  <td className="py-2">
+                    {product.material || "N/A"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td className="py-2 font-medium text-muted-foreground">
+                    Packing Type
+                  </td>
+                  <td className="py-2">
+                    {product.packingType || "N/A"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td className="py-2 font-medium text-muted-foreground">
+                    Master Carton
+                  </td>
+                  <td className="py-2">
+                    {product.masterCarton || "N/A"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td className="py-2 font-medium text-muted-foreground">
+                    Customized
+                  </td>
+                  <td className="py-2">
+                    {product.customized || "N/A"}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* QUANTITY */}
+
+          <div className="mt-2">
+            <p className="text-sm font-medium mb-2">Quantity {product.minOrderQty && (
+              <span className="text-xs text-muted-foreground mt-1">
+               (Minimum order quantity: {product.minOrderQty})
+              </span>
+            )}</p>
+
+            <div className="flex items-center gap-3 border rounded-lg px-2 py-1 w-fit">
+              <button
+                onClick={() =>
+                  setQuantity(
+                    Math.max(product.minOrderQty ?? 1, quantity - 1)
+                  )
+                }
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+
+              <span className="font-semibold">{quantity}</span>
+
+              <button onClick={() => setQuantity(quantity + 1)}>
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+
+            
+          </div>
+
+          {/* ACTION BUTTONS */}
+
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              onClick={() => {
+                addItem({
+                  productId: product.id,
+                  quantity,
+                  color: selectedColorName,
+                });
+
+                toast.success(`${product.name} added to cart`);
+              }}
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Add to Cart
+            </button>
+
+            <button className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2">
+              <Heart className="w-4 h-4" />
+              Wishlist
+            </button>
+          </div>
+
+          {/* WHATSAPP BUTTON */}
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 w-full sm:w-auto flex items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Order via WhatsApp
+          </a>
+
+          <p className="text-xs text-muted-foreground mt-2">
+            You'll be redirected to WhatsApp to complete your order
+          </p>
+        </motion.div>
       </div>
-      <Footer />
     </div>
-  );
+
+    {relatedProducts.length > 0 && (
+      <section className="container mx-auto px-4 py-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-display text-2xl font-bold">You may also like</h2>
+          <Link
+            to="/shop"
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            View all products
+          </Link>
+        </div>
+        <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+          {relatedProducts.map((relatedProduct, index) => (
+            <ProductCard
+              key={relatedProduct.id}
+              product={relatedProduct}
+              index={index}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <Footer />
+  </div>
+);
+
 };
 
 export default ProductDetail;

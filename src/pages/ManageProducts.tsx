@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
-import { Upload, PlusCircle, RotateCcw, Pencil, Trash2, X } from "lucide-react";
+import { Upload, PlusCircle, RotateCcw, Pencil, Trash2, X, ImageUp } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,6 +7,7 @@ import type { Category, Product } from "@/data/products";
 import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase } from "@/integrations/supabase/client";
 
 const CSV_REQUIRED_HEADERS = ["id", "name", "price", "description", "category", "images"];
 
@@ -304,6 +305,7 @@ const ManageProducts = () => {
   const [form, setForm] = useState<ProductFormState>(initialFormState);
   const [categoryForm, setCategoryForm] = useState<CategoryFormState>(initialCategoryFormState);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
 
@@ -418,6 +420,35 @@ const ManageProducts = () => {
     }
   };
 
+  const onImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const path = `products/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage.from("product-images").upload(path, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+      const publicUrl = data.publicUrl;
+      setForm((current) => ({
+        ...current,
+        images: current.images ? `${current.images}|${publicUrl}` : publicUrl,
+      }));
+      toast.success("Image uploaded and added to Images field.");
+    } catch (error) {
+      console.error(error);
+      toast.error(error instanceof Error ? error.message : "Image upload failed.");
+    } finally {
+      setUploadingImage(false);
+      event.target.value = "";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -513,6 +544,22 @@ const ManageProducts = () => {
                 placeholder="https://img1.jpg|https://img2.jpg"
                 className="w-full rounded-lg border border-border bg-background px-3 py-2"
               />
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium text-foreground transition hover:bg-secondary">
+                  <ImageUp className="w-4 h-4" />
+                  Upload image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={onImageUpload}
+                    disabled={uploadingImage}
+                    className="hidden"
+                  />
+                </label>
+                <span className="text-xs text-muted-foreground">
+                  Upload adds a public URL to the Images field (bucket: product-images).
+                </span>
+              </div>
             </label>
 
             <label className="text-sm space-y-1 block">

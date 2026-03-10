@@ -12,12 +12,14 @@ export interface CartItem {
   productId: string;
   quantity: number;
   variant?: string;
+  color?: string;
 }
 
 interface AddToCartInput {
   productId: string;
   quantity?: number;
   variant?: string;
+  color?: string;
 }
 
 interface CartContextValue {
@@ -52,31 +54,20 @@ function readCachedCart(ownerKey: string): CartItem[] {
         typeof item.productId === "string" &&
         typeof item.quantity === "number"
     );
-    const merged = new Map<string, CartItem>();
-    for (const item of valid) {
-      const existing = merged.get(item.productId);
-      if (existing) {
-        existing.quantity += item.quantity;
-        if (item.variant) {
-          existing.variant = item.variant;
-        }
-      } else {
-        merged.set(item.productId, {
-          id: item.productId,
-          productId: item.productId,
-          quantity: Math.max(1, item.quantity),
-          variant: item.variant,
-        });
-      }
-    }
-    return Array.from(merged.values());
+    return valid.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      quantity: Math.max(1, item.quantity),
+      variant: item.variant,
+      color: item.color,
+    }));
   } catch {
     return [];
   }
 }
 
-function getItemId(productId: string, variant?: string) {
-  return productId;
+function getItemId(productId: string, variant?: string, color?: string) {
+  return [productId, variant ?? "", color ?? ""].join("::");
 }
 
 function getOrCreateSessionId() {
@@ -156,6 +147,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             productId: row.product_id,
             quantity: row.quantity,
             variant: row.variant ?? undefined,
+            color: undefined,
           }))
         );
       }
@@ -213,19 +205,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       items,
       itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
-      addItem: ({ productId, quantity = 1, variant }) => {
+      addItem: ({ productId, quantity = 1, variant, color }) => {
         const nextQty = Math.max(1, quantity);
-        const id = getItemId(productId, variant);
+        const id = getItemId(productId, variant, color);
+        const variantLabel =
+          variant || color ? [variant, color ? `Color: ${color}` : null].filter(Boolean).join(" | ") : undefined;
         setItems((current) => {
-          const existing = current.find((item) => item.productId === productId);
+          const existing = current.find((item) => item.id === id);
           if (!existing) {
-            return [...current, { id, productId, quantity: nextQty, variant }];
+            return [...current, { id, productId, quantity: nextQty, variant: variantLabel, color }];
           }
-          return current.map((item) =>
-            item.productId === productId
-              ? { ...item, quantity: item.quantity + nextQty, variant: variant ?? item.variant }
-              : item
-          );
+          return current.map((item) => (item.id === id ? { ...item, quantity: item.quantity + nextQty } : item));
         });
       },
       updateQuantity: (itemId, quantity) => {

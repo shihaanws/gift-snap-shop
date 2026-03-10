@@ -23,6 +23,14 @@ function asStringArray(value: unknown): string[] {
   }
   return value.map((item) => String(item));
 }
+function toPublicImageUrl(path: string): string {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+  const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+  return data.publicUrl ?? path;
+}
 function mapRowToProduct(row: ProductRow): Product {
   return (
     {
@@ -31,8 +39,9 @@ function mapRowToProduct(row: ProductRow): Product {
       price: Number(row.price),
       description: row.description,
       category: row.category,
-      images: asStringArray(row.images),
+      images: asStringArray(row.images).map(toPublicImageUrl),
       variants: row.variants ? asStringArray(row.variants) : undefined,
+      bundleSize: row.bundle_size ?? undefined,
       currency: row.currency === "USD" ? "USD" : "INR",
       gstRate: row.gst_rate ?? undefined,
       listPrice: row.list_price ?? undefined,
@@ -57,6 +66,7 @@ function mapProductToInsert(product: Product): ProductInsert {
     category: product.category,
     images: product.images,
     variants: product.variants ?? null,
+    bundle_size: product.bundleSize ?? null,
     currency: product.currency ?? "INR",
     gst_rate: product.gstRate ?? null,
     list_price: product.listPrice ?? null,
@@ -72,7 +82,7 @@ function mapProductToInsert(product: Product): ProductInsert {
 }
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<Product[]>(seedProducts);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -92,22 +102,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      if (!data || data.length === 0) {
-        const seedRows = seedProducts.map(mapProductToInsert);
-        const { error: seedError } = await supabase.from("products").upsert(seedRows, { onConflict: "id" });
-        if (seedError) {
-          console.error("Failed to seed products in Supabase", seedError);
-          setProducts(seedProducts);
-          return;
-        }
-
-        if (isMounted) {
-          setProducts(seedProducts);
-        }
-        return;
-      }
-
-      setProducts(data.map(mapRowToProduct));
+      const rows = data ?? [];
+      setProducts(rows.map(mapRowToProduct));
     };
 
     void fetchProducts();

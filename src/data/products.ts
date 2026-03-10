@@ -14,6 +14,7 @@ export interface Product {
   category: string;
   images: string[];
   variants?: string[];
+  bundleSize?: number;
   currency?: "INR" | "USD";
   gstRate?: number;
   listPrice?: number;

@@ -80,6 +80,11 @@ const Cart = () => {
                       <Link to={`/product/${row!.product.id}`} className="font-semibold text-foreground hover:text-primary">
                         {row!.product.name}
                       </Link>
+                      {row!.product.productCode && (
+                        <p className="mt-1 text-xs font-semibold text-primary uppercase tracking-wide">
+                          Code: {row!.product.productCode}
+                        </p>
+                      )}
                       {row!.item.variant && (
                         <p className="mt-1 text-xs text-muted-foreground">Variant: {row!.item.variant}</p>
                       )}

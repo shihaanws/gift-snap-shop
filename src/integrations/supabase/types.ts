@@ -74,6 +74,7 @@ export type Database = {
       products: {
         Row: {
           available_colors: Json | null
+          bundle_size: number | null
           category: string
           created_at: string
           currency: string | null
@@ -96,6 +97,7 @@ export type Database = {
         }
         Insert: {
           available_colors?: Json | null
+          bundle_size?: number | null
           category: string
           created_at?: string
           currency?: string | null
@@ -118,6 +120,7 @@ export type Database = {
         }
         Update: {
           available_colors?: Json | null
+          bundle_size?: number | null
           category?: string
           created_at?: string
           currency?: string | null

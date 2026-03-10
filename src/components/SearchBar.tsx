@@ -15,10 +15,12 @@ const SearchBar = () => {
   // Filter products based on query
   useEffect(() => {
     if (query.trim().length > 0) {
+      const q = query.toLowerCase();
       const filtered = products.filter((product) =>
-        product.name.toLowerCase().includes(query.toLowerCase()) ||
-        product.category.toLowerCase().includes(query.toLowerCase()) ||
-        product.description.toLowerCase().includes(query.toLowerCase())
+        product.name.toLowerCase().includes(q) ||
+        product.category.toLowerCase().includes(q) ||
+        product.description.toLowerCase().includes(q) ||
+        (product.productCode && product.productCode.toLowerCase().includes(q))
       );
       setSuggestions(filtered);
       setIsOpen(true);
@@ -47,7 +49,8 @@ const SearchBar = () => {
   };
 
   const highlightMatch = (text: string) => {
-    const parts = text.split(new RegExp(`(${query})`, "gi"));
+    const pattern = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = text.split(new RegExp(`(${pattern})`, "gi"));
     return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <span key={i} className="font-semibold text-primary">

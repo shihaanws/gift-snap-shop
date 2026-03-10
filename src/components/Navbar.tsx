@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
 import FestiveCarousel from "./FestiveCarousel";
@@ -17,13 +17,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
+function linkForEntry(entry: string, parentLabel: string) {
+  const bundleMatch = entry.match(/(\d)\s*in\s*1/i);
+  if (parentLabel.toLowerCase().includes("gift") && bundleMatch) {
+    const size = bundleMatch[1];
+    return `/shop?category=gift-sets&bundle=${size}`;
+  }
+  // fallback: use entry as category slug
+  return `/shop?category=${slugify(entry)}`;
+}
+
 const subNavItems = [
   {
     label: "Gift Sets",
     groups: [
       { title: "Giftset Types", items: ["2 in 1 Gift Set", "3 in 1 Gift Set", "4 in 1 Gift Set", "5 in 1 Gift Set", "6 in 1 Gift Set"] },
-      { title: "Festival Packs", items: ["Diwali Deluxe", "New Year Pack", "Onam Hamper", "Holiday Box"] },
-      { title: "Joining Kits", items: ["Starter Kit", "Welcome Box", "Employee Delight", "Team Bundle"] },
+      // { title: "Festival Packs", items: ["Diwali Deluxe", "New Year Pack", "Onam Hamper", "Holiday Box"] },
+      // { title: "Joining Kits", items: ["Starter Kit", "Welcome Box", "Employee Delight", "Team Bundle"] },
     ],
   },
   {
@@ -84,6 +102,9 @@ function getInitials(name?: string) {
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSubNav, setOpenSubNav] = useState<string | null>(null);
+  const [subNavOffset, setSubNavOffset] = useState(0);
+  const subNavBarRef = useRef<HTMLDivElement>(null);
+  const subNavWrapperRef = useRef<HTMLDivElement>(null);
   const { itemCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -139,14 +160,11 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-        
-
           <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
             <DownloadIcon className="w-4 h-4" />
-            Download Brochure 
+            Download Brochure
           </Link>
-
-            {!isAuthenticated ? (
+          {!isAuthenticated ? (
             <div className="hidden md:flex items-center gap-2">
               <Link
                 to="/login"
@@ -212,16 +230,27 @@ const Navbar = () => {
       </div>
 
       <div
+        ref={subNavWrapperRef}
         className="relative hidden border-t border-border bg-white shadow-sm md:block"
         onMouseLeave={() => setOpenSubNav(null)}
       >
         <div className="container mx-auto px-4">
-          <div className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none">
+          <div
+            ref={subNavBarRef}
+            className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none"
+          >
             {subNavItems.map((item) => (
               <button
                 key={item.label}
                 type="button"
-                onMouseEnter={() => setOpenSubNav(item.label)}
+                onMouseEnter={(e) => {
+                  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                  const wrapper = subNavWrapperRef.current?.getBoundingClientRect();
+                  const wrapperLeft = wrapper?.left ?? 0;
+                  const buttonCenter = rect.left + rect.width / 2;
+                  setSubNavOffset(buttonCenter - wrapperLeft);
+                  setOpenSubNav(item.label);
+                }}
                 className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
                   openSubNav === item.label ? "text-[#0E2A4A]" : "text-[#0E2A4A]/75 hover:text-[#0E2A4A]"
                 }`}
@@ -240,27 +269,39 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.18 }}
-              className="absolute left-0 right-0 top-full z-[70] border-t border-border bg-white shadow-lg"
+              className="absolute top-full z-[70]"
+              style={{ left: `${subNavOffset - 80}px`, transform: "translateX(-50%)" }}
             >
-              <div className="container mx-auto grid gap-6 px-4 py-5 md:grid-cols-3">
-                {subNavItems
-                  .find((item) => item.label === openSubNav)
-                  ?.groups.map((group) => (
-                    <div key={group.title}>
-                      <p className="mb-2 text-sm font-semibold text-foreground">{group.title}</p>
-                      <div className="space-y-0.5">
-                        {group.items.map((entry) => (
-                          <Link
-                            key={entry}
-                            to="/shop"
-                            className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
-                          >
-                            {entry}
-                          </Link>
-                        ))}
+              <div className="border border-border bg-white shadow-lg rounded-b-xl">
+                <div
+                  className={`grid gap-6 px-6 py-5 ${
+                    openSubNav === "Gift Sets"
+                      ? "grid-cols-1 min-w-[200px]"
+                      : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
+                  }`}
+                >
+                  {subNavItems
+                    .find((item) => item.label === openSubNav)
+                    ?.groups.map((group) => (
+                      <div key={group.title}>
+                        <p className="mb-2 text-sm font-semibold text-foreground">{group.title}</p>
+                        <div className="space-y-0.5">
+                          {group.items.map((entry) => {
+                            const target = linkForEntry(entry, openSubNav ?? "");
+                            return (
+                              <Link
+                                key={entry}
+                                to={target}
+                                className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
+                              >
+                                {entry}
+                              </Link>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                </div>
               </div>
             </motion.div>
           )}
@@ -321,7 +362,7 @@ const Navbar = () => {
                     {subNavItems.map((item) => (
                       <Link
                         key={item.label}
-                        to="/shop"
+                        to={item.label.toLowerCase().includes("gift") ? "/shop?category=gift-sets" : `/shop?category=${slugify(item.label)}`}
                         onClick={() => setMobileOpen(false)}
                         className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
                       >
