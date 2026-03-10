@@ -38,6 +38,9 @@ const Shop = () => {
       const bundleNumber = Number(activeBundle);
       result = result.filter((p) => p.bundleSize === bundleNumber);
     }
+    if (isGiftSets) {
+      return [...result].sort((a, b) => a.id.localeCompare(b.id));
+    }
     return result;
   }, [activeCategory, activeBundle, isGiftSets, products]);
 
