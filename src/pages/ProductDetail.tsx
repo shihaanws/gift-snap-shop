@@ -66,9 +66,22 @@ const ProductDetail = () => {
     typeof product.discountPercent === "number";
 
   const whatsappMessage = encodeURIComponent(
-    `Hi! I'd like to order:\n\n🎁 *${product.name}*\n${product.variants?.length ? `📦 Variant: ${product.variants[selectedVariant]}` : ""}${
-      product.availableColors?.length ? `\n🎨 Color: ${product.availableColors[selectedColor]}` : ""
-    }\nQuantity: ${quantity}\nPrice: ${formatter.format(product.price * quantity)}\n\nPlease let me know the next steps!`,
+    [
+      "Hi! I'd like to place an order:",
+      "",
+      `🎁 *${product.name}*`,
+      `🆔 Product ID: ${product.productCode ?? product.id}`,
+      ...(product.variants?.length
+        ? [`📦 Variant: ${product.variants[selectedVariant]}`]
+        : []),
+      ...(product.availableColors?.length
+        ? [`🎨 Color: ${product.availableColors[selectedColor]}`]
+        : []),
+      `🔢 Quantity: ${quantity}`,
+      `💰 Total: ${formatter.format(product.price * quantity)}`,
+      "",
+      "Please let me know the next steps!",
+    ].join("\n"),
   );
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];

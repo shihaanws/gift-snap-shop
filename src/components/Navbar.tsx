@@ -223,7 +223,7 @@ const Navbar = () => {
               </span>
             )}
           </Link>
-          <button className="text-white md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+          <button className="text-foreground md:hidden hover:text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
