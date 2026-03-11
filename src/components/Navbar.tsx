@@ -172,12 +172,6 @@ const Navbar = () => {
               >
                 Login
               </Link>
-              <Link
-                to="/signup"
-                className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-              >
-                Sign Up
-              </Link>
             </div>
           ) : (
             <DropdownMenu>
