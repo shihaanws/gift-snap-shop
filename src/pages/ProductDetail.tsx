@@ -46,6 +46,34 @@ const ProductDetail = () => {
     });
   };
 
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
+
+    const byCategory = products.filter(
+      (p) => p.id !== product.id && p.category === product.category,
+    );
+
+    const byBundleSize = product.bundleSize
+      ? products.filter(
+          (p) =>
+            p.id !== product.id &&
+            p.bundleSize === product.bundleSize &&
+            p.category !== product.category,
+        )
+      : [];
+
+    const seen = new Set<string>();
+    return [...byCategory, ...byBundleSize]
+      .filter((p) => {
+        if (seen.has(p.id)) {
+          return false;
+        }
+        seen.add(p.id);
+        return true;
+      })
+      .slice(0, 6);
+  }, [products, product]);
+
   if (!product) {
     return (
       <div className="min-h-screen bg-background">
@@ -96,33 +124,6 @@ const ProductDetail = () => {
   );
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];
-  const relatedProducts = useMemo(() => {
-    if (!product) return [];
-
-    const byCategory = products.filter(
-      (p) => p.id !== product.id && p.category === product.category,
-    );
-
-    const byBundleSize = product.bundleSize
-      ? products.filter(
-          (p) =>
-            p.id !== product.id &&
-            p.bundleSize === product.bundleSize &&
-            p.category !== product.category,
-        )
-      : [];
-
-    const seen = new Set<string>();
-    return [...byCategory, ...byBundleSize]
-      .filter((p) => {
-        if (seen.has(p.id)) {
-          return false;
-        }
-        seen.add(p.id);
-        return true;
-      })
-      .slice(0, 6);
-  }, [products, product]);
 
   
 return (
