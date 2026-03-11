@@ -168,7 +168,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center gap-2">
               <Link
                 to="/login"
-                className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 hover:text-primary-foreground"
+                className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
               >
                 Login
               </Link>
