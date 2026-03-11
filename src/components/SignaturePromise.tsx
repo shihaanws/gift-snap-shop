@@ -25,7 +25,7 @@ const SignaturePromise = () => {
     <section id="about-us" className="py-20">
       <div className="container mx-auto px-4">
         <div className="mb-10 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Why Emotion Plus</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Why Emotions Unlimited</p>
           <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl">Signature Experience, Every Order</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-3 md:gap-6">

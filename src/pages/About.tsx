@@ -19,32 +19,49 @@ const About = () => {
             className="mx-auto max-w-4xl rounded-3xl border border-border/70 bg-card/90 p-8 shadow-xl shadow-black/10 md:p-12"
           >
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">About Us</p>
-            <h1 className="font-display text-3xl font-bold text-foreground md:text-5xl">
-              We Build Corporate Gifting Experiences
-            </h1>
+            <div>
+              <h1 className="font-display text-3xl font-bold text-foreground md:text-5xl">
+                Emotions Unlimited
+              </h1>
+              <p className="mt-2 text-xs uppercase tracking-[0.4em] text-muted-foreground md:text-sm">
+                Corporate gifting specialists
+              </p>
+            </div>
 
-            <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted-foreground md:text-base">
+            <div className="mt-6 space-y-6 text-sm leading-relaxed text-muted-foreground md:text-base">
               <p>
-                This is dummy content for the About page. Emotion Plus helps companies create thoughtful gifting
-                experiences for employees, clients, partners, and events.
+                Emotions Unlimited offers premium corporate bulk gifting solutions at the best rates. We specialize in
+                customized gifts tailored to suit your company’s brand, events, and special occasions. With a focus on
+                quality, affordability, and attention to detail, we ensure every order meets your expectations. Our team
+                is committed to providing smooth service and the earliest possible delivery for bulk customized orders,
+                making corporate gifting simple, professional, and memorable.
               </p>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <img
+                src="https://scontent.ftrv5-1.fna.fbcdn.net/v/t39.30808-6/486573237_1063603435804595_2621018687506638908_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=L1jCbDD0MgoQ7kNvwGEf_qa&_nc_oc=AdlGBYbgXyRx_QJtFS74p_c1qLUkB9Hslo0DEhC4vsLVAwnRNcf9D2FQsz_MWrryZjI&_nc_zt=23&_nc_ht=scontent.ftrv5-1.fna&_nc_gid=duRVECSvteN721TKjr6OJQ&_nc_ss=8&oh=00_AfxUaNLiEvc1PMZHoHJRVH3hQBnWrqImrK287SOPnEH14g&oe=69B786E1"
+                alt="Red Moments logo"
+                className="h-32 w-auto object-contain"
+              />
+            </div>
+
+            <div className="mt-6 space-y-6 text-sm leading-relaxed text-muted-foreground md:text-base">
               <p>
-                From product selection to customization and PAN India shipping, our team supports end-to-end execution
-                for bulk orders and branded campaigns.
-              </p>
-              <p>
-                We are focused on quality, timely delivery, and long-term business relationships. You can replace this
-                section with your final brand story, mission, values, and timeline.
+                Red Moments is India’s leading personalised gift manufacturer. Since its inception in 1998, Red Moments
+                has been redefining the tradition of gift giving. Today the brand operates multiple business models,
+                including Franchise System, Shop-in-Shop (SIS), Red Moments Prime, and the production and distribution of
+                sublimation machines. Our vision is to radically change the gifting industry through personalisation.
               </p>
             </div>
 
             <div className="mt-8 rounded-2xl border border-border bg-background p-5">
-              <h2 className="font-display text-xl font-semibold text-foreground">Dummy Highlights</h2>
+              <h2 className="font-display text-xl font-semibold text-foreground">What We Deliver</h2>
               <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                <li>Corporate gifting strategy and planning</li>
-                <li>Custom branding and packaging support</li>
-                <li>Bulk order handling with reliable logistics</li>
-                <li>Dedicated support for campaigns and events</li>
+                <li>End-to-end corporate gifting strategy and campaign support</li>
+                <li>Personalized products with custom branding and packaging</li>
+                <li>Efficient PAN India logistics for bulk and planned orders</li>
+                <li>Dedicated client success for events, launches, and employee rewards</li>
               </ul>
             </div>
           </motion.div>

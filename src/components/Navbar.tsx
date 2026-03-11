@@ -126,8 +126,8 @@ const Navbar = () => {
       </div>
       <div className="container mx-auto px-4 flex items-center justify-between h-20">
         <Link to="/" className="flex items-center gap-2">
-          {/* <img src="/logg.png" alt="Emotion Plus" className="mb-2.5 h-8 w-18" /> */}
-          <img src="/EMOTIONS.png" alt="Emotion Plus" className="h-16 w-auto my-6" />
+          {/* <img src="/logg.png" alt="Emotions Unlimited" className="mb-2.5 h-8 w-18" /> */}
+          <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-16 w-auto my-6" />
         </Link>
 
         <div className="hidden md:flex items-center gap-5 flex-1 ml-8 min-w-0">
@@ -168,13 +168,13 @@ const Navbar = () => {
             <div className="hidden md:flex items-center gap-2">
               <Link
                 to="/login"
-                className="rounded-lg border border-white/30 px-3 py-2 text-sm font-medium text-white transition hover:bg-white hover:text-[#0E2A4A]"
+                className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10 hover:text-primary-foreground"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
+                className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
                 Sign Up
               </Link>
