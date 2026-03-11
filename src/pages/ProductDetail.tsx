@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
@@ -34,6 +34,17 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(product?.minOrderQty ?? 1);
   const [showNav, setShowNav] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const thumbnailsRef = useRef<HTMLDivElement>(null);
+
+  const scrollThumbnails = (direction: "left" | "right") => {
+    const container = thumbnailsRef.current;
+    if (!container) return;
+    const scrollAmount = container.clientWidth * 0.75;
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
   if (!product) {
     return (
@@ -144,8 +155,9 @@ return (
               {productImages.map((img, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => setSelectedImage(i)}
-                  className={`w-16 h-16  rounded-lg overflow-hidden border-2 ${
+                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 ${
                     selectedImage === i
                       ? "border-primary"
                       : "border-transparent"
@@ -154,7 +166,7 @@ return (
                   <img
                     src={img}
                     alt=""
-                    className="w-full h-full object-cover rounded-sm p-1 "
+                    className="w-full h-full object-cover rounded-sm p-1"
                   />
                 </button>
               ))}
@@ -207,6 +219,48 @@ return (
           </>
             )}
           </div>
+
+          {productImages.length > 1 && (
+            <div className="md:hidden mt-3 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollThumbnails("left")}
+                className="rounded-full bg-white border border-border shadow-sm p-2"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <div
+                ref={thumbnailsRef}
+                className="flex-1 flex gap-2 overflow-x-auto scrollbar-none px-1 py-0.5"
+              >
+                {productImages.map((img, i) => (
+                  <button
+                    key={`mobile-${i}`}
+                    type="button"
+                    onClick={() => setSelectedImage(i)}
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
+                      selectedImage === i
+                        ? "border-primary"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollThumbnails("right")}
+                className="rounded-full bg-white border border-border shadow-sm p-2"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </motion.div>
 
         {/* LIGHTBOX */}
