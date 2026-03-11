@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,6 +23,7 @@ import ProductCard from "@/components/ProductCard";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const location = useLocation<{ from?: string }>();
   const { products } = useProducts();
   const { addItem } = useCart();
   const product = products.find((p) => p.id === id);
@@ -74,6 +75,8 @@ const ProductDetail = () => {
       .slice(0, 6);
   }, [products, product]);
 
+  const backLink = location.state?.from ?? "/shop";
+
   if (!product) {
     return (
       <div className="min-h-screen bg-background">
@@ -82,7 +85,7 @@ const ProductDetail = () => {
           <h1 className="font-display text-2xl font-bold text-foreground mb-1">
             Product not found
           </h1>
-          <Link to="/shop" className="text-primary underline">
+          <Link to={backLink} className="text-primary underline">
             Back to shop
           </Link>
         </div>
@@ -125,21 +128,20 @@ const ProductDetail = () => {
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];
 
-  
-return (
-  <div className="min-h-screen bg-background">
-    <Navbar />
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
 
-    <div className="container mx-auto px-4 py-6">
-      <Link
-        to="/shop"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to shop
-      </Link>
+      <div className="container mx-auto px-4 py-6">
+        <Link
+          to={backLink}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to shop
+        </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
 
         {/* IMAGE SECTION */}
 
