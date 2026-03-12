@@ -137,11 +137,26 @@ const ProductDetail = () => {
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];
   const normalizedCategory = normalizeCategory(product.category);
-  const containCategories = new Set(["keychains", "pens"]);
-  const imageFitClass = containCategories.has(normalizedCategory) ? "object-contain" : "object-cover";
+  const containCategories = new Set(["pens"]);
+  const skipFitCategories = new Set(["gift-sets"]);
+  const imageFitClass = skipFitCategories.has(normalizedCategory)
+    ? ""
+    : containCategories.has(normalizedCategory)
+    ? ""
+    : "";
   const isPen = normalizedCategory === "pens";
   const penContainerStyle = isPen ? { width: 796, height: 900 } : undefined;
   const mainAspectClass = isPen ? "aspect-[796/900]" : "aspect-[4/5] md:aspect-[3/4]";
+  const isWoodenProduct =
+    normalizedCategory === "keychains" && product.material?.toLowerCase().includes("wood");
+  const detailTags = [
+    ...(isWoodenProduct ? ["Wooden Products"] : []),
+    normalizedCategory === "keychains"
+      ? "Keychains"
+      : normalizedCategory === "pens"
+      ? "Pens"
+      : "Gift Sets",
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -204,7 +219,7 @@ const ProductDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.2 }}
-                className="absolute inset-0 w-full h-full object-contain"
+                className={`absolute inset-0 w-full h-full ${imageFitClass}`}
               />
             </AnimatePresence>
 
@@ -318,6 +333,19 @@ const ProductDetail = () => {
           <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold mb-1">
             {product.name}
           </h1>
+
+          {detailTags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {detailTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           <p className="text-xl sm:text-2xl font-semibold text-primary">
             {formatter.format(product.price)}

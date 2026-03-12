@@ -35,6 +35,9 @@ function linkForEntry(entry: string, parentLabel: string) {
     const styleSlug = slugify(entry).replace(/-keychains$/, "");
     return `/shop?category=keychains${styleSlug ? `&style=${styleSlug}` : ""}`;
   }
+  if (parentLabel.toLowerCase().includes("wooden")) {
+    return `/shop?category=wooden-products`;
+  }
   if (parentLabel.toLowerCase().includes("pen")) {
     return `/shop?category=pens`;
   }
@@ -58,6 +61,15 @@ const subNavItems = [
   {
     label: "Pens",
     groups: [{ title: "Pen Styles", items: ["Laser Marking Pens"] }],
+  },
+  {
+    label: "Wooden Products",
+    groups: [
+      {
+        title: "Wooden Gifts",
+        items: ["Wooden Products"],
+      },
+    ],
   },
   {
     label: "Drinkware",

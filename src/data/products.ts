@@ -54,831 +54,705 @@ export const categories: Category[] = [
     description: "Practical and elegant keychain gift options",
     image: productChocolate,
   },
-   {
-            id: "diaries",
-            name: "Diaries & Notebooks",
-            description: "Executive diaries for meetings and planning",
-            image: giftWedding,
-          },
   {
-    id: "bags",
-    name: "Laptop & Office Bags",
-    description: "Durable branded bags for daily business use",
-    image: giftThankyou,
+    id: "wooden-products",
+    name: "Wooden Products",
+    description:
+      "Sustainable wooden gifts with laser engraving and natural textures",
+    image: giftWedding,
   },
-         
   {
-    id: "bottles",
-    name: "Bottles & Tumblers",
-    description: "Reusable drinkware with custom logo options",
-    image: productSpa,
+    id: "diaries",
+    name: "Diaries & Notebooks",
+    description: "Executive diaries for meetings and planning",
+    image: giftWedding,
   },
-  
+  // {
+  //   id: "bags",
+  //   name: "Laptop & Office Bags",
+  //   description: "Durable branded bags for daily business use",
+  //   image: giftThankyou,
+  // },
+
+  // {
+  //   id: "bottles",
+  //   name: "Bottles & Tumblers",
+  //   description: "Reusable drinkware with custom logo options",
+  //   image: productSpa,
+  // },
+
   {
-    id: "electronics",
-    name: "Electronics",
-    description: "Useful tech gifts for modern workplaces",
+    id: "discounted-items",
+    name: "Discounted Items",
+    description: "Exclusive deals on our most popular products",
     image: productFlowers,
   },
-  {
-    id: "accessories",
-    name: "Desk Accessories",
-    description: "Functional office accessories with branding",
-    image: giftCorporate,
-  },
+  // {
+  //   id: "accessories",
+  //   name: "Desk Accessories",
+  //   description: "Functional office accessories with branding",
+  //   image: giftCorporate,
+  // },
 ];
 
 export const products: Product[] = [
-
   {
-    "id": "1",
-    "name": "2 In 1 Gift Set",
-    "price": 4343,
-    "description": "rd3",
-    "category": "H964",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H964/H964-582x640.jpg"
+    id: "1",
+    name: "2 In 1 Gift Set",
+    price: 4343,
+    description: "rd3",
+    category: "H964",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H964/H964-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "2",
-    "name": "2 in 1 Gift Set",
-    "price": 43,
-    "description": "ewe",
-    "category": "H974",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H974/H974%20New%20Cover-582x640.jpg"
+    id: "2",
+    name: "2 in 1 Gift Set",
+    price: 43,
+    description: "ewe",
+    category: "H974",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H974/H974%20New%20Cover-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "3",
-    "name": "3 IN 1 GIFT SET Power Bank Planner Diary",
-    "price": 54,
-    "description": "ewe",
-    "category": "P1004 - 32GB",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1004/3%20IN%201%20GIFT%20SET%20P1004%20FF-582x640.jpg"
+    id: "3",
+    name: "3 IN 1 GIFT SET Power Bank Planner Diary",
+    price: 54,
+    description: "ewe",
+    category: "P1004 - 32GB",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1004/3%20IN%201%20GIFT%20SET%20P1004%20FF-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4",
-    "name": "2 In 1 Gift Set",
-    "price": 5,
-    "description": "ewe",
-    "category": "H3126",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3126/2%20IN%201%20GIFT%20SET%20H3126-582x640.jpg"
+    id: "4",
+    name: "2 In 1 Gift Set",
+    price: 5,
+    description: "ewe",
+    category: "H3126",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3126/2%20IN%201%20GIFT%20SET%20H3126-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "5",
-    "name": "2 In 1 Gift Set",
-    "price": 4,
-    "description": "ewe",
-    "category": "H3117",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3117/H3117-582x640.jpg"
+    id: "5",
+    name: "2 In 1 Gift Set",
+    price: 4,
+    description: "ewe",
+    category: "H3117",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3117/H3117-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "6",
-    "name": "2 In 1 Gift Set",
-    "price": 6,
-    "description": "ewe",
-    "category": "H3109",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3109/2%20IN%201%20GIFT%20SET%20H3109%20-%20Final-582x640.jpg"
+    id: "6",
+    name: "2 In 1 Gift Set",
+    price: 6,
+    description: "ewe",
+    category: "H3109",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3109/2%20IN%201%20GIFT%20SET%20H3109%20-%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "7",
-    "name": "2 In 1 Gift Set",
-    "price": 64,
-    "description": "ewe",
-    "category": "H3124",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3124/2%20IN%201%20GIFT%20SET%20H3124%20New-582x640.jpg"
+    id: "7",
+    name: "2 In 1 Gift Set",
+    price: 64,
+    description: "ewe",
+    category: "H3124",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3124/2%20IN%201%20GIFT%20SET%20H3124%20New-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "8",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H910",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H910/2%20IN%201%20GIFT%20SET%20H910%20NEW-582x640.jpg"
+    id: "8",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H910",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H910/2%20IN%201%20GIFT%20SET%20H910%20NEW-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "9",
-    "name": "2 In 1 Gift Set",
-    "price": 432,
-    "description": "ewe",
-    "category": "H3107",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107-582x640.jpg"
+    id: "9",
+    name: "2 In 1 Gift Set",
+    price: 432,
+    description: "ewe",
+    category: "H3107",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "10",
-    "name": "2 In 1 Gift Set",
-    "price": 3,
-    "description": "ewe",
-    "category": "H911",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H911/2%20IN%201%20GIFT%20SET%20H911%20NEW-582x640.jpg"
+    id: "10",
+    name: "2 In 1 Gift Set",
+    price: 3,
+    description: "ewe",
+    category: "H911",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H911/2%20IN%201%20GIFT%20SET%20H911%20NEW-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "11",
-    "name": "2 In 1 Gift Set",
-    "price": 2,
-    "description": "ewe",
-    "category": "H909",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H909/H909%20-%202-582x640.jpg"
+    id: "11",
+    name: "2 In 1 Gift Set",
+    price: 2,
+    description: "ewe",
+    category: "H909",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H909/H909%20-%202-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "12",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H912",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H912/2%20IN%201%20GIFT%20SET%20H912%20NEW-582x640.jpg"
+    id: "12",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H912",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H912/2%20IN%201%20GIFT%20SET%20H912%20NEW-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "13",
-    "name": "2 In 1 Gift Set",
-    "price": 3,
-    "description": "ewe",
-    "category": "H995",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H995/H995-582x640.jpg"
+    id: "13",
+    name: "2 In 1 Gift Set",
+    price: 3,
+    description: "ewe",
+    category: "H995",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H995/H995-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "14",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3101",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3101/H3101-582x640.jpg"
+    id: "14",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H3101",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3101/H3101-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "15",
-    "name": "2 In 1 Gift Set",
-    "price": 1,
-    "description": "ewe",
-    "category": "H3107",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107%20-%20ROSE%20GOLD-582x640.jpg"
+    id: "15",
+    name: "2 In 1 Gift Set",
+    price: 1,
+    description: "ewe",
+    category: "H3107",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107%20-%20ROSE%20GOLD-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "16",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3106",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3106/2%20IN%201%20GIFT%20SET%20H3106-582x640.jpg"
+    id: "16",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H3106",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3106/2%20IN%201%20GIFT%20SET%20H3106-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "17",
-    "name": "2 In 1 Gift Set",
-    "price": 42,
-    "description": "ewe",
-    "category": "H3118",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3118/H3118-582x640.jpg"
+    id: "17",
+    name: "2 In 1 Gift Set",
+    price: 42,
+    description: "ewe",
+    category: "H3118",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3118/H3118-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "18",
-    "name": "2 In 1 Gift Set",
-    "price": 43,
-    "description": "ewe",
-    "category": "H3107",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107%20%20SIlver-582x640.jpg"
+    id: "18",
+    name: "2 In 1 Gift Set",
+    price: 43,
+    description: "ewe",
+    category: "H3107",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3107/H3107%20%20SIlver-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "19",
-    "name": "2 In 1 Gift Set",
-    "price": 43,
-    "description": "ewe",
-    "category": "H3125",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3125/2%20IN%201%20GIFT%20SET%20H3125%20-%20Final-582x640.jpg"
+    id: "19",
+    name: "2 In 1 Gift Set",
+    price: 43,
+    description: "ewe",
+    category: "H3125",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3125/2%20IN%201%20GIFT%20SET%20H3125%20-%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "20",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3127",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3127/2%20IN%201%20GIFT%20SET%20H3127-582x640.jpg"
+    id: "20",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H3127",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3127/2%20IN%201%20GIFT%20SET%20H3127-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "21",
-    "name": "2 In 1 Gift Set",
-    "price": 43,
-    "description": "ewe",
-    "category": "H994",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H994/H994%20New-582x640.jpg"
+    id: "21",
+    name: "2 In 1 Gift Set",
+    price: 43,
+    description: "ewe",
+    category: "H994",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H994/H994%20New-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "22",
-    "name": "2 In 1 Gift Set",
-    "price": 43,
-    "description": "ewe",
-    "category": "H3132",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3132/2%20in%201%20Gift%20Set%20H3132%20-%20Final-582x640.jpg"
+    id: "22",
+    name: "2 In 1 Gift Set",
+    price: 43,
+    description: "ewe",
+    category: "H3132",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3132/2%20in%201%20Gift%20Set%20H3132%20-%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "23",
-    "name": "2 In 1 Gift Set",
-    "price": 54,
-    "description": "ewe",
-    "category": "H3105",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3105/H3105%20-%20Final-582x640.jpg"
+    id: "23",
+    name: "2 In 1 Gift Set",
+    price: 54,
+    description: "ewe",
+    category: "H3105",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3105/H3105%20-%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "24",
-    "name": "2 In 1 Gift Set",
-    "price": 5,
-    "description": "ewe",
-    "category": "H3115",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3115/H3115-582x640.jpg"
+    id: "24",
+    name: "2 In 1 Gift Set",
+    price: 5,
+    description: "ewe",
+    category: "H3115",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3115/H3115-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "25",
-    "name": "2 In 1 Gift Set",
-    "price": 5,
-    "description": "ewe",
-    "category": "H963",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H963/2%20IN%201%20GIFT%20SET%20H963%20New%20-%201-582x640.jpg"
+    id: "25",
+    name: "2 In 1 Gift Set",
+    price: 5,
+    description: "ewe",
+    category: "H963",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H963/2%20IN%201%20GIFT%20SET%20H963%20New%20-%201-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "26",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3116",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3116/2%20IN%201%20GIFT%20SET%20H3116-582x640.jpg"
+    id: "26",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H3116",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3116/2%20IN%201%20GIFT%20SET%20H3116-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "27",
-    "name": "2 In 1 Pen Set",
-    "price": 34,
-    "description": "ewe",
-    "category": "H3119",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3119/H3119-582x640.jpg"
+    id: "27",
+    name: "2 In 1 Pen Set",
+    price: 34,
+    description: "ewe",
+    category: "H3119",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3119/H3119-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "28",
-    "name": "2 IN 1 CROCK SET",
-    "price": 42,
-    "description": "ewe",
-    "category": "H3108",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3108/2%20IN%201%20GIFT%20SET%20H3108%20-%202-582x640.jpg"
+    id: "28",
+    name: "2 IN 1 CROCK SET",
+    price: 42,
+    description: "ewe",
+    category: "H3108",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3108/2%20IN%201%20GIFT%20SET%20H3108%20-%202-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "29",
-    "name": "2 in 1 Gift Set",
-    "price": 32,
-    "description": "ewe",
-    "category": "H986",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H986/2%20in%201%20Gift%20Set%20H986%20New-min-582x640.jpg"
+    id: "29",
+    name: "2 in 1 Gift Set",
+    price: 32,
+    description: "ewe",
+    category: "H986",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H986/2%20in%201%20Gift%20Set%20H986%20New-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "30",
-    "name": "2 in 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H949",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H949/2%20in%201%20Gift%20Set%20H949%20New%20Add%20Color-min-582x640.jpg"
+    id: "30",
+    name: "2 in 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H949",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H949/2%20in%201%20Gift%20Set%20H949%20New%20Add%20Color-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "31",
-    "name": "2 in 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H955",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H955/WhatsApp%20Image%202024-08-06%20at%201.10.24%20PM%20(1)-582x640.jpeg"
+    id: "31",
+    name: "2 in 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H955",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H955/WhatsApp%20Image%202024-08-06%20at%201.10.24%20PM%20(1)-582x640.jpeg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "32",
-    "name": "2 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H922",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H922/2%20in%201%20Gift%20Set%20H922%20NEW-582x640.jpg"
+    id: "32",
+    name: "2 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H922",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H922/2%20in%201%20Gift%20Set%20H922%20NEW-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "33",
-    "name": "2 in 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H937",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/2%20in%201%20Gift%20Set%20H937%20new-582x640.jpg"
+    id: "33",
+    name: "2 in 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H937",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/2%20in%201%20Gift%20Set%20H937%20new-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "34",
-    "name": "2 in 1 Gift Set",
-    "price": 32,
-    "description": "ewe",
-    "category": "H938",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H938/2%20in%201%20Gift%20Set%20H938%20new%2015-04-min-582x640.jpg"
+    id: "34",
+    name: "2 in 1 Gift Set",
+    price: 32,
+    description: "ewe",
+    category: "H938",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H938/2%20in%201%20Gift%20Set%20H938%20new%2015-04-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "3",
-    "name": "2 in 1 Gift Set",
-    "price": 23,
-    "description": "ewe",
-    "category": "H921",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H921/Model%20H921%20new-582x640.jpg"
+    id: "3",
+    name: "2 in 1 Gift Set",
+    price: 23,
+    description: "ewe",
+    category: "H921",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H921/Model%20H921%20new-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "35",
-    "name": "2 in 1 Gift Set",
-    "price": 34,
-    "description": "ewe",
-    "category": "H940",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H940/2%20In%201%20Gift%20Set%20H940%20New-582x640.jpg"
+    id: "35",
+    name: "2 in 1 Gift Set",
+    price: 34,
+    description: "ewe",
+    category: "H940",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H940/2%20In%201%20Gift%20Set%20H940%20New-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "36",
-    "name": "2 in 1 Gift Set",
-    "price": 23,
-    "description": "ewe",
-    "category": "H943",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/2%20in%201%20Gift%20Set%20H943%20new1-582x640.jpg"
+    id: "36",
+    name: "2 in 1 Gift Set",
+    price: 23,
+    description: "ewe",
+    category: "H943",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/2%20in%201%20Gift%20Set%20H943%20new1-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "37",
-    "name": "2 IN 1 GIFT SET",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3123",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3123/2%20IN%201%20GIFT%20SET%20H3123-582x640.jpg"
+    id: "37",
+    name: "2 IN 1 GIFT SET",
+    price: 31,
+    description: "ewe",
+    category: "H3123",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3123/2%20IN%201%20GIFT%20SET%20H3123-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "432",
-    "name": "2 in 1 Gift Set",
-    "price": 42,
-    "description": "ewe",
-    "category": "H916",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H916/2%20in%201%20Gift%20Set%20H916%20Final-582x640.jpg"
+    id: "432",
+    name: "2 in 1 Gift Set",
+    price: 42,
+    description: "ewe",
+    category: "H916",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H916/2%20in%201%20Gift%20Set%20H916%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "454",
-    "name": "2 in 1 Gift Set",
-    "price": 42,
-    "description": "ewe",
-    "category": "H948",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H948/Model%20H948%20NEw%20BLue-582x640.jpg"
+    id: "454",
+    name: "2 in 1 Gift Set",
+    price: 42,
+    description: "ewe",
+    category: "H948",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H948/Model%20H948%20NEw%20BLue-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4554",
-    "name": "2 in 1 Gift Set",
-    "price": 23,
-    "description": "ewe",
-    "category": "H981",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H981/2%20IN%201%20GIFT%20SET%20H981%20New-min-582x640.jpg"
+    id: "4554",
+    name: "2 in 1 Gift Set",
+    price: 23,
+    description: "ewe",
+    category: "H981",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H981/2%20IN%201%20GIFT%20SET%20H981%20New-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "34",
-    "name": "2 in 1 Gift Set - PU Leather Diary & Metal Ball Pen",
-    "price": 31,
-    "description": "ewe",
-    "category": "H978",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H978/H978%20(1)-582x640.jpg"
+    id: "34",
+    name: "2 in 1 Gift Set - PU Leather Diary & Metal Ball Pen",
+    price: 31,
+    description: "ewe",
+    category: "H978",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H978/H978%20(1)-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "45",
-    "name": "2 IN 1 GIFT SET Power Bank Planner Diary",
-    "price": 32,
-    "description": "ewe",
-    "category": "P1004",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1004/2%20IN%201%20GIFT%20SET%20P1004-582x640.jpg"
+    id: "45",
+    name: "2 IN 1 GIFT SET Power Bank Planner Diary",
+    price: 32,
+    description: "ewe",
+    category: "P1004",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1004/2%20IN%201%20GIFT%20SET%20P1004-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "455",
-    "name": "2 in 1 Pen set",
-    "price": 4,
-    "description": "ewe",
-    "category": "H3120",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3120/H3120-582x640.jpg"
+    id: "455",
+    name: "2 in 1 Pen set",
+    price: 4,
+    description: "ewe",
+    category: "H3120",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3120/H3120-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "3465",
-    "name": "2 IN 1 Pen Set",
-    "price": 312,
-    "description": "ewe",
-    "category": "H3133",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3133/H3133-582x640.jpg"
+    id: "3465",
+    name: "2 IN 1 Pen Set",
+    price: 312,
+    description: "ewe",
+    category: "H3133",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3133/H3133-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4",
-    "name": "2 IN 1 POWER BANK DIARY GIFT SET",
-    "price": 31,
-    "description": "ewe",
-    "category": "P1003",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1003/2%20IN%201%20GIFT%20SET%20P1003%20-%20Without%20Pendrive-582x640.jpg"
+    id: "4",
+    name: "2 IN 1 POWER BANK DIARY GIFT SET",
+    price: 31,
+    description: "ewe",
+    category: "P1003",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/P1003/2%20IN%201%20GIFT%20SET%20P1003%20-%20Without%20Pendrive-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "445",
-    "name": "2 In 1 Premium Gift Set",
-    "price": 23,
-    "description": "ewe",
-    "category": "H996",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H996/2%20IN%201%20GIFT%20SET%20H996%20New-582x640.jpg"
+    id: "445",
+    name: "2 In 1 Premium Gift Set",
+    price: 23,
+    description: "ewe",
+    category: "H996",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H996/2%20IN%201%20GIFT%20SET%20H996%20New-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4545",
-    "name": "2 in 1 Premium Gift Set -- A5 PU Leather Diary & Metal Ball Pen",
-    "price": 13,
-    "description": "ewe",
-    "category": "H983",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H983/H983%20NEw%20Cover-582x640.jpg"
+    id: "4545",
+    name: "2 in 1 Premium Gift Set -- A5 PU Leather Diary & Metal Ball Pen",
+    price: 13,
+    description: "ewe",
+    category: "H983",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H983/H983%20NEw%20Cover-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "646",
-    "name": "3 In 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3112",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3112/3%20IN%201%20GIFT%20SET%20H3112-582x640.jpg"
+    id: "646",
+    name: "3 In 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H3112",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3112/3%20IN%201%20GIFT%20SET%20H3112-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "5665",
-    "name": "3 IN 1 GIFT SET",
-    "price": 31,
-    "description": "ewe",
-    "category": "H3114",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3114/2%20IN%201%20GIFT%20SET%20H3116-582x640.jpg"
+    id: "5665",
+    name: "3 IN 1 GIFT SET",
+    price: 31,
+    description: "ewe",
+    category: "H3114",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3114/2%20IN%201%20GIFT%20SET%20H3116-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4554",
-    "name": "3 in 1 Gift Set",
-    "price": 3,
-    "description": "ewe",
-    "category": "H926",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H926/3%20in%201%20Gift%20Set%20H926%20New%20Color%20Added-582x640.jpg"
+    id: "4554",
+    name: "3 in 1 Gift Set",
+    price: 3,
+    description: "ewe",
+    category: "H926",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H926/3%20in%201%20Gift%20Set%20H926%20New%20Color%20Added-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "54",
-    "name": "3 in 1 Gift Set",
-    "price": 21,
-    "description": "ewe",
-    "category": "H973",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H973/H973%20Blue%20Color%20Add-min-582x640.jpg"
+    id: "54",
+    name: "3 in 1 Gift Set",
+    price: 21,
+    description: "ewe",
+    category: "H973",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H973/H973%20Blue%20Color%20Add-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "45i",
-    "name": "3 IN 1 GIFT SET",
-    "price": 13,
-    "description": "ewe",
-    "category": "H3110",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3110/3%20IN%201%20GIFT%20SET%20H3110%20NEW%20Final-582x640.jpg"
+    id: "45i",
+    name: "3 IN 1 GIFT SET",
+    price: 13,
+    description: "ewe",
+    category: "H3110",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H3110/3%20IN%201%20GIFT%20SET%20H3110%20NEW%20Final-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "893",
-    "name": "3 in 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H941",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H941/3%20in%201%20Gift%20Set%20H941%20New%2001-582x640.jpg"
+    id: "893",
+    name: "3 in 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H941",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H941/3%20in%201%20Gift%20Set%20H941%20New%2001-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4554",
-    "name": "3 in 1 Gift Set",
-    "price": 31,
-    "description": "ewe",
-    "category": "H950",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H950/3%20in%201%20Gift%20Set%20H950%20New%20-%201-582x640.jpg"
+    id: "4554",
+    name: "3 in 1 Gift Set",
+    price: 31,
+    description: "ewe",
+    category: "H950",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H950/3%20in%201%20Gift%20Set%20H950%20New%20-%201-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
+    variants: ["Black\n Golden"],
   },
   {
-    "id": "4554",
-    "name": "3 in 1 Gift Set",
-    "price": 13,
-    "description": "ewe",
-    "category": "H942",
-    "images": [
-      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H942/3%20in%201%20Gift%20Set%20H942%20Color-min-582x640.jpg"
+    id: "4554",
+    name: "3 in 1 Gift Set",
+    price: 13,
+    description: "ewe",
+    category: "H942",
+    images: [
+      "https://www.horagifts.com/image/cache/catalog/Gift%20Sets/H942/3%20in%201%20Gift%20Set%20H942%20Color-min-582x640.jpg",
     ],
-    "variants": [
-      "Black\n Golden"
-    ]
-  }
-,
+    variants: ["Black\n Golden"],
+  },
   {
-    "id": "gold-plated-corporate-gift-set",
-    "name": "Gold Plated Corporate Gift Set",
-    "price": 32,
-    "description": "Executive set with metallic pen card holder and keychain in a premium presentation box",
-    "category": "gift-sets",
-    "images": [
+    id: "gold-plated-corporate-gift-set",
+    name: "Gold Plated Corporate Gift Set",
+    price: 32,
+    description:
+      "Executive set with metallic pen card holder and keychain in a premium presentation box",
+    category: "gift-sets",
+    images: [
       "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg"
+      "https://example.com/image2.jpg",
     ],
-    "variants": [
-      "Black Box",
-      "Navy Box",
-      "Walnut Box"
-    ]
+    variants: ["Black Box", "Navy Box", "Walnut Box"],
   },
   {
-    "id": "corporate-laptop-bag",
-    "name": "Corporate Laptop Bag",
-    "price": 26,
-    "description": "Professional laptop bag with padded compartments and logo placement options",
-    "category": "bags",
-    "images": [
-      "https://example.com/bag1.jpg",
-      "https://example.com/bag2.jpg"
-    ],
-    "variants": [
-      "15 Inch",
-      "16 Inch",
-      "17 Inch"
-    ]
+    id: "corporate-laptop-bag",
+    name: "Corporate Laptop Bag",
+    price: 26,
+    description:
+      "Professional laptop bag with padded compartments and logo placement options",
+    category: "bags",
+    images: ["https://example.com/bag1.jpg", "https://example.com/bag2.jpg"],
+    variants: ["15 Inch", "16 Inch", "17 Inch"],
   },
   {
-    "id": "dkjs",
-    "name": "dwjbwe",
-    "price": 35,
-    "description": "kjdhw",
-    "category": "kjsdcb",
-    "images": [
-      "cdskjb"
-    ],
-    "variants": [
-      "kdjscnb",
-      "hjkb"
-    ]
+    id: "dkjs",
+    name: "dwjbwe",
+    price: 35,
+    description: "kjdhw",
+    category: "kjsdcb",
+    images: ["cdskjb"],
+    variants: ["kdjscnb", "hjkb"],
   },
   {
-    "id": "kejdnw",
-    "name": "ewdlkn",
-    "price": 43,
-    "description": "jmdcs b",
-    "category": "jcdmsb",
-    "images": [
-      "dsclkn"
-    ],
-    "variants": [
-      "jmbewd"
-    ]
-  }
-,
+    id: "kejdnw",
+    name: "ewdlkn",
+    price: 43,
+    description: "jmdcs b",
+    category: "jcdmsb",
+    images: ["dsclkn"],
+    variants: ["jmbewd"],
+  },
   {
     id: "gold-plated-corporate-gift-set",
     name: "Gold Plated Corporate Gift Set",

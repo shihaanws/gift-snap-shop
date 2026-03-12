@@ -4,6 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import type { Product } from "@/data/products";
 import { useCart } from "@/hooks/use-cart";
+import { useState } from "react";
 
 function normalizeCategory(value?: string) {
   if (!value) return "";
@@ -28,10 +29,18 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const primaryImage = product.images?.[0] || (product.productCode ? `/product-images/${product.productCode}.jpg` : "");
   const normalizedCategory = normalizeCategory(product.category);
   const objectContainCategories = new Set(["keychains", "pens"]);
-  const imageFitClass = objectContainCategories.has(normalizedCategory) ? "object-contain" : "object-cover";
+  const skipFitCategories = new Set(["gift-sets"]);
+  const imageFitClass = skipFitCategories.has(normalizedCategory)
+    ? ""
+    : objectContainCategories.has(normalizedCategory)
+    ? "object-contain"
+    : "object-cover";
   const isPenCard = normalizedCategory === "pens";
   const cardAspectClass = isPenCard ? "aspect-[796/900]" : "aspect-square";
   const shouldAnimate = !reduceMotion && index < 24; // avoid costly animations on long lists
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const isWoodenProduct =
+    normalizedCategory === "keychains" && product.material?.toLowerCase().includes("wood");
 
   return (
     <motion.div
@@ -48,6 +57,9 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
         <div
           className={`relative rounded-xl overflow-hidden bg-card ${cardAspectClass} mb-3 border border-border/80 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/70 transform group-hover:scale-[1.05]`}
         >
+          {!imageLoaded && (
+            <div className="absolute inset-0 animate-pulse rounded-md bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100" />
+          )}
           <img
             src={primaryImage}
             alt={product.name}
@@ -55,12 +67,18 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             decoding="async"
             fetchPriority={index < 4 ? "high" : "auto"}
             className={`w-full h-full transition-transform duration-300 group-hover:scale-100 ${imageFitClass}`}
+            onLoad={() => setImageLoaded(true)}
           />
           <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-primary/20 via-transparent to-secondary/30" />
         </div>
         <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
           {product.name}
         </h3>
+        {isWoodenProduct && (
+          <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Wooden Products
+          </span>
+        )}
         {product.productCode && (
           <p className="mt-1 text-sm font-semibold text-primary tracking-wide uppercase">
             {product.productCode}

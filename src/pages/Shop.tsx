@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function normalizeCategory(value: string) {
   return value
@@ -125,12 +126,12 @@ const Shop = () => {
   return (
     <div className="min-h-screen listing-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">Corporate Product Catalog</h1>
-        <p className="text-muted-foreground mb-8">Explore bulk gifting products for clients, teams, and events</p>
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Corporate Product Catalog</h1>
+        <p className="text-muted-foreground mb-4">Explore bulk gifting products for clients, teams, and events</p>
 
         {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setSearchParams({})}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -163,69 +164,55 @@ const Shop = () => {
             </button>
           ))}
         </div>
+       
         {activeCategoryNormalized === "keychains" && (
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            <span className="text-sm text-muted-foreground mr-1">Keychain style:</span>
-            <button
-              onClick={() => handleKeychainStyle("")}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                keychainOption === ""
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
-              }`}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground ">
+              Keychain style:
+            </span>
+            <Tabs
+              value={keychainOption || "all"}
+              onValueChange={(value) => handleKeychainStyle(value === "all" ? "" : (value as KeychainStyle))}
             >
-              All
-            </button>
-            <button
-              onClick={() => handleKeychainStyle("wooden")}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                keychainOption === "wooden"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
-              }`}
-            >
-              Wooden
-            </button>
-            <button
-              onClick={() => handleKeychainStyle("metal")}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                keychainOption === "metal"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
-              }`}
-            >
-              Metal
-            </button>
+              <TabsList className="rounded-sm border border-border bg-secondary/10 p-1">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="wooden">Wooden</TabsTrigger>
+                <TabsTrigger value="metal">Metal</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         )}
 
         {isGiftSets && bundleOptions.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div className="mb-6 flex flex-wrap items-center gap-4 justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground mr-2">Bundle size:</span>
-              <button
-                onClick={() => setSearchParams({ category: "gift-sets" })}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                  !activeBundle
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-primary/10"
-                }`}
+              <span className="text-sm text-muted-foreground">
+                Bundle size:
+              </span>
+              <Tabs
+                value={activeBundle ?? "all"}
+                onValueChange={(value) => {
+                  setSearchParams((prev) => {
+                    const params = new URLSearchParams(prev);
+                    params.set("category", "gift-sets");
+                    if (value === "all") {
+                      params.delete("bundle");
+                    } else {
+                      params.set("bundle", value);
+                    }
+                    return params;
+                  });
+                }}
               >
-                All
-              </button>
-              {bundleOptions.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSearchParams({ category: "gift-sets", bundle: String(size) })}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                    activeBundle === String(size)
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-primary/10"
-                  }`}
-                >
-                  {size} in 1
-                </button>
-              ))}
+                <TabsList className="rounded-sm border border-border bg-secondary/10 p-1">
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  {bundleOptions.map((size) => (
+                    <TabsTrigger key={size} value={String(size)}>
+                      {size} in 1
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
             </div>
             {activeBundle === "2" && (
               <a
