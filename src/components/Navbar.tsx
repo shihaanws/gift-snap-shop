@@ -67,8 +67,12 @@ const subNavItems = [
     groups: [
       {
         title: "Wooden Gifts",
-        items: ["Wooden Products"],
+        items: ["Wooden Desk Accessories", "Wooden Engravings"],
       },
+      // {
+      //   title: "Engravings",
+      //   items: ["Wooden Engravings"],
+      // },
     ],
   },
   {

@@ -137,20 +137,21 @@ const ProductDetail = () => {
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];
   const normalizedCategory = normalizeCategory(product.category);
-  const containCategories = new Set(["pens"]);
+  const woodenEngravingCategories = new Set(["wooden-engravings"]);
+  const containCategories = new Set(["pens", ...woodenEngravingCategories]);
   const skipFitCategories = new Set(["gift-sets"]);
   const imageFitClass = skipFitCategories.has(normalizedCategory)
     ? ""
     : containCategories.has(normalizedCategory)
-    ? ""
-    : "";
+    ? "object-contain"
+    : "object-cover";
   const isPen = normalizedCategory === "pens";
   const penContainerStyle = isPen ? { width: 796, height: 900 } : undefined;
   const mainAspectClass = isPen ? "aspect-[796/900]" : "aspect-[4/5] md:aspect-[3/4]";
   const isWoodenProduct =
     normalizedCategory === "keychains" && product.material?.toLowerCase().includes("wood");
   const detailTags = [
-    ...(isWoodenProduct ? ["Wooden Products"] : []),
+    ...(isWoodenProduct ? ["Wooden Desk Accessories"] : []),
     normalizedCategory === "keychains"
       ? "Keychains"
       : normalizedCategory === "pens"
@@ -199,7 +200,7 @@ const ProductDetail = () => {
                   <img
                     src={img}
                     alt=""
-                    className="w-full h-full object-cover rounded-sm p-1"
+                    className={`w-full h-full ${imageFitClass} rounded-sm p-1`}
                   />
                 </button>
               ))}
@@ -280,7 +281,7 @@ const ProductDetail = () => {
                     <img
                       src={img}
                       alt=""
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full ${imageFitClass}`}
                     />
                   </button>
                 ))}
@@ -412,15 +413,14 @@ const ProductDetail = () => {
                     {product.material || "N/A"}
                   </td>
                 </tr>
-
-                <tr>
+                {/* <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Packing Type
                   </td>
                   <td className="py-2">
                     {product.packingType || "N/A"}
                   </td>
-                </tr>
+                </tr> */}
 
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">

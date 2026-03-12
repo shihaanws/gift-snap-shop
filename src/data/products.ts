@@ -56,7 +56,14 @@ export const categories: Category[] = [
   },
   {
     id: "wooden-products",
-    name: "Wooden Products",
+    name: "Wooden Desk Accessories",
+    description:
+      "Sustainable wooden gifts with laser engraving and natural textures",
+    image: giftWedding,
+  },
+  {
+    id: "wooden-engravings",
+    name: "Wooden Engravings",
     description:
       "Sustainable wooden gifts with laser engraving and natural textures",
     image: giftWedding,

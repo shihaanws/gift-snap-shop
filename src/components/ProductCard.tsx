@@ -28,11 +28,15 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const isInCart = items.some((item) => item.productId === product.id);
   const primaryImage = product.images?.[0] || (product.productCode ? `/product-images/${product.productCode}.jpg` : "");
   const normalizedCategory = normalizeCategory(product.category);
+  const woodenEngravingCategories = new Set(["wooden-engravings"]);
   const objectContainCategories = new Set(["keychains", "pens"]);
   const skipFitCategories = new Set(["gift-sets"]);
+  const shouldContainImage =
+    objectContainCategories.has(normalizedCategory) ||
+    woodenEngravingCategories.has(normalizedCategory);
   const imageFitClass = skipFitCategories.has(normalizedCategory)
     ? ""
-    : objectContainCategories.has(normalizedCategory)
+    : shouldContainImage
     ? "object-contain"
     : "object-cover";
   const isPenCard = normalizedCategory === "pens";
