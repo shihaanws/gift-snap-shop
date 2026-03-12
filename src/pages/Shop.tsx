@@ -17,22 +17,52 @@ function normalizeCategory(value: string) {
 
 const ITEMS_PER_PAGE = 12;
 
+const KeychainStyles = ["wooden", "metal"] as const;
+type KeychainStyle = "" | (typeof KeychainStyles)[number];
+
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeBundle = searchParams.get("bundle");
   const activeCategoryRaw = searchParams.get("category") || (activeBundle ? "gift-sets" : "all");
   const activeCategory = activeCategoryRaw;
   const activeCategoryNormalized = normalizeCategory(activeCategoryRaw);
+  const styleParamRaw = searchParams.get("style");
+  const normalizeStyleParam = (value: string | null): KeychainStyle => {
+    if (value === "wooden" || value === "metal") {
+      return value;
+    }
+    return "";
+  };
+  const styleParam = normalizeStyleParam(styleParamRaw);
   const { products } = useProducts();
   const { categories } = useCategories();
   const isGiftSets = activeCategoryNormalized === "gift-sets";
   const [currentPage, setCurrentPage] = useState(1);
+  const [keychainOption, setKeychainOption] = useState<KeychainStyle>(styleParam);
+  const updateSearchParams = (modifier: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams);
+    modifier(params);
+    setSearchParams(params);
+  };
 
   const filtered = useMemo(() => {
     let result = products;
     if (activeCategory !== "all") {
       const target = activeCategoryNormalized;
       result = result.filter((p) => normalizeCategory(p.category) === target);
+    }
+    if (activeCategoryNormalized === "keychains" && keychainOption) {
+      result = result.filter((p) => {
+        if (!p.material) return false;
+        const normalizedMaterial = p.material.toLowerCase();
+        if (keychainOption === "wooden") {
+          return normalizedMaterial.includes("wood");
+        }
+        if (keychainOption === "metal") {
+          return normalizedMaterial.includes("metal") || normalizedMaterial.includes("steel");
+        }
+        return true;
+      });
     }
     if (isGiftSets && activeBundle) {
       const bundleNumber = Number(activeBundle);
@@ -42,11 +72,23 @@ const Shop = () => {
       return [...result].sort((a, b) => a.id.localeCompare(b.id));
     }
     return result;
-  }, [activeCategory, activeBundle, isGiftSets, products]);
+  }, [activeCategory, activeCategoryNormalized, activeBundle, isGiftSets, keychainOption, products]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [activeCategory, activeBundle]);
+
+  useEffect(() => {
+    if (activeCategoryNormalized !== "keychains" && keychainOption) {
+      setKeychainOption("");
+    }
+  }, [activeCategoryNormalized, keychainOption]);
+
+  useEffect(() => {
+    if (styleParam !== keychainOption) {
+      setKeychainOption(styleParam);
+    }
+  }, [styleParam, keychainOption]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   useEffect(() => {
@@ -67,6 +109,18 @@ const Shop = () => {
     // Show the full expected range even if some sizes are not yet present in data
     return [2, 3, 4, 5, 6];
   }, [isGiftSets]);
+
+  const handleKeychainStyle = (style: KeychainStyle) => {
+    updateSearchParams((params) => {
+      params.set("category", "keychains");
+      if (style) {
+        params.set("style", style);
+      } else {
+        params.delete("style");
+      }
+    });
+    setKeychainOption(style);
+  };
 
   return (
     <div className="min-h-screen listing-background">
@@ -90,7 +144,15 @@ const Shop = () => {
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setSearchParams({ category: cat.id })}
+              onClick={() => {
+                updateSearchParams((params) => {
+                  params.set("category", cat.id);
+                  params.delete("bundle");
+                  if (cat.id !== "keychains") {
+                    params.delete("style");
+                  }
+                });
+              }}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               normalizeCategory(cat.id) === activeCategoryNormalized
                 ? "bg-primary text-primary-foreground"
@@ -101,6 +163,41 @@ const Shop = () => {
             </button>
           ))}
         </div>
+        {activeCategoryNormalized === "keychains" && (
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            <span className="text-sm text-muted-foreground mr-1">Keychain style:</span>
+            <button
+              onClick={() => handleKeychainStyle("")}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                keychainOption === ""
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => handleKeychainStyle("wooden")}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                keychainOption === "wooden"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+              }`}
+            >
+              Wooden
+            </button>
+            <button
+              onClick={() => handleKeychainStyle("metal")}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                keychainOption === "metal"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-primary/10"
+              }`}
+            >
+              Metal
+            </button>
+          </div>
+        )}
 
         {isGiftSets && bundleOptions.length > 0 && (
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">

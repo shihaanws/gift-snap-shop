@@ -21,6 +21,15 @@ import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
 import ProductCard from "@/components/ProductCard";
 
+function normalizeCategory(value?: string) {
+  if (!value) return "";
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
 const ProductDetail = () => {
   const { id } = useParams();
   const location = useLocation<{ from?: string }>();
@@ -127,6 +136,12 @@ const ProductDetail = () => {
   );
   const whatsappUrl = `https://wa.me/9074145962?text=${whatsappMessage}`;
   const selectedColorName = product?.availableColors?.[selectedColor];
+  const normalizedCategory = normalizeCategory(product.category);
+  const containCategories = new Set(["keychains", "pens"]);
+  const imageFitClass = containCategories.has(normalizedCategory) ? "object-contain" : "object-cover";
+  const isPen = normalizedCategory === "pens";
+  const penContainerStyle = isPen ? { width: 796, height: 900 } : undefined;
+  const mainAspectClass = isPen ? "aspect-[796/900]" : "aspect-[4/5] md:aspect-[3/4]";
 
   return (
     <div className="min-h-screen bg-background">
@@ -177,7 +192,7 @@ const ProductDetail = () => {
           )}
 
           <div
-            className="relative w-full rounded-xl overflow-hidden bg-card aspect-[4/5] md:aspect-[3/4] max-h-[560px] shadow-sm border border-border cursor-zoom-in"
+            className={`relative w-full rounded-xl overflow-hidden bg-card ${mainAspectClass} max-h-[560px] shadow-sm border border-border cursor-zoom-in`}
             onClick={() => setLightboxOpen(true)}
           >
             <AnimatePresence mode="wait">
@@ -189,7 +204,7 @@ const ProductDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.2 }}
-                className="absolute inset-0 w-full h-full "
+                className="absolute inset-0 w-full h-full object-contain"
               />
             </AnimatePresence>
 

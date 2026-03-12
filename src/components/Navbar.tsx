@@ -31,6 +31,13 @@ function linkForEntry(entry: string, parentLabel: string) {
     const size = bundleMatch[1];
     return `/shop?category=gift-sets&bundle=${size}`;
   }
+  if (parentLabel.toLowerCase().includes("keychain")) {
+    const styleSlug = slugify(entry).replace(/-keychains$/, "");
+    return `/shop?category=keychains${styleSlug ? `&style=${styleSlug}` : ""}`;
+  }
+  if (parentLabel.toLowerCase().includes("pen")) {
+    return `/shop?category=pens`;
+  }
   // fallback: use entry as category slug
   return `/shop?category=${slugify(entry)}`;
 }
@@ -45,12 +52,12 @@ const subNavItems = [
     ],
   },
   {
-    label: "Bags & Travel",
-    groups: [
-      { title: "Laptop Bags", items: ["15 inch Series", "Slim Pro", "Messenger Classic", "Urban Executive"] },
-      { title: "Backpacks", items: ["Commute Pack", "Travel Pack", "Hybrid Office", "Rolltop Utility"] },
-      { title: "Accessories", items: ["Pouch Set", "Organizer Kit", "Cable Holder", "Passport Sleeve"] },
-    ],
+    label: "Keychains",
+    groups: [{ title: "Keychain Styles", items: ["Wooden Keychains", "Metal Keychains"] }],
+  },
+  {
+    label: "Pens",
+    groups: [{ title: "Pen Styles", items: ["Laser Marking Pens"] }],
   },
   {
     label: "Drinkware",
@@ -124,102 +131,113 @@ const Navbar = () => {
           </a>
         </div>
       </div>
-      <div className="container mx-auto px-4 flex items-center justify-between h-20">
-        <Link to="/" className="flex items-center gap-2">
-          {/* <img src="/logg.png" alt="Emotions Unlimited" className="mb-2.5 h-8 w-18" /> */}
-          <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-16 w-auto my-6" />
-        </Link>
-
-        <div className="hidden md:flex items-center gap-5 flex-1 ml-8 min-w-0">
-        
-          {/* <NavLink
-            to="/shop"
-            className="whitespace-nowrap text-sm font-medium text-white/85 transition-colors hover:text-white"
-            activeClassName="text-white"
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 md:hidden">
+          <button
+            className="text-foreground hover:text-primary"
+            onClick={() => setMobileOpen(!mobileOpen)}
           >
-            Corporate Catalog
-          </NavLink> */}
-          <NavLink
-            to="/about"
-            className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
-            activeClassName="text-primary"
-          >
-            About Us
-          </NavLink>
-          <NavLink
-            to="/manage-products"
-            className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
-            activeClassName="text-primary"
-          >
-            Manage Products
-          </NavLink>
-          
-          <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
-            <SearchBar />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-            <DownloadIcon className="w-4 h-4" />
-            Download Brochure
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+          <Link to="/" className="flex items-center justify-center">
+            <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-12 w-auto" />
           </Link>
-          {!isAuthenticated ? (
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                to="/login"
-                className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
-              >
-                Login
-              </Link>
-            </div>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="hidden md:inline-flex items-center rounded-full border border-white/40 bg-white p-0.5 text-[#0E2A4A] transition hover:opacity-90"
-                  aria-label="Open user menu"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-[#0E2A4A] text-xs font-semibold text-white">
-                      {getInitials(user?.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="truncate">{user?.name ?? "User"}</DropdownMenuLabel>
-                {user?.email && <DropdownMenuLabel className="pt-0 text-xs font-normal text-muted-foreground">{user.email}</DropdownMenuLabel>}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    void logout();
-                  }}
-                  className="cursor-pointer"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          
           <Link
             to="/cart"
-            className="relative hidden md:inline-flex items-center justify-center rounded-lg border border-white/40 bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
+            className="relative inline-flex items-center justify-center rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
             aria-label="View cart"
           >
             <ShoppingBag className="h-4 w-4" />
             {itemCount > 0 && (
-              <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+              <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
                 {itemCount}
               </span>
             )}
           </Link>
-          <button className="text-foreground md:hidden hover:text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+        </div>
+
+        <div className="hidden md:flex items-center justify-between h-20">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-16 w-auto my-6" />
+          </Link>
+          <div className="flex items-center gap-5 flex-1 ml-8 min-w-0">
+            <NavLink
+              to="/about"
+              className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
+              activeClassName="text-primary"
+            >
+              About Us
+            </NavLink>
+            <NavLink
+              to="/manage-products"
+              className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
+              activeClassName="text-primary"
+            >
+              Manage Products
+            </NavLink>
+            <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
+              <SearchBar />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+              <DownloadIcon className="w-4 h-4" />
+              Download Brochure
+            </Link>
+            {!isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
+                >
+                  Login
+                </Link>
+              </div>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-full border border-white/40 bg-white p-0.5 text-[#0E2A4A] transition hover:opacity-90"
+                    aria-label="Open user menu"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-[#0E2A4A] text-xs font-semibold text-white">
+                        {getInitials(user?.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="truncate">{user?.name ?? "User"}</DropdownMenuLabel>
+                  {user?.email && <DropdownMenuLabel className="pt-0 text-xs font-normal text-muted-foreground">{user.email}</DropdownMenuLabel>}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      void logout();
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <Link
+              to="/cart"
+              className="relative inline-flex items-center justify-center rounded-lg border border-white/40 bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
+              aria-label="View cart"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              {itemCount > 0 && (
+                <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -271,6 +289,8 @@ const Navbar = () => {
                   className={`grid gap-6 px-6 py-5 ${
                     openSubNav === "Gift Sets"
                       ? "grid-cols-1 min-w-[200px]"
+                      : openSubNav === "Keychains"
+                      ? "grid-cols-1 min-w-[320px]"
                       : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
                   }`}
                 >

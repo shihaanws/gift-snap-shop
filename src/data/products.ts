@@ -960,6 +960,28 @@ export const products: Product[] = [
     variants: ["Classic Black", "Brown", "Dual Tone"],
   },
   {
+    id: "wooden-keychain",
+    name: "Wooden Keychain",
+    price: 6,
+    description:
+      "Laser-engraved wooden keychain with magnetic clasp, highlighting natural grain and logo customization for sustainable gifting.",
+    category: "keychains",
+    images: [productChocolate, productFlowers],
+    variants: ["Natural Teak", "Walnut", "Two-Tone"],
+    material: "Sustainable wood",
+  },
+  {
+    id: "metal-keychain",
+    name: "Metal Keychain",
+    price: 7,
+    description:
+      "Brushed metal keychain with chamfered edges and precision engraving, designed for premium corporate awards and executive kits.",
+    category: "keychains",
+    images: [productCandle, productSpa],
+    variants: ["Brushed Steel", "Matte Black", "Rose Gold"],
+    material: "Stainless steel",
+  },
+  {
     id: "desk-clock-pen-stand-set",
     name: "Desk Clock + Pen Stand Set",
     price: 19,

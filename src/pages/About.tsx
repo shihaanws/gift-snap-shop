@@ -16,7 +16,7 @@ const About = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mx-auto max-w-4xl rounded-3xl border border-border/70 bg-card/90 p-8 shadow-xl shadow-black/10 md:p-12"
+            className="mx-auto max-w-4xl rounded-3xl border border-border/70 bg-white p-8 shadow-xl shadow-black/10 md:p-12"
           >
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">About Us</p>
             <div>

@@ -5,6 +5,15 @@ import { toast } from "sonner";
 import type { Product } from "@/data/products";
 import { useCart } from "@/hooks/use-cart";
 
+function normalizeCategory(value?: string) {
+  if (!value) return "";
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
 interface ProductCardProps {
   product: Product;
   index?: number;
@@ -17,6 +26,11 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const { addItem, items } = useCart();
   const isInCart = items.some((item) => item.productId === product.id);
   const primaryImage = product.images?.[0] || (product.productCode ? `/product-images/${product.productCode}.jpg` : "");
+  const normalizedCategory = normalizeCategory(product.category);
+  const objectContainCategories = new Set(["keychains", "pens"]);
+  const imageFitClass = objectContainCategories.has(normalizedCategory) ? "object-contain" : "object-cover";
+  const isPenCard = normalizedCategory === "pens";
+  const cardAspectClass = isPenCard ? "aspect-[796/900]" : "aspect-square";
   const shouldAnimate = !reduceMotion && index < 24; // avoid costly animations on long lists
 
   return (
@@ -31,14 +45,16 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
         state={{ from: `${location.pathname}${location.search}` }}
         className="group block"
       >
-        <div className="relative rounded-xl overflow-hidden bg-card aspect-square mb-3 border border-border/80 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/70 transform group-hover:scale-[1.05]">
+        <div
+          className={`relative rounded-xl overflow-hidden bg-card ${cardAspectClass} mb-3 border border-border/80 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/70 transform group-hover:scale-[1.05]`}
+        >
           <img
             src={primaryImage}
             alt={product.name}
             loading="lazy"
             decoding="async"
             fetchPriority={index < 4 ? "high" : "auto"}
-            className="w-full h-full transition-transform duration-300 group-hover:scale-100"
+            className={`w-full h-full transition-transform duration-300 group-hover:scale-100 ${imageFitClass}`}
           />
           <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-primary/20 via-transparent to-secondary/30" />
         </div>
