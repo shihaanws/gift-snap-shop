@@ -138,7 +138,7 @@ const ProductDetail = () => {
   const selectedColorName = product?.availableColors?.[selectedColor];
   const normalizedCategory = normalizeCategory(product.category);
   const woodenEngravingCategories = new Set(["wooden-engravings"]);
-  const containCategories = new Set(["pens", ...woodenEngravingCategories]);
+  const containCategories = new Set(["pens", "badges", ...woodenEngravingCategories]);
   const skipFitCategories = new Set(["gift-sets"]);
   const imageFitClass = skipFitCategories.has(normalizedCategory)
     ? ""

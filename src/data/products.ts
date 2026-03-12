@@ -62,6 +62,12 @@ export const categories: Category[] = [
     image: giftWedding,
   },
   {
+    id: "badges",
+    name: "Badges",
+    description: "Custom metal and enamel badges for recognition and events",
+    image: giftCorporate,
+  },
+  {
     id: "wooden-engravings",
     name: "Wooden Engravings",
     description:
@@ -74,6 +80,7 @@ export const categories: Category[] = [
     description: "Executive diaries for meetings and planning",
     image: giftWedding,
   },
+  
   // {
   //   id: "bags",
   //   name: "Laptop & Office Bags",

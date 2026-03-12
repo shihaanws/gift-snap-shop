@@ -63,16 +63,21 @@ const subNavItems = [
     groups: [{ title: "Pen Styles", items: ["Laser Marking Pens"] }],
   },
   {
+    label: "Badges",
+    groups: [
+      {
+        title: "Badges",
+        items: ["Badges"],
+      },
+    ],
+  },
+  {
     label: "Wooden Products",
     groups: [
       {
         title: "Wooden Gifts",
         items: ["Wooden Desk Accessories", "Wooden Engravings"],
       },
-      // {
-      //   title: "Engravings",
-      //   items: ["Wooden Engravings"],
-      // },
     ],
   },
   {

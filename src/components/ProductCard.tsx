@@ -29,7 +29,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const primaryImage = product.images?.[0] || (product.productCode ? `/product-images/${product.productCode}.jpg` : "");
   const normalizedCategory = normalizeCategory(product.category);
   const woodenEngravingCategories = new Set(["wooden-engravings"]);
-  const objectContainCategories = new Set(["keychains", "pens"]);
+  const objectContainCategories = new Set(["keychains", "pens", "badges"]);
   const skipFitCategories = new Set(["gift-sets"]);
   const shouldContainImage =
     objectContainCategories.has(normalizedCategory) ||

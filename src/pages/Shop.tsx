@@ -123,6 +123,14 @@ const Shop = () => {
     setKeychainOption(style);
   };
 
+  const highlightBadgeSection = () => {
+    updateSearchParams((params) => {
+      params.set("category", "badges");
+      params.delete("bundle");
+      params.delete("style");
+    });
+  };
+
   return (
     <div className="min-h-screen listing-background">
       <Navbar />
@@ -182,6 +190,23 @@ const Shop = () => {
             </Tabs>
           </div>
         )}
+
+        {/* <div className="mb-6 rounded-2xl border border-border bg-white/80 p-4 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground">Badges</p>
+          <p className="mt-2 text-lg font-semibold text-foreground">Premium enamel and metal badges for recognition, events, and campaigns.</p>
+          <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
+            Mix-and-match finishes and engraving-ready panels let you brand each badge for teams, awards, and promotional giveaways.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={highlightBadgeSection}
+              className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              View Badge Collection
+            </button>
+          </div>
+        </div> */}
 
         {isGiftSets && bundleOptions.length > 0 && (
           <div className="mb-6 flex flex-wrap items-center gap-4 justify-between">
