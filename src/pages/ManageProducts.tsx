@@ -362,11 +362,26 @@ const ManageProducts = () => {
   const [activeTab, setActiveTab] = useState<"products" | "categories">(
     "products",
   );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
 
   const categoryOptions = useMemo(
     () => categories.map((cat) => cat.id),
     [categories],
   );
+  const filteredProducts = useMemo(() => {
+    const term = searchQuery.trim().toLowerCase();
+    return products.filter((product) => {
+      if (filterCategory !== "all" && product.category !== filterCategory) {
+        return false;
+      }
+      if (!term) {
+        return true;
+      }
+      const haystack = `${product.name} ${product.description} ${product.id} ${product.productCode ?? ""}`.toLowerCase();
+      return haystack.includes(term);
+    });
+  }, [products, searchQuery, filterCategory]);
 
   useEffect(() => {
     if (form.category || categoryOptions.length === 0) {
@@ -640,6 +655,46 @@ const ManageProducts = () => {
                 <PlusCircle className="w-4 h-4" />
                 Add Product
               </button>
+            </div>
+
+            <div className="flex flex-wrap items-end gap-4 rounded-xl border border-border bg-background/90 p-4">
+              <label className="flex-1 min-w-[220px] text-sm space-y-1">
+                <span className="text-muted-foreground">Search products</span>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Name, ID, description..."
+                  className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="text-sm space-y-1">
+                <span className="text-muted-foreground">Category filter</span>
+                <select
+                  value={filterCategory}
+                  onChange={(event) => setFilterCategory(event.target.value)}
+                  className="rounded-lg border border-border bg-white px-3 py-2 text-sm"
+                >
+                  <option value="all">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {(searchQuery || filterCategory !== "all") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setFilterCategory("all");
+                  }}
+                  className="rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground hover:border-primary hover:text-primary"
+                >
+                  Clear filters
+                </button>
+              )}
             </div>
 
             {/* <div className="space-y-2 rounded-xl border border-border bg-background p-4 text-xs text-muted-foreground">
@@ -957,13 +1012,25 @@ const ManageProducts = () => {
               </div>
             )}
 
-            <div className="rounded-lg border border-border bg-background p-4">
+            {/* <div className="rounded-lg border border-border bg-background p-4">
               <p className="text-sm text-muted-foreground">
                 Current product count
               </p>
               <p className="text-2xl font-semibold text-foreground">
                 {products.length}
               </p>
+            </div> */}
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+              <span>
+                Showing {filteredProducts.length} / {products.length} products
+              </span>
+              {filterCategory !== "all" && (
+                <span className="font-semibold text-foreground">
+                  Filtered by{" "}
+                  {categories.find((cat) => cat.id === filterCategory)?.name ??
+                    filterCategory}
+                </span>
+              )}
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] border-collapse text-sm">
@@ -978,7 +1045,7 @@ const ManageProducts = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
+                  {filteredProducts.map((product) => (
                     <tr key={product.id} className="border-b border-border/70">
                       <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
                         {product.id}
