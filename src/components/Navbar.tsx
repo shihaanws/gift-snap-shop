@@ -80,6 +80,15 @@ const subNavItems = [
       },
     ],
   },
+  {
+    label: "Personalized Gifts",
+    groups: [
+      {
+        title: "Personalized Gifts",
+        items: ["Personalized Gifts"],
+      },
+    ],
+  },
   // {
   //   label: "Drinkware",
   //   groups: [

@@ -62,6 +62,12 @@ export const categories: Category[] = [
     image: giftWedding,
   },
   {
+    id: "personalized-gifts",
+    name: "Personalized Gifts",
+    description: "Customizable gifts for special occasions",
+    image: giftCorporate,
+  },
+  {
     id: "badges",
     name: "Badges",
     description: "Custom metal and enamel badges for recognition and events",
