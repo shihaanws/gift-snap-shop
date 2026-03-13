@@ -85,6 +85,16 @@ const Shop = () => {
       }
       return giftSetResults.sort((a, b) => a.id.localeCompare(b.id));
     }
+    if (activeCategoryNormalized === "keychains") {
+      const keychainResults = [...result];
+      if (!keychainOption) {
+        return shuffleArray(keychainResults);
+      }
+      return keychainResults;
+    }
+    if (activeCategory === "all") {
+      return shuffleArray(result);
+    }
     return result;
   }, [activeCategory, activeCategoryNormalized, activeBundle, isGiftSets, keychainOption, products]);
 
