@@ -8,6 +8,15 @@ import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const shuffleArray = <T,>(items: T[]): T[] => {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+};
+
 function normalizeCategory(value: string) {
   return value
     .toLowerCase()
@@ -70,7 +79,11 @@ const Shop = () => {
       result = result.filter((p) => p.bundleSize === bundleNumber);
     }
     if (isGiftSets) {
-      return [...result].sort((a, b) => a.id.localeCompare(b.id));
+      const giftSetResults = [...result];
+      if (!activeBundle) {
+        return shuffleArray(giftSetResults);
+      }
+      return giftSetResults.sort((a, b) => a.id.localeCompare(b.id));
     }
     return result;
   }, [activeCategory, activeCategoryNormalized, activeBundle, isGiftSets, keychainOption, products]);
