@@ -70,7 +70,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             loading="lazy"
             decoding="async"
             fetchPriority={index < 4 ? "high" : "auto"}
-            className={`w-full h-full transition-transform duration-300 group-hover:scale-100 ${imageFitClass}`}
+            className={`w-full h-full transition-transform duration-300 group-hover:scale-100 ${product.category === "diaries" ? "" : imageFitClass}`}
             onLoad={() => setImageLoaded(true)}
           />
           <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-primary/20 via-transparent to-secondary/30" />
