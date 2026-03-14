@@ -30,6 +30,9 @@ const ITEMS_PER_PAGE = 12;
 const KeychainStyles = ["wooden", "metal"] as const;
 type KeychainStyle = "" | (typeof KeychainStyles)[number];
 
+const DiarySubcategories = ["planner-diary", "notebook-diary"] as const;
+type DiarySubcategory = "" | (typeof DiarySubcategories)[number];
+
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeBundle = searchParams.get("bundle");
@@ -44,9 +47,16 @@ const Shop = () => {
     return "";
   };
   const styleParam = normalizeStyleParam(styleParamRaw);
+  const subcategoryParamRaw = searchParams.get("subcategory");
+  const normalizeDiarySubcategory = (value: string | null): DiarySubcategory => {
+    if (value === "planner-diary" || value === "notebook-diary") return value;
+    return "";
+  };
+  const diarySubcategoryParam = normalizeDiarySubcategory(subcategoryParamRaw);
   const { products } = useProducts();
   const { categories } = useCategories();
   const isGiftSets = activeCategoryNormalized === "gift-sets";
+  const isDiaries = activeCategoryNormalized === "diaries";
   const [currentPage, setCurrentPage] = useState(1);
   const [keychainOption, setKeychainOption] = useState<KeychainStyle>(styleParam);
   const updateSearchParams = (modifier: (params: URLSearchParams) => void) => {
@@ -60,6 +70,11 @@ const Shop = () => {
     if (activeCategory !== "all") {
       const target = activeCategoryNormalized;
       result = result.filter((p) => normalizeCategory(p.category) === target);
+    }
+    if (isDiaries && diarySubcategoryParam) {
+      result = result.filter(
+        (p) => normalizeCategory(p.subcategory ?? "") === diarySubcategoryParam
+      );
     }
     if (activeCategoryNormalized === "keychains" && keychainOption) {
       result = result.filter((p) => {
@@ -92,15 +107,18 @@ const Shop = () => {
       }
       return keychainResults;
     }
+    if (isDiaries && !diarySubcategoryParam) {
+      return shuffleArray([...result]);
+    }
     if (activeCategory === "all") {
       return shuffleArray(result);
     }
     return result;
-  }, [activeCategory, activeCategoryNormalized, activeBundle, isGiftSets, keychainOption, products]);
+  }, [activeCategory, activeCategoryNormalized, activeBundle, isGiftSets, isDiaries, diarySubcategoryParam, keychainOption, products]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, activeBundle]);
+  }, [activeCategory, activeBundle, diarySubcategoryParam]);
 
   useEffect(() => {
     if (activeCategoryNormalized !== "keychains" && keychainOption) {
@@ -183,6 +201,9 @@ const Shop = () => {
                   if (cat.id !== "keychains") {
                     params.delete("style");
                   }
+                  if (cat.id !== "diaries") {
+                    params.delete("subcategory");
+                  }
                 });
               }}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -196,6 +217,31 @@ const Shop = () => {
           ))}
         </div>
        
+        {isDiaries && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted-foreground">Diary type:</span>
+            <Tabs
+              value={diarySubcategoryParam || "all"}
+              onValueChange={(value) => {
+                updateSearchParams((params) => {
+                  params.set("category", "diaries");
+                  if (value === "all") {
+                    params.delete("subcategory");
+                  } else {
+                    params.set("subcategory", value);
+                  }
+                });
+              }}
+            >
+              <TabsList className="rounded-sm border border-border bg-secondary/10 p-1">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="planner-diary">Planner Diary</TabsTrigger>
+                <TabsTrigger value="notebook-diary">Notebook Diary</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        )}
+
         {activeCategoryNormalized === "keychains" && (
           <div className="mb-6 flex flex-wrap items-center gap-2">
               <span className="text-sm text-muted-foreground ">

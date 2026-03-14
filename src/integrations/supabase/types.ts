@@ -92,6 +92,7 @@ export type Database = {
           packing_type: string | null
           price: number
           product_code: string | null
+          subcategory: string | null
           updated_at: string
           variants: Json | null
         }
@@ -115,6 +116,7 @@ export type Database = {
           packing_type?: string | null
           price: number
           product_code?: string | null
+          subcategory?: string | null
           updated_at?: string
           variants?: Json | null
         }
@@ -138,6 +140,7 @@ export type Database = {
           packing_type?: string | null
           price?: number
           product_code?: string | null
+          subcategory?: string | null
           updated_at?: string
           variants?: Json | null
         }
