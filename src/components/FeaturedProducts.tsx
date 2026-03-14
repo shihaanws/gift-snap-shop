@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/use-products";
 
+function shuffleArray<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 const FeaturedProducts = () => {
   const { products } = useProducts();
-  const featured = products.slice(0, 4);
+  const featured = useMemo(
+    () => shuffleArray(products).slice(0, 8),
+    [products]
+  );
 
   return (
     <section className="relative overflow-hidden bg-card py-20">
@@ -15,7 +28,7 @@ const FeaturedProducts = () => {
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">Corporate Bestsellers</h2>
           <p className="text-muted-foreground text-lg">Most requested products for bulk gifting programs</p>
         </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-4 md:gap-6">
           {featured.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
