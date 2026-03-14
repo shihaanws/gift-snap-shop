@@ -220,7 +220,7 @@ const ProductDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.2 }}
-                className={`absolute inset-0 w-full h-full ${product.category == "personalized-gifts" || product.category == "keychains" ? "object-contain" : imageFitClass}`}
+                className={`absolute inset-0 w-full h-full ${product.category == "personalized-gifts" || product.category == "keychains"|| product.category == "diaries" ? "object-contain" : imageFitClass}`}
               />
             </AnimatePresence>
 
