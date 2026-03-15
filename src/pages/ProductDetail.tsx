@@ -92,10 +92,11 @@ const ProductDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
-        <GiftLoader message="Finding the perfect product wrap…" />
-        <Footer />
+        <div className="flex-1 flex items-center justify-center">
+          <GiftLoader message="Finding the perfect product wrap…" />
+        </div>
       </div>
     );
   }

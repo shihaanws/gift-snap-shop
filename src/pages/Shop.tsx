@@ -192,14 +192,20 @@ const Shop = () => {
   };
 
   return (
-    <div className="min-h-screen listing-background">
+    <div className="min-h-screen listing-background flex flex-col">
       <Navbar />
-      <div className="container mx-auto px-4 py-4">
-        {/* Desktop heading */}
-        <div className="hidden md:block mb-4">
-          <h1 className="font-display text-3xl font-bold text-foreground mb-1">
-            Corporate Product Catalog
-          </h1>
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center">
+          <GiftLoader message="Loading and wrapping the catalog for you..." />
+        </div>
+      ) : (
+        <div className="flex-1">
+          <div className="container mx-auto px-4 py-4">
+            {/* Desktop heading */}
+            <div className="hidden md:block mb-4">
+              <h1 className="font-display text-3xl font-bold text-foreground mb-1">
+                Corporate Product Catalog
+              </h1>
           <p className="text-muted-foreground">
             Explore bulk gifting products for clients, teams, and events
           </p>
@@ -445,9 +451,7 @@ const Shop = () => {
           </div>
         )}
 
-        {isLoading ? (
-          <GiftLoader message="Loading and wrapping the catalog for you..." />
-        ) : paginatedProducts.length === 0 ? (
+        {paginatedProducts.length === 0 ? (
           <p className="text-muted-foreground text-center py-16">No products found in this category.</p>
         ) : (
           <>
@@ -495,8 +499,10 @@ const Shop = () => {
             )}
           </>
         )}
-      </div>
-      <Footer />
+          </div>
+        </div>
+      )}
+      {!isLoading && <Footer />}
     </div>
   );
 };
