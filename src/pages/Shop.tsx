@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import GiftLoader from "@/components/GiftLoader";
 import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
@@ -71,7 +72,7 @@ const Shop = () => {
     return "";
   };
   const diarySubcategoryParam = normalizeDiarySubcategory(subcategoryParamRaw);
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
   const { categories } = useCategories();
   const isGiftSets = activeCategoryNormalized === "gift-sets";
   const isDiaries = activeCategoryNormalized === "diaries";
@@ -444,7 +445,9 @@ const Shop = () => {
           </div>
         )}
 
-        {paginatedProducts.length === 0 ? (
+        {isLoading ? (
+          <GiftLoader message="Loading and wrapping the catalog for you..." />
+        ) : paginatedProducts.length === 0 ? (
           <p className="text-muted-foreground text-center py-16">No products found in this category.</p>
         ) : (
           <>

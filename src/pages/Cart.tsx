@@ -20,6 +20,9 @@ const Cart = () => {
   const { items, updateQuantity, removeItem, clearCart } = useCart();
   const { products } = useProducts();
   const whatsappPhone = "9074145962";
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const buildProductUrl = (productId: string) =>
+    baseUrl ? `${baseUrl}/product/${productId}` : `/product/${productId}`;
 
   const cartRows = items
     .map((item) => {
@@ -28,7 +31,8 @@ const Cart = () => {
         return null;
       }
       const lineTotal = product.price * item.quantity;
-      return { item, product, lineTotal };
+      const productLink = buildProductUrl(product.id);
+      return { item, product, lineTotal, productLink };
     })
     .filter(Boolean);
 
@@ -37,7 +41,7 @@ const Cart = () => {
     `Hi! I'd like to place an order from my cart:\n\n${cartRows
       .map(
         (row, index) =>
-          `${index + 1}. ${row!.product.name}\nProduct ID: ${row!.item.productId}\nQuantity: ${row!.item.quantity}${row!.item.variant ? `\nVariant: ${row!.item.variant}` : ""}\nLine Total: Rs. ${row!.lineTotal.toFixed(2)}`
+          `${index + 1}. ${row!.product.name}\nProduct ID: ${row!.item.productId}\nQuantity: ${row!.item.quantity}${row!.item.variant ? `\nVariant: ${row!.item.variant}` : ""}\nLine Total: Rs. ${row!.lineTotal.toFixed(2)}\nProduct Link: ${row!.productLink}`
       )
       .join("\n\n")}\n\nSubtotal: Rs. ${subtotal.toFixed(2)}\n\nPlease let me know the next steps!`
   );

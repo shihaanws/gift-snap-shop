@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import GiftLoader from "@/components/GiftLoader";
 import { useProducts } from "@/hooks/use-products";
 import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
@@ -33,9 +34,12 @@ function normalizeCategory(value?: string) {
 const ProductDetail = () => {
   const { id } = useParams();
   const location = useLocation<{ from?: string }>();
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
   const { addItem } = useCart();
   const product = products.find((p) => p.id === id);
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const buildProductUrl = (productId: string) =>
+    baseUrl ? `${baseUrl}/product/${productId}` : `/product/${productId}`;
   const fallbackImages = product?.productCode ? [`/product-images/${product.productCode}.jpg`] : [];
   const productImages = product?.images && product.images.length > 0 ? product.images : fallbackImages;
   const [selectedImage, setSelectedImage] = useState(0);
@@ -86,6 +90,16 @@ const ProductDetail = () => {
 
   const backLink = location.state?.from ?? "/shop";
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <GiftLoader message="Finding the perfect product wrap…" />
+        <Footer />
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="min-h-screen bg-background">
@@ -116,6 +130,7 @@ const ProductDetail = () => {
     typeof product.listPrice === "number" &&
     typeof product.discountPercent === "number";
 
+  const productLink = buildProductUrl(product.id);
   const whatsappMessage = encodeURIComponent(
     [
       "Hi! I'd like to place an order:",
@@ -130,6 +145,7 @@ const ProductDetail = () => {
         : []),
       `🔢 Quantity: ${quantity}`,
       `💰 Total: ${formatter.format(product.price * quantity)}`,
+      `🔗 Product Link: ${productLink}`,
       "",
       "Please let me know the next steps!",
     ].join("\n"),

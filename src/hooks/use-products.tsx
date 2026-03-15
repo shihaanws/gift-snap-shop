@@ -9,6 +9,7 @@ type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
 
 interface ProductContextValue {
   products: Product[];
+  isLoading: boolean;
   addOrUpdateProduct: (product: Product) => Promise<void>;
   addOrUpdateMany: (nextProducts: Product[]) => Promise<{ created: number; updated: number }>;
   removeProduct: (productId: string) => Promise<void>;
@@ -85,27 +86,35 @@ function mapProductToInsert(product: Product): ProductInsert {
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchProducts = async () => {
+      if (!isMounted) {
+        return;
+      }
+      setIsLoading(true);
+
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Failed to fetch products from Supabase", error);
+      if (!isMounted) {
         return;
       }
 
-      if (!isMounted) {
+      if (error) {
+        console.error("Failed to fetch products from Supabase", error);
+        setIsLoading(false);
         return;
       }
 
       const rows = data ?? [];
       setProducts(rows.map(mapRowToProduct));
+      setIsLoading(false);
     };
 
     void fetchProducts();
@@ -118,6 +127,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const value = useMemo<ProductContextValue>(
     () => ({
       products,
+      isLoading,
       addOrUpdateProduct: async (product) => {
         const row = mapProductToInsert(product);
         const { error } = await supabase.from("products").upsert(row, { onConflict: "id" });
@@ -179,7 +189,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         setProducts(seedProducts);
       },
     }),
-    [products]
+    [products, isLoading]
   );
 
   return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
