@@ -7,6 +7,14 @@ import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const shuffleArray = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -30,7 +38,11 @@ const ITEMS_PER_PAGE = 12;
 const KeychainStyles = ["wooden", "metal"] as const;
 type KeychainStyle = "" | (typeof KeychainStyles)[number];
 
-const DiarySubcategories = ["planner-diary", "notebook-diary"] as const;
+const DiarySubcategories = [
+  "planner-diary",
+  "notebook-diary",
+  "eco-diaries-memo-pads",
+] as const;
 type DiarySubcategory = "" | (typeof DiarySubcategories)[number];
 
 const Shop = () => {
@@ -49,7 +61,13 @@ const Shop = () => {
   const styleParam = normalizeStyleParam(styleParamRaw);
   const subcategoryParamRaw = searchParams.get("subcategory");
   const normalizeDiarySubcategory = (value: string | null): DiarySubcategory => {
-    if (value === "planner-diary" || value === "notebook-diary") return value;
+    if (
+      value === "planner-diary" ||
+      value === "notebook-diary" ||
+      value === "eco-diaries-memo-pads"
+    ) {
+      return value;
+    }
     return "";
   };
   const diarySubcategoryParam = normalizeDiarySubcategory(subcategoryParamRaw);
@@ -176,11 +194,71 @@ const Shop = () => {
     <div className="min-h-screen listing-background">
       <Navbar />
       <div className="container mx-auto px-4 py-4">
-        <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Corporate Product Catalog</h1>
-        <p className="text-muted-foreground mb-4">Explore bulk gifting products for clients, teams, and events</p>
+        {/* Desktop heading */}
+        <div className="hidden md:block mb-4">
+          <h1 className="font-display text-3xl font-bold text-foreground mb-1">
+            Corporate Product Catalog
+          </h1>
+          <p className="text-muted-foreground">
+            Explore bulk gifting products for clients, teams, and events
+          </p>
+        </div>
 
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* Mobile breadcrumb + category selector */}
+        <div className="md:hidden mb-4 space-y-2">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>
+                  {activeCategory === "all"
+                    ? "All products"
+                    : categories.find(
+                        (cat) => normalizeCategory(cat.id) === activeCategoryNormalized
+                      )?.name ?? "Products"}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground shrink-0">Category:</span>
+            <select
+              className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              value={activeCategory === "all" ? "all" : activeCategory}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value === "all") {
+                  setSearchParams({});
+                  return;
+                }
+                updateSearchParams((params) => {
+                  params.set("category", value);
+                  params.delete("bundle");
+                  if (value !== "keychains") {
+                    params.delete("style");
+                  }
+                  if (value !== "diaries") {
+                    params.delete("subcategory");
+                  }
+                });
+              }}
+            >
+              <option value="all">All products</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Category filters - desktop/tablet only */}
+        <div className="hidden md:flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setSearchParams({})}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -218,28 +296,73 @@ const Shop = () => {
         </div>
        
         {isDiaries && (
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted-foreground">Diary type:</span>
-            <Tabs
-              value={diarySubcategoryParam || "all"}
-              onValueChange={(value) => {
-                updateSearchParams((params) => {
-                  params.set("category", "diaries");
-                  if (value === "all") {
-                    params.delete("subcategory");
-                  } else {
-                    params.set("subcategory", value);
-                  }
-                });
-              }}
-            >
-              <TabsList className="rounded-sm border border-border bg-secondary/10 p-1">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="planner-diary">Planner Diary</TabsTrigger>
-                <TabsTrigger value="notebook-diary">Notebook Diary</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+          <>
+            {/* Mobile: dropdown selector */}
+            <div className="mb-4 flex items-center gap-2 sm:hidden">
+              <label
+                className="text-sm text-muted-foreground shrink-0"
+                htmlFor="diary-subcategory-select"
+              >
+                Diary type:
+              </label>
+              <select
+                id="diary-subcategory-select"
+                className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                value={diarySubcategoryParam || "all"}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  updateSearchParams((params) => {
+                    params.set("category", "diaries");
+                    if (value === "all") {
+                      params.delete("subcategory");
+                    } else {
+                      params.set("subcategory", value);
+                    }
+                  });
+                }}
+              >
+                <option value="all">All</option>
+                <option value="planner-diary">Planner Diary</option>
+                <option value="notebook-diary">Notebook Diary</option>
+                <option value="eco-diaries-memo-pads">Eco Diaries &amp; Memo Pads</option>
+              </select>
+            </div>
+
+            {/* Desktop/tablet: tabs */}
+            <div className="mb-6 hidden sm:flex flex-col gap-2">
+              <span className="text-sm text-muted-foreground">Diary type:</span>
+              <div className="w-full overflow-x-auto">
+                <Tabs
+                  value={diarySubcategoryParam || "all"}
+                  onValueChange={(value) => {
+                    updateSearchParams((params) => {
+                      params.set("category", "diaries");
+                      if (value === "all") {
+                        params.delete("subcategory");
+                      } else {
+                        params.set("subcategory", value);
+                      }
+                    });
+                  }}
+                >
+                  <TabsList className="inline-flex w-max rounded-sm border border-border bg-secondary/10 p-1 text-sm justify-start">
+                    <TabsTrigger value="all" className="px-3">
+                      All
+                    </TabsTrigger>
+                    <TabsTrigger value="planner-diary" className="px-3">
+                      Planner Diary
+                    </TabsTrigger>
+                    <TabsTrigger value="notebook-diary" className="px-3">
+                      Notebook Diary
+                    </TabsTrigger>
+                    <TabsTrigger value="eco-diaries-memo-pads" className="px-3">
+                      Eco Diaries &amp; Memo Pads
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+            </div>
+          </>
         )}
 
         {activeCategoryNormalized === "keychains" && (

@@ -40,7 +40,9 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     ? "object-contain"
     : "object-cover";
   const isPenCard = normalizedCategory === "pens";
-  const cardAspectClass = isPenCard ? "aspect-[796/900]" : "aspect-square";
+  const cardAspectClass = isPenCard
+    ? "aspect-[796/900]"
+    : "aspect-[4/5] sm:aspect-square";
   const shouldAnimate = !reduceMotion && index < 24; // avoid costly animations on long lists
   const [imageLoaded, setImageLoaded] = useState(false);
   const isWoodenProduct =
