@@ -55,7 +55,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       viewport={shouldAnimate ? { once: true } : undefined}
       transition={shouldAnimate ? { duration: 0.35, delay: Math.min(index * 0.06, 0.4) } : undefined}
     >
-      <div className="border border-border/30 rounded-3xl bg-white p-3 transition sm:border-none sm:p-0 sm:bg-card sm:shadow-sm">
+      <div  className=" h-[100%] border border-border/30 rounded-3xl bg-white p-3 transition sm:border-none sm:p-0 sm:bg-card sm:shadow-sm">
         <Link
           to={`/product/${product.id}`}
           state={{ from: `${location.pathname}${location.search}` }}
@@ -83,7 +83,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
           <Link
             to={`/product/${product.id}`}
             state={{ from: `${location.pathname}${location.search}` }}
-            className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate"
+            className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate min-w-0"
           >
             {product.name}
           </Link>
@@ -97,24 +97,25 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               addItem({ productId: product.id, quantity: 1 });
               toast.success(`${product.name} added to cart`);
             }}
-            className="hidden items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-secondary sm:inline-flex"
+            className="hidden sm:inline-flex flex-shrink-0 items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-secondary"
           >
             <ShoppingCart className="h-4 w-4" />
             {isInCart ? "Go to Cart" : "Add to Cart"}
           </button>
         </div>
         <div className="mt-1 space-y-1">
-          {isWoodenProduct && (
+          {/* {isWoodenProduct && (
             <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Wooden Products
             </span>
-          )}
-          {product.productCode && (
-            <p className="text-sm font-semibold text-gold tracking-wide uppercase">
-              {product.productCode}
-            </p>
-          )}
-          <p className="text-foreground font-semibold">Rs. {product.price.toFixed(2)}</p>
+          )} */}
+          <p className="text-sm font-semibold text-gold tracking-wide uppercase">
+            {product.productCode ?? "PROD_CODE"}
+          </p>
+          <p className="text-foreground font-semibold">
+            <span className="font-serif text-lg leading-tight">₹</span>{" "}
+            {product.price.toFixed(2)}
+          </p>
         </div>
       </div>
     </motion.div>

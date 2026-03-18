@@ -1,7 +1,5 @@
 import {
   Gift,
-  Instagram,
-  Linkedin,
   Facebook,
   Mail,
   Phone,
@@ -23,30 +21,34 @@ const WhatsAppIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const Footer = () => {
-  const socialLinks = [
+  const socialLinks: {
+    label: string;
+    href: string;
+    className: string;
+    icon: (props: { className?: string }) => JSX.Element;
+  } = [
     {
       label: "WhatsApp",
       href: "https://wa.me/9074145962",
-      icon: WhatsAppIcon,
+      icon: (props) => <WhatsAppIcon {...props} />,
       className: "bg-[#25d366] text-white hover:bg-[#1ebe54]",
     },
     {
       label: "Instagram",
       href: "https://instagram.com/redmomentskerala/",
-      icon: Instagram,
+      icon: (props) => (
+        <i
+          className={`fa-brands fa-instagram ${props.className ?? ""}`}
+          aria-hidden="true"
+        />
+      ),
       className:
         "bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white hover:brightness-105",
     },
-    // {
-    //   label: "LinkedIn",
-    //   href: "https://www.linkedin.com/",
-    //   icon: Linkedin,
-    //   className: "bg-[#0A66C2] text-white hover:bg-[#0955a6]",
-    // },
     {
       label: "Facebook",
       href: "https://www.facebook.com/p/Red-Moments-Kochi-100063559886803/",
-      icon: Facebook,
+      icon: (props) => <Facebook {...props} />,
       className: "bg-[#1877F2] text-white hover:bg-[#166fe4]",
     },
   ];
@@ -118,7 +120,7 @@ const Footer = () => {
                 <address className="not-italic">
                   Panathara Building, Kompara,
                   <br />
-                  Market Road, Near Hi Court,
+                  Market Road, Near High Court,
                   <br />
                   Ernakulam, 682018.
                 </address>

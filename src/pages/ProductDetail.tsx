@@ -2,7 +2,6 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  MessageCircle,
   ArrowLeft,
   Check,
   Plus,
@@ -38,6 +37,15 @@ const ProductDetail = () => {
   const { products, isLoading } = useProducts();
   const { addItem } = useCart();
   const product = products.find((p) => p.id === id);
+  const handleAddToCart = () => {
+    if (!product) return;
+    addItem({
+      productId: product.id,
+      quantity,
+      color: selectedColorName,
+    });
+    toast.success(`${product.name} added to cart`);
+  };
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const buildProductUrl = (productId: string) =>
     baseUrl ? `${baseUrl}/product/${productId}` : `/product/${productId}`;
@@ -259,7 +267,7 @@ const ProductDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.2 }}
-                className={`absolute inset-0 w-full h-full ${product.category == "diaries"? "":""} ${product.category == "personalized-gifts" || product.category == "keychains"|| product.category == "diaries" ? "" : imageFitClass}`}
+                className={`absolute inset-0 w-full h-full ${product.category == "diaries"? "":""} ${product.category == "personalized-gifts" || product.category == "keychains"|| product.category == "diaries" || product.category == "desktop-lifetime-calenders" || product.category == "business-card-holders"? "" : imageFitClass}`}
               />
             </AnimatePresence>
 
@@ -374,13 +382,9 @@ const ProductDetail = () => {
             {product.name}
           </h1>
 
-          {product.description && (
-            <p className="text-sm text-muted-foreground mb-4 leading-relaxed max-w-2xl">
-              {product.description}
-            </p>
-          )}
+          
 
-          {detailTags.length > 0 && (
+          {/* {detailTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
               {detailTags.map((tag) => (
                 <span
@@ -391,43 +395,94 @@ const ProductDetail = () => {
                 </span>
               ))}
             </div>
-          )}
+          )} */}
 
-          <p className="text-xl sm:text-2xl font-semibold text-primary">
-            {formatter.format(product.price)}
-          </p>
-
-          {product.gstRate && (
-            <p className="text-sm text-muted-foreground">
-              GST @ {product.gstRate}% ({formatter.format(gstAmount)})
+          <div className="flex flex-wrap items-center gap-3 sm:flex-col sm:items-start">
+            <p className="text-xl sm:text-2xl font-semibold text-primary">
+              {formatter.format(product.price)}
             </p>
-          )}
+            {product.gstRate && (
+              <p className="text-sm text-muted-foreground">
+                GST @ {product.gstRate}% ({formatter.format(gstAmount)})
+              </p>
+            )}
+            {discountedFromList && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="line-through text-muted-foreground">
+                  {formatter.format(product.listPrice)}
+                </span>
+                <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">
+                  {product.discountPercent}% OFF
+                </span>
+              </div>
+            )}
+          </div>
 
-          {discountedFromList && (
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-sm line-through text-muted-foreground">
-                {formatter.format(product.listPrice)}
-              </span>
-              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold">
-                {product.discountPercent}% OFF
-              </span>
-            </div>
-          )}
+          <div className="mt-3 flex flex-wrap items-center gap-2 sm:hidden">
+            <button
+              onClick={handleAddToCart}
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Add to Cart
+            </button>
+
+            <button className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2">
+              <Heart className="w-4 h-4" />
+              Wishlist
+            </button>
+
+            <button
+              onClick={handleShare}
+              className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2"
+            >
+              <Share2 className="w-4 h-4" />
+              Share
+            </button>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-auto inline-flex items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+            >
+              <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
+              Order via WhatsApp
+            </a>
+          </div>
+
+          <div className="mt-3 flex sm:hidden items-center gap-2">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Add to Cart
+            </button>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 flex items-center justify-center gap-3 bg-green-600 text-white px-4 py-2 rounded-lg font-semibold"
+            >
+              <i className="fab fa-whatsapp text-base" aria-hidden="true" />
+              Order now
+            </a>
+          </div>
+
 
           {/* COLORS */}
 
-          <div className="mt-2">
+          <div className="mt-3">
             <p className="text-sm font-medium mb-2">Colors</p>
-
             <div className="flex flex-wrap gap-2">
               {product.availableColors?.map((c, i) => (
                 <button
                   key={c}
                   onClick={() => setSelectedColor(i)}
                   className={`px-3 py-1 rounded-lg text-xs sm:text-sm border ${
-                    selectedColor === i
-                      ? "border-primary bg-primary/10"
-                      : "border-border"
+                    selectedColor === i ? "border-primary bg-primary/10" : "border-border"
                   }`}
                 >
                   {c}
@@ -436,7 +491,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* PRODUCT TABLE */}
+          {/* ACTION BUTTONS */}
 
           <div className="mt-2 border rounded-lg overflow-x-auto px-3">
             <table className="w-full min-w-[320px] text-sm ">
@@ -446,7 +501,7 @@ const ProductDetail = () => {
                     Product Code
                   </td>
                   <td className="py-2">
-                    {product.productCode || "N/A"}
+                    {product.productCode ?? "PROD_CODE"}
                   </td>
                 </tr>
 
@@ -520,17 +575,9 @@ const ProductDetail = () => {
 
           {/* ACTION BUTTONS */}
 
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="mt-3 hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
-              onClick={() => {
-                addItem({
-                  productId: product.id,
-                  quantity,
-                  color: selectedColorName,
-                });
-
-                toast.success(`${product.name} added to cart`);
-              }}
+              onClick={handleAddToCart}
               className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
             >
               <ShoppingCart className="w-4 h-4" />
@@ -557,13 +604,13 @@ const ProductDetail = () => {
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 w-full sm:w-auto flex items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+            className="mt-2 hidden w-full sm:flex sm:w-auto items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
           >
-            <MessageCircle className="w-5 h-5" />
+            <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
             Order via WhatsApp
           </a>
 
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-xs text-muted-foreground mt-2 hidden sm:block">
             You'll be redirected to WhatsApp to complete your order
           </p>
         </motion.div>

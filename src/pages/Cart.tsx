@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ShoppingCart, MessageCircle } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/hooks/use-cart";
@@ -153,7 +153,7 @@ const Cart = () => {
                     type="button"
                     className="mb-2 bg-[hsl(142,70%,40%)] inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-[hsl(0,0%,100%)] hover:opacity-90 transition-opacity shadow-lg"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <i className="fab fa-whatsapp text-lg" aria-hidden="true" />
                     Order via WhatsApp
                   </button>
                 </AlertDialogTrigger>

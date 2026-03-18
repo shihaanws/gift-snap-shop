@@ -11,10 +11,12 @@ const shortNames: Record<string, string> = {
   "business-card-holders": "Card Holders",
   "desktop-lifetime-calenders": "Calendars",
   "gift-sets": "Gift Sets",
-  "wooden-engravings": "Wooden",
+  "wooden-engravings": "Engravings",
   "personalized-gifts": "Personalized",
   "wooden-products": "Desk Decor",
   "diaries": "Diaries",
+    "discounted-items": "Discounted",
+
 };
 
 const ALL_CATEGORY_IMAGE =""

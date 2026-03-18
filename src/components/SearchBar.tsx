@@ -4,7 +4,11 @@ import { Search, X } from "lucide-react";
 import type { Product } from "@/data/products";
 import { useProducts } from "@/hooks/use-products";
 
-const SearchBar = () => {
+type SearchBarProps = {
+  onSelect?: () => void;
+};
+
+const SearchBar = ({ onSelect }: SearchBarProps) => {
   const { products } = useProducts();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +50,7 @@ const SearchBar = () => {
     navigate(`/product/${productId}`);
     setQuery("");
     setIsOpen(false);
+    onSelect?.();
   };
 
   const highlightMatch = (text: string) => {
@@ -109,7 +114,7 @@ const SearchBar = () => {
                   {product.category}
                 </p>
                 <p className="text-sm font-semibold text-primary mt-1">
-                  ${product.price.toFixed(2)}
+                  ₹{product.price.toFixed(2)}
                 </p>
               </div>
             </button>

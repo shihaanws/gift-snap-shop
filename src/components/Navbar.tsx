@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut } from "lucide-react";
+import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut, Search as SearchIcon } from "lucide-react";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
@@ -138,6 +138,7 @@ function getInitials(name?: string) {
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [openSubNav, setOpenSubNav] = useState<string | null>(null);
   const [subNavOffset, setSubNavOffset] = useState(0);
   const subNavBarRef = useRef<HTMLDivElement>(null);
@@ -172,18 +173,28 @@ const Navbar = () => {
           <Link to="/" className="flex items-center justify-center">
             <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-12 w-auto" />
           </Link>
-          <Link
-            to="/cart"
-            className="relative inline-flex items-center justify-center rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
-            aria-label="View cart"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            {itemCount > 0 && (
-              <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setMobileSearchOpen(true)}
+              aria-label="Search products"
+              className="rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
+            >
+              <SearchIcon className="h-4 w-4" />
+            </button>
+            <Link
+              to="/cart"
+              className="relative inline-flex items-center justify-center rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
+              aria-label="View cart"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              {itemCount > 0 && (
+                <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
 
         <div className="hidden md:flex items-center justify-between h-20">
@@ -423,6 +434,50 @@ const Navbar = () => {
           )}
         </AnimatePresence>
       </nav>
+
+      <AnimatePresence>
+        {mobileSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50"
+          >
+            <div
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => setMobileSearchOpen(false)}
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="relative mx-auto mt-10 flex w-full max-w-lg items-start justify-center px-4"
+            >
+              <div
+                className="w-full rounded-2xl border border-border bg-white p-6 shadow-2xl"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-lg font-semibold text-foreground">Search products</p>
+                  <button
+                    type="button"
+                    onClick={() => setMobileSearchOpen(false)}
+                    aria-label="Close search"
+                    className="rounded-full p-2 text-muted-foreground transition hover:bg-secondary"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <SearchBar onSelect={() => setMobileSearchOpen(false)} />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* <FestiveCarousel /> */}
     </>
   );
