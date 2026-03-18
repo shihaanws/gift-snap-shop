@@ -209,13 +209,13 @@ const Navbar = () => {
             >
               About Us
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/manage-products"
               className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
               activeClassName="text-primary"
             >
               Manage Products
-            </NavLink>
+            </NavLink> */}
             <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
               <SearchBar />
             </div>
@@ -363,24 +363,60 @@ const Navbar = () => {
         </AnimatePresence>
       </div>
 
-        <AnimatePresence>
-          {mobileOpen && (
+      </nav>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-white/15 bg-[#0E2A4A] md:hidden"
+              key="mobile-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/40"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.aside
+              key="mobile-panel"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+              className="fixed inset-y-0 left-0 z-50 w-[80vw] max-w-sm overflow-y-auto border-r border-white/20 bg-[#0E2A4A] p-5 md:hidden"
             >
-              <div className="flex flex-col gap-4 p-4">
-                <SearchBar />
-                <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Home</Link>
-                <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Bulk Solutions</Link>
-                <Link to="/shop" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Catalog</Link>
-                <Link to="/about" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">About Us</Link>
-                <Link to="/manage-products" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">Manage Products</Link>
-                <Link to="/cart" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-white">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-lg font-semibold text-white">Menu</p>
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-full border border-white/20 p-2 text-white transition hover:border-white hover:bg-white/20"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <SearchBar />
+              <div className="mt-4 flex flex-col gap-3">
+                <Link onClick={() => setMobileOpen(false)} to="/" className="text-sm font-medium text-white">
+                  Home
+                </Link>
+                <Link onClick={() => setMobileOpen(false)} to="/shop?category=corporate" className="text-sm font-medium text-white">
+                  Bulk Solutions
+                </Link>
+                <Link onClick={() => setMobileOpen(false)} to="/shop" className="text-sm font-medium text-white">
+                  Catalog
+                </Link>
+                <Link onClick={() => setMobileOpen(false)} to="/about" className="text-sm font-medium text-white">
+                  About Us
+                </Link>
+                {/* <Link onClick={() => setMobileOpen(false)} to="/manage-products" className="text-sm font-medium text-white">
+                  Manage Products
+                </Link> */}
+                <Link onClick={() => setMobileOpen(false)} to="/cart" className="text-sm font-medium text-white">
                   Cart ({itemCount})
                 </Link>
+              </div>
+              <div className="mt-5">
                 {!isAuthenticated ? (
                   <div className="grid grid-cols-2 gap-2">
                     <Link
@@ -411,29 +447,33 @@ const Navbar = () => {
                     Logout {user?.name ? `(${user.name})` : ""}
                   </button>
                 )}
-                <div className="rounded-lg border border-white/15 p-3">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {subNavItems.map((item) => (
-                      <Link
-                        key={item.label}
-                        to={item.label.toLowerCase().includes("gift") ? "/shop?category=gift-sets" : `/shop?category=${slugify(item.label)}`}
-                        onClick={() => setMobileOpen(false)}
-                        className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <Link to="/shop?category=corporate" onClick={() => setMobileOpen(false)} className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
-                  Request Bulk Quote
-                </Link>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+              <div className="mt-6 rounded-lg border border-white/15 p-3">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {subNavItems.map((item) => (
+                    <Link
+                      key={item.label}
+                      to={item.label.toLowerCase().includes("gift") ? "/shop?category=gift-sets" : `/shop?category=${slugify(item.label)}`}
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <Link
+                to="/shop?category=corporate"
+                onClick={() => setMobileOpen(false)}
+                className="mt-5 rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground"
+              >
+                Request Bulk Quote
+              </Link>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {mobileSearchOpen && (

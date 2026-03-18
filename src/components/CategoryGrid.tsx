@@ -53,7 +53,7 @@ const CategoryGrid = () => {
     map["business-card-holders"] = "https://www.zestpics.com/cdn/shop/files/Brown_BlackLeatherCardHolder_2.jpg?v=1685675929&width=3840";
     map["desktop-lifetime-calenders"] = "https://5.imimg.com/data5/SELLER/Default/2023/3/DQ/BF/FR/50809465/zahepa-lifetime-perpetual-metal-table-calendrer-500x500.jpg";
     map["badges"] = "https://badgesforafrica.co.za/wp-content/uploads/2025/04/Lapel.png";
-    map["gift-sets"] = GIFT_SETS_HOMEPAGE_IMAGE;
+    map["gift-sets"] = "https://5.imimg.com/data5/SELLER/Default/2025/4/507226151/OV/YQ/GI/240292911/bamboo-employee-gift-set-500x500.jpeg";
     map["pens"] = "https://m.media-amazon.com/images/I/71pwFw7Lz5L._AC_UF1000,1000_QL80_.jpg";
     map["diaries"] = "https://cpimg.tistatic.com/06821552/b/4/2021-Multinc-LP-W-Business-Diary.jpg"
     // "https://m.media-amazon.com/images/I/71YplvYxbYL._AC_SX679_.jpg";
