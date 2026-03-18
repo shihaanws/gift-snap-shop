@@ -20,7 +20,6 @@ const shortNames: Record<string, string> = {
 };
 
 const ALL_CATEGORY_IMAGE ="https://2.imimg.com/data2/MW/RO/MY-/4-1000x1000.jpg"
-  // "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=80";
 
 const CategoryGrid = () => {
   const { products } = useProducts();
