@@ -157,6 +157,28 @@ const Shop = () => {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
+  const paginationButtons = useMemo(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const siblingCount = 1;
+    const firstPage = 1;
+    const lastPage = totalPages;
+    const leftIndex = Math.max(currentPage - siblingCount, 2);
+    const rightIndex = Math.min(currentPage + siblingCount, totalPages - 1);
+    const pages: Array<number | "ellipsis-start" | "ellipsis-end"> = [firstPage];
+    if (leftIndex > 2) {
+      pages.push("ellipsis-start");
+    }
+    for (let page = leftIndex; page <= rightIndex; page += 1) {
+      pages.push(page);
+    }
+    if (rightIndex < totalPages - 1) {
+      pages.push("ellipsis-end");
+    }
+    pages.push(lastPage);
+    return pages;
+  }, [totalPages, currentPage]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -200,7 +222,7 @@ const Shop = () => {
         </div>
       ) : (
         <div className="flex-1">
-          <div className="container mx-auto px-4 py-4">
+          <div className="container mx-auto px-1 py-4">
             {/* Desktop heading */}
             <div className="hidden md:block mb-4">
               <h1 className="font-display text-3xl font-bold text-foreground mb-1">
@@ -455,7 +477,7 @@ const Shop = () => {
           <p className="text-muted-foreground text-center py-16">No products found in this category.</p>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
               {paginatedProducts.map((p, i) => (
                 <ProductCard key={p.id} product={p} index={i} />
               ))}
@@ -470,8 +492,14 @@ const Shop = () => {
                 >
                   Previous
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => {
-                  const page = i + 1;
+                {paginationButtons.map((page) => {
+                  if (page === "ellipsis-start" || page === "ellipsis-end") {
+                    return (
+                      <span key={page} className="px-3 py-1 text-sm font-semibold text-muted-foreground">
+                        …
+                      </span>
+                    );
+                  }
                   return (
                     <button
                       key={page}

@@ -32,7 +32,7 @@ const Footer = () => {
     },
     {
       label: "Instagram",
-      href: "https://www.instagram.com/emotionplus_/",
+      href: "https://instagram.com/redmomentskerala/",
       icon: Instagram,
       className:
         "bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white hover:brightness-105",
@@ -45,7 +45,7 @@ const Footer = () => {
     // },
     {
       label: "Facebook",
-      href: "https://www.facebook.com/p/Emotions-Unlimited-100067074061954/",
+      href: "https://www.facebook.com/p/Red-Moments-Kochi-100063559886803/",
       icon: Facebook,
       className: "bg-[#1877F2] text-white hover:bg-[#166fe4]",
     },

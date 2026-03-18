@@ -44,6 +44,18 @@ export const categories: Category[] = [
     image: giftCorporate,
   },
   {
+    id: "business-card-holders",
+    name: "Business Card Holders",
+    description: "Executive holders that elevate brand-first impressions",
+    image: giftThankyou,
+  },
+  {
+    id: "desktop-lifetime-calenders",
+    name: "Desktop Lifetime Calendars",
+    description: "Steel and premium calendars with rotating month plates",
+    image: giftCorporate,
+  },
+  {
     id: "pens",
     name: "Pens",
     description: "Premium writing instruments for corporate gifting",

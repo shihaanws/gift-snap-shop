@@ -352,6 +352,12 @@ const ProductDetail = () => {
             {product.name}
           </h1>
 
+          {product.description && (
+            <p className="text-sm text-muted-foreground mb-4 leading-relaxed max-w-2xl">
+              {product.description}
+            </p>
+          )}
+
           {detailTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
               {detailTags.map((tag) => (
