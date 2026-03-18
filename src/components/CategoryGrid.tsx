@@ -19,7 +19,7 @@ const shortNames: Record<string, string> = {
 
 };
 
-const ALL_CATEGORY_IMAGE =""
+const ALL_CATEGORY_IMAGE ="https://2.imimg.com/data2/MW/RO/MY-/4-1000x1000.jpg"
   // "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=80";
 
 const CategoryGrid = () => {
@@ -50,9 +50,14 @@ const CategoryGrid = () => {
       );
       map[category.id] = match?.images[0] || category.image || ALL_CATEGORY_IMAGE;
     }
+    map["discounted-items"] = "https://blog.agilenceinc.com/hubfs/stacking-discounts.png";
+    map["business-card-holders"] = "https://www.zestpics.com/cdn/shop/files/Brown_BlackLeatherCardHolder_2.jpg?v=1685675929&width=3840";
+    map["desktop-lifetime-calenders"] = "https://5.imimg.com/data5/SELLER/Default/2023/3/DQ/BF/FR/50809465/zahepa-lifetime-perpetual-metal-table-calendrer-500x500.jpg";
+    map["badges"] = "https://badgesforafrica.co.za/wp-content/uploads/2025/04/Lapel.png";
     map["gift-sets"] = GIFT_SETS_HOMEPAGE_IMAGE;
     map["pens"] = "https://m.media-amazon.com/images/I/71pwFw7Lz5L._AC_UF1000,1000_QL80_.jpg";
-    map["diaries"] = "https://m.media-amazon.com/images/I/71YplvYxbYL._AC_SX679_.jpg";
+    map["diaries"] = "https://cpimg.tistatic.com/06821552/b/4/2021-Multinc-LP-W-Business-Diary.jpg"
+    // "https://m.media-amazon.com/images/I/71YplvYxbYL._AC_SX679_.jpg";
     map["keychains"] =
       "https://seedballs.in/cdn/shop/files/Premiummetalkeychainforpromotionalbrandingandbulkorders.png?v=1766291952";
     return map;
