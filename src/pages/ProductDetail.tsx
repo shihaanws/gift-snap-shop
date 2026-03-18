@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   ChevronLeft,
   ChevronRight,
+  Share2,
   X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -132,6 +133,27 @@ const ProductDetail = () => {
     typeof product.discountPercent === "number";
 
   const productLink = buildProductUrl(product.id);
+
+  const handleShare = async () => {
+    if (!product) return;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product.name,
+          text: `Check out this product: ${product.name}`,
+          url: productLink,
+        });
+        toast.success("Product link shared");
+        return;
+      }
+
+      await navigator.clipboard.writeText(productLink);
+      toast.success("Product link copied");
+    } catch {
+      toast.error("Unable to share right now");
+    }
+  };
   const whatsappMessage = encodeURIComponent(
     [
       "Hi! I'd like to place an order:",
@@ -498,7 +520,7 @@ const ProductDetail = () => {
 
           {/* ACTION BUTTONS */}
 
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               onClick={() => {
                 addItem({
@@ -518,6 +540,14 @@ const ProductDetail = () => {
             <button className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2">
               <Heart className="w-4 h-4" />
               Wishlist
+            </button>
+
+            <button
+              onClick={handleShare}
+              className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2"
+            >
+              <Share2 className="w-4 h-4" />
+              Share
             </button>
           </div>
 
