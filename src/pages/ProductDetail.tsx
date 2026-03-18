@@ -1,5 +1,5 @@
 import { useParams, Link, useLocation } from "react-router-dom";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type TouchEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -49,8 +49,13 @@ const ProductDetail = () => {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const buildProductUrl = (productId: string) =>
     baseUrl ? `${baseUrl}/product/${productId}` : `/product/${productId}`;
-  const fallbackImages = product?.productCode ? [`/product-images/${product.productCode}.jpg`] : [];
-  const productImages = product?.images && product.images.length > 0 ? product.images : fallbackImages;
+  const fallbackImages = product?.productCode
+    ? [`/product-images/${product.productCode}.jpg`]
+    : [];
+  const productImages =
+    product?.images && product.images.length > 0
+      ? product.images
+      : fallbackImages;
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
@@ -58,6 +63,7 @@ const ProductDetail = () => {
   const [showNav, setShowNav] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const thumbnailsRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
 
   const scrollThumbnails = (direction: "left" | "right") => {
     const container = thumbnailsRef.current;
@@ -67,6 +73,30 @@ const ProductDetail = () => {
       left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
     });
+  };
+
+  const goToPreviousImage = () => {
+    setSelectedImage((i) => (i === 0 ? productImages.length - 1 : i - 1));
+  };
+
+  const goToNextImage = () => {
+    setSelectedImage((i) => (i === productImages.length - 1 ? 0 : i + 1));
+  };
+
+  const handleImageTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = event.touches[0].clientX;
+  };
+
+  const handleImageTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (touchStartXRef.current === null) return;
+    const deltaX = event.changedTouches[0].clientX - touchStartXRef.current;
+    const threshold = 50;
+    if (deltaX > threshold) {
+      goToPreviousImage();
+    } else if (deltaX < -threshold) {
+      goToNextImage();
+    }
+    touchStartXRef.current = null;
   };
 
   const relatedProducts = useMemo(() => {
@@ -185,32 +215,39 @@ const ProductDetail = () => {
   const selectedColorName = product?.availableColors?.[selectedColor];
   const normalizedCategory = normalizeCategory(product.category);
   const woodenEngravingCategories = new Set(["wooden-engravings"]);
-  const containCategories = new Set(["pens", "badges", ...woodenEngravingCategories]);
+  const containCategories = new Set([
+    "pens",
+    "badges",
+    ...woodenEngravingCategories,
+  ]);
   const skipFitCategories = new Set(["gift-sets"]);
   const imageFitClass = skipFitCategories.has(normalizedCategory)
     ? ""
     : containCategories.has(normalizedCategory)
-    ? "object-contain"
-    : "object-cover";
+      ? "object-contain"
+      : "object-cover";
   const isPen = normalizedCategory === "pens";
   const penContainerStyle = isPen ? { width: 796, height: 900 } : undefined;
-  const mainAspectClass = isPen ? "aspect-[796/900]" : "aspect-[4/5] md:aspect-[3/4]";
+  const mainAspectClass = isPen
+    ? "aspect-[796/900]"
+    : "aspect-[4/5] md:aspect-[3/4]";
   const isWoodenProduct =
-    normalizedCategory === "keychains" && product.material?.toLowerCase().includes("wood");
+    normalizedCategory === "keychains" &&
+    product.material?.toLowerCase().includes("wood");
   const detailTags = [
     ...(isWoodenProduct ? ["Wooden Desk Accessories"] : []),
     normalizedCategory === "keychains"
       ? "Keychains"
       : normalizedCategory === "pens"
-      ? "Pens"
-      : "Gift Sets",
+        ? "Pens"
+        : "Gift Sets",
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 pb-6 sm:pb-3">
         <Link
           to={backLink}
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
@@ -257,6 +294,8 @@ const ProductDetail = () => {
           <div
             className={`relative w-full rounded-xl overflow-hidden bg-card ${mainAspectClass} max-h-[560px] shadow-sm border border-border cursor-zoom-in`}
             onClick={() => setLightboxOpen(true)}
+            onTouchStart={handleImageTouchStart}
+            onTouchEnd={handleImageTouchEnd}
           >
             <AnimatePresence mode="wait">
               <motion.img
@@ -274,9 +313,6 @@ const ProductDetail = () => {
             {showNav && productImages.length > 1 && (
               <>
                 <button
-                  onClick={() =>
-                    setSelectedImage((i) => (i === 0 ? productImages.length - 1 : i - 1))
-                  }
                   className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 shadow-lg p-3 text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => {
@@ -297,7 +333,7 @@ const ProductDetail = () => {
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
-          </>
+              </>
             )}
           </div>
 
@@ -382,21 +418,6 @@ const ProductDetail = () => {
             {product.name}
           </h1>
 
-          
-
-          {/* {detailTags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {detailTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )} */}
-
           <div className="flex flex-wrap items-center gap-3 sm:flex-col sm:items-start">
             <p className="text-xl sm:text-2xl font-semibold text-primary">
               {formatter.format(product.price)}
@@ -418,60 +439,6 @@ const ProductDetail = () => {
             )}
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 sm:hidden">
-            <button
-              onClick={handleAddToCart}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
-            </button>
-
-            <button className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2">
-              <Heart className="w-4 h-4" />
-              Wishlist
-            </button>
-
-            <button
-              onClick={handleShare}
-              className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2"
-            >
-              <Share2 className="w-4 h-4" />
-              Share
-            </button>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="ml-auto inline-flex items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
-            >
-              <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
-              Order via WhatsApp
-            </a>
-          </div>
-
-          <div className="mt-3 flex sm:hidden items-center gap-2">
-            <button
-              onClick={handleAddToCart}
-              className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
-            </button>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="flex-1 flex items-center justify-center gap-3 bg-green-600 text-white px-4 py-2 rounded-lg font-semibold"
-            >
-              <i className="fab fa-whatsapp text-base" aria-hidden="true" />
-              Order now
-            </a>
-          </div>
-
-
           {/* COLORS */}
 
           <div className="mt-3">
@@ -491,10 +458,10 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* ACTION BUTTONS */}
+          {/* PRODUCT DETAILS TABLE */}
 
           <div className="mt-2 border rounded-lg overflow-x-auto px-3">
-            <table className="w-full min-w-[320px] text-sm ">
+            <table className="w-full min-w-[320px] text-sm">
               <tbody className="divide-y">
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">
@@ -504,7 +471,6 @@ const ProductDetail = () => {
                     {product.productCode ?? "PROD_CODE"}
                   </td>
                 </tr>
-
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Material
@@ -513,15 +479,6 @@ const ProductDetail = () => {
                     {product.material || "N/A"}
                   </td>
                 </tr>
-                {/* <tr>
-                  <td className="py-2 font-medium text-muted-foreground">
-                    Packing Type
-                  </td>
-                  <td className="py-2">
-                    {product.packingType || "N/A"}
-                  </td>
-                </tr> */}
-
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Master Carton
@@ -530,7 +487,6 @@ const ProductDetail = () => {
                     {product.masterCarton || "N/A"}
                   </td>
                 </tr>
-
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Customized
@@ -546,18 +502,19 @@ const ProductDetail = () => {
           {/* QUANTITY */}
 
           <div className="mt-2">
-            <p className="text-sm font-medium mb-2">Quantity {product.minOrderQty && (
-              <span className="text-xs text-muted-foreground mt-1">
-               (Minimum order quantity: {product.minOrderQty})
-              </span>
-            )}</p>
+            <p className="text-sm font-medium mb-2">
+              Quantity{" "}
+              {product.minOrderQty && (
+                <span className="text-xs text-muted-foreground mt-1">
+                  (Minimum order quantity: {product.minOrderQty})
+                </span>
+              )}
+            </p>
 
             <div className="flex items-center gap-3 border rounded-lg px-2 py-1 w-fit">
               <button
                 onClick={() =>
-                  setQuantity(
-                    Math.max(product.minOrderQty ?? 1, quantity - 1)
-                  )
+                  setQuantity(Math.max(product.minOrderQty ?? 1, quantity - 1))
                 }
               >
                 <Minus className="w-4 h-4" />
@@ -569,13 +526,11 @@ const ProductDetail = () => {
                 <Plus className="w-4 h-4" />
               </button>
             </div>
-
-            
           </div>
 
-          {/* ACTION BUTTONS */}
+          {/* DESKTOP ACTION BUTTONS */}
 
-          <div className="mt-3 hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="mt-3 hidden sm:grid sm:grid-cols-3 gap-3">
             <button
               onClick={handleAddToCart}
               className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
@@ -598,13 +553,13 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          {/* WHATSAPP BUTTON */}
+          {/* DESKTOP WHATSAPP BUTTON */}
 
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 hidden w-full sm:flex sm:w-auto items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+            className="mt-2 hidden sm:flex w-full items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
           >
             <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
             Order via WhatsApp
@@ -615,6 +570,29 @@ const ProductDetail = () => {
           </p>
         </motion.div>
       </div>
+
+      {/* MOBILE STICKY BOTTOM BAR */}
+
+      <div className="sticky bottom-0 left-0 right-0 z-40 sm:hidden bg-background border-t border-border px-0 py-3 flex items-center gap-3 ">
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-xl font-semibold text-sm"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          Add to Cart
+        </button>
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-3 rounded-xl font-semibold text-sm"
+        >
+          <i className="fab fa-whatsapp text-base" aria-hidden="true" />
+          Order Now
+        </a>
+      </div>
+
     </div>
 
     {relatedProducts.length > 0 && (
@@ -643,7 +621,6 @@ const ProductDetail = () => {
     <Footer />
   </div>
 );
-
 };
 
 export default ProductDetail;
