@@ -55,12 +55,12 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       viewport={shouldAnimate ? { once: true } : undefined}
       transition={shouldAnimate ? { duration: 0.35, delay: Math.min(index * 0.06, 0.4) } : undefined}
     >
-      <Link
-        to={`/product/${product.id}`}
-        state={{ from: `${location.pathname}${location.search}` }}
-        className="group block"
-      >
-        <div className="border border-border/30 rounded-3xl bg-white p-3 transition sm:border-none sm:p-0 sm:bg-card sm:shadow-sm">
+      <div className="border border-border/30 rounded-3xl bg-white p-3 transition sm:border-none sm:p-0 sm:bg-card sm:shadow-sm">
+        <Link
+          to={`/product/${product.id}`}
+          state={{ from: `${location.pathname}${location.search}` }}
+          className="group block"
+        >
           <div
             className={`relative rounded-2xl overflow-hidden ${cardAspectClass} border border-border/80 bg-card transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-0.5 group-hover:border-primary/70 transform group-hover:scale-[1.05]`}
           >
@@ -78,39 +78,45 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             />
             <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-primary/20 via-transparent to-secondary/30" />
           </div>
-          <div className="mt-3 space-y-1 sm:mt-2">
-            <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-              {product.name}
-            </h3>
-            {isWoodenProduct && (
-              <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                Wooden Products
-              </span>
-            )}
-            {product.productCode && (
-              <p className="text-sm font-semibold text-gold tracking-wide uppercase">
-                {product.productCode}
-              </p>
-            )}
-            <p className="text-foreground font-semibold">Rs. {product.price.toFixed(2)}</p>
-          </div>
+        </Link>
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <Link
+            to={`/product/${product.id}`}
+            state={{ from: `${location.pathname}${location.search}` }}
+            className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate"
+          >
+            {product.name}
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              if (isInCart) {
+                navigate("/cart");
+                return;
+              }
+              addItem({ productId: product.id, quantity: 1 });
+              toast.success(`${product.name} added to cart`);
+            }}
+            className="hidden items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-secondary sm:inline-flex"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {isInCart ? "Go to Cart" : "Add to Cart"}
+          </button>
         </div>
-      </Link>
-      <button
-        type="button"
-        onClick={() => {
-          if (isInCart) {
-            navigate("/cart");
-            return;
-          }
-          addItem({ productId: product.id, quantity: 1 });
-          toast.success(`${product.name} added to cart`);
-        }}
-        className="mt-3 hidden items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-secondary sm:inline-flex"
-      >
-        <ShoppingCart className="h-4 w-4" />
-        {isInCart ? "Go to Cart" : "Add to Cart"}
-      </button>
+        <div className="mt-1 space-y-1">
+          {isWoodenProduct && (
+            <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Wooden Products
+            </span>
+          )}
+          {product.productCode && (
+            <p className="text-sm font-semibold text-gold tracking-wide uppercase">
+              {product.productCode}
+            </p>
+          )}
+          <p className="text-foreground font-semibold">Rs. {product.price.toFixed(2)}</p>
+        </div>
+      </div>
     </motion.div>
   );
 };
