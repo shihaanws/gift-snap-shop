@@ -40,7 +40,7 @@ const About = () => {
 
             <div className="mt-6 flex justify-center">
               <img
-                src="https://scontent.ftrv5-1.fna.fbcdn.net/v/t39.30808-6/486573237_1063603435804595_2621018687506638908_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=L1jCbDD0MgoQ7kNvwGEf_qa&_nc_oc=AdlGBYbgXyRx_QJtFS74p_c1qLUkB9Hslo0DEhC4vsLVAwnRNcf9D2FQsz_MWrryZjI&_nc_zt=23&_nc_ht=scontent.ftrv5-1.fna&_nc_gid=duRVECSvteN721TKjr6OJQ&_nc_ss=8&oh=00_AfxUaNLiEvc1PMZHoHJRVH3hQBnWrqImrK287SOPnEH14g&oe=69B786E1"
+              src="/redmoments-logo.jpeg"
                 alt="Red Moments logo"
                 className="h-32 w-auto object-contain"
               />
