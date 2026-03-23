@@ -222,10 +222,10 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+            {/* <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
               <DownloadIcon className="w-4 h-4" />
               Download Brochure
-            </Link>
+            </Link> */}
             {!isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <Link
