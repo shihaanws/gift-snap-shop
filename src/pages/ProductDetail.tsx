@@ -46,9 +46,10 @@ const ProductDetail = () => {
     });
     toast.success(`${product.name} added to cart`);
   };
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const canonicalHost =
+    import.meta.env.VITE_CANONICAL_URL ?? "https://www.emotionskerala.com";
   const buildProductUrl = (productId: string) =>
-    baseUrl ? `${baseUrl}/product/${productId}` : `/product/${productId}`;
+    `${canonicalHost.replace(/\/+$/, "")}/product/${productId}`;
   const fallbackImages = product?.productCode
     ? [`/product-images/${product.productCode}.jpg`]
     : [];

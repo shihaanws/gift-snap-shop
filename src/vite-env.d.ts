@@ -2,4 +2,5 @@
 
 interface ImportMetaEnv {
   readonly VITE_EMAIL_VERIFICATION_REDIRECT?: string;
+  readonly VITE_CANONICAL_URL?: string;
 }
