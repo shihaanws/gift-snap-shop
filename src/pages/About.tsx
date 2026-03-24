@@ -7,7 +7,7 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="relative overflow-hidden bg-[#f8f3eb] py-16 md:py-20">
+      <section className="relative overflow-hidden bg-[#f8f3eb] py-2 md:py-8">
         <div className="pointer-events-none absolute -left-16 top-10 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
         <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-full bg-gold-light/40 blur-3xl" />
 
@@ -16,7 +16,7 @@ const About = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mx-auto max-w-4xl rounded-3xl border border-border/70 bg-white p-8 shadow-xl shadow-black/10 md:p-12"
+            className="w-full rounded-3xl border border-border/70 bg-white p-8 shadow-xl shadow-black/10 md:p-12"
           >
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">About Us</p>
             <div>
@@ -38,12 +38,23 @@ const About = () => {
               </p>
             </div>
 
-            <div className="mt-6 flex justify-center">
-              <img
-              src="/redmoments-logo.jpeg"
-                alt="Red Moments logo"
-                className="h-32 w-auto object-contain"
-              />
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/redmoments-logo.jpeg"
+                  alt="Red Moments logo"
+                  className="h-28 w-auto object-contain"
+                />
+                <span className="text-2xl font-semibold text-muted-foreground">×</span>
+                <img
+                  src="/EMOTIONS.png"
+                  alt="Emotions Unlimited logo"
+                  className="h-16 w-auto object-contain"
+                />
+              </div>
+              <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
+                Emotions Unlimited
+              </p>
             </div>
 
             <div className="mt-6 space-y-6 text-sm leading-relaxed text-muted-foreground md:text-base">
