@@ -71,7 +71,7 @@ const Footer = () => {
             <h4 className="font-display font-semibold mb-3">Contact</h4>
             <div className="text-sm text-primary-foreground/70 space-y-3">
               
-              <a
+              {/* <a
                 href="https://wa.me/9074145962"
                 target="_blank"
                 rel="noreferrer"
@@ -79,15 +79,18 @@ const Footer = () => {
               >
                 <i className="fab fa-whatsapp text-base"></i>
                 WhatsApp: 9074145962
+              </a> */}
+
+              <a
+                href="mailto:kerala@redmoments.in"
+                className="flex items-center gap-2 hover:text-primary-foreground transition-colors"
+              >
+                <i className="fas fa-envelope text-base"></i>
+                <span>kerala@redmoments.in</span>
               </a>
 
               <div className="flex items-start gap-2">
-                <i className="fas fa-envelope text-base mt-0.5"></i>
-                <span>kerala@redmoments.in</span>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <i className="fas fa-map-marker-alt text-base mt-0.5"></i>
+                <i className="fas fa-map-marker-alt text-base"></i>
                 <address className="not-italic">
                   Panathara Building, Kompara,
                   <br />
@@ -97,8 +100,8 @@ const Footer = () => {
                 </address>
               </div>
 
-              <div className="flex items-start gap-2">
-                <i className="fas fa-phone text-base mt-0.5"></i>
+              <div className="flex items-center gap-2">
+                <i className="fas fa-phone text-base"></i>
                 <span>Phone: 9074145962</span>
               </div>
 
