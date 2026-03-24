@@ -27,6 +27,17 @@ interface AuthContextValue {
   logout: () => Promise<void>;
 }
 
+const getEmailVerificationRedirect = () => {
+  const configured = import.meta.env.VITE_EMAIL_VERIFICATION_REDIRECT;
+  if (configured) {
+    return configured;
+  }
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+  return `${window.location.origin}/verify-email`;
+};
+
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function normalizeEmail(email: string) {
@@ -78,12 +89,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!normalizedName || !normalizedEmail || !password) {
           return { ok: false, message: "Please fill all fields." };
         }
+        const options: Parameters<typeof supabase.auth.signUp>[0]["options"] = {
+          data: { name: normalizedName },
+        };
+        const redirectTo = getEmailVerificationRedirect();
+        if (redirectTo) {
+          options.emailRedirectTo = redirectTo;
+        }
+
         const { data, error } = await supabase.auth.signUp({
           email: normalizedEmail,
           password,
-          options: {
-            data: { name: normalizedName },
-          },
+          options,
         });
         if (error) {
           return { ok: false, message: error.message };

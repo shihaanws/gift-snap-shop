@@ -30,7 +30,8 @@ const Footer = () => {
     {
       label: "WhatsApp",
       href: "https://wa.me/9074145962",
-      icon: (props) => <WhatsAppIcon {...props} />,
+      icon: (props) =>             <i className="fab fa-whatsapp text-lg" aria-hidden="true" />
+,
       className: "bg-[#25d366] text-white hover:bg-[#1ebe54]",
     },
     {

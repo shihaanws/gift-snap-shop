@@ -16,6 +16,7 @@ import { CartProvider } from "./hooks/use-cart";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import VerifyEmail from "./pages/VerifyEmail";
 import { AuthProvider, useAuth } from "./hooks/use-auth";
 
 const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ const App = () => (
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>

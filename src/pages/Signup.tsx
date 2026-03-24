@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -16,6 +17,11 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<{
+    title: string;
+    description: string;
+    variant?: "default" | "destructive";
+  } | null>(null);
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
@@ -29,18 +35,28 @@ const Signup = () => {
       return;
     }
 
+    setStatus(null);
     setIsSubmitting(true);
     const result = await signup({ name, email, password });
     setIsSubmitting(false);
     if (!result.ok) {
       toast.error(result.message ?? "Unable to create account.");
+      setStatus({
+        title: "Unable to create account",
+        description: result.message ?? "Please correct the highlighted errors and try again.",
+        variant: "destructive",
+      });
       return;
     }
 
     const message = result.message ?? "Account created successfully.";
     toast.success(message);
     if (message.toLowerCase().includes("verify your email")) {
-      navigate("/login", { replace: true });
+      setStatus({
+        title: "Check your inbox",
+        description: `We sent a confirmation link to ${email.trim() || "your inbox"}. The link opens a verification page that shows the success message before taking you to the shop.`,
+        variant: "default",
+      });
       return;
     }
     navigate("/", { replace: true });
@@ -53,6 +69,13 @@ const Signup = () => {
         <div className="mx-auto max-w-md rounded-2xl border border-border bg-card p-6 md:p-8">
           <h1 className="font-display text-3xl font-bold text-foreground">Sign Up</h1>
           <p className="mt-2 text-sm text-muted-foreground">Create an account to access login-based actions.</p>
+
+          {status && (
+            <Alert className="mt-6" variant={status.variant ?? "default"}>
+              <AlertTitle>{status.title}</AlertTitle>
+              <AlertDescription>{status.description}</AlertDescription>
+            </Alert>
+          )}
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-1.5">
