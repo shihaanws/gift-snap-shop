@@ -63,6 +63,12 @@ export const categories: Category[] = [
     image: giftThankyou,
   },
   {
+    id: "diaries",
+    name: "Diaries & Notebooks",
+    description: "Executive diaries for meetings and planning",
+    image: giftWedding,
+  },
+  {
     id: "desktop-lifetime-calenders",
     name: "Desktop Lifetime Calendars",
     description: "Steel and premium calendars with rotating month plates",
@@ -107,12 +113,7 @@ export const categories: Category[] = [
       "Sustainable wooden gifts with laser engraving and natural textures",
     image: giftWedding,
   },
-  {
-    id: "diaries",
-    name: "Diaries & Notebooks",
-    description: "Executive diaries for meetings and planning",
-    image: giftWedding,
-  },
+  
 
   {
     id: "discounted-items",

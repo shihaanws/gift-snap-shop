@@ -26,6 +26,12 @@ const Footer = () => {
       icon: "fab fa-facebook-f",
       className: "bg-[#1877F2] text-white hover:bg-[#166fe4]",
     },
+    {
+      label: "Location",
+      href: "https://www.google.com/maps/place/Red+Moments+Personalised+and+Corporate+Gift+Store/@9.9891955,76.2740507,17z/data=!3m1!4b1!4m6!3m5!1s0x3b080d5267a11d0d:0x67bd460cad2291ae!8m2!3d9.9891955!4d76.2766256!16s%2Fg%2F11c5t4mk6v?entry=ttu&g_ep=EgoyMDI2MDMyMy4xIKXMDSoASAFQAw%3D%3D",
+      icon: "fas fa-map-marker-alt",
+      className: "bg-white text-foreground border border-white/60 hover:bg-primary hover:text-primary-foreground",
+    },
   ];
 
   return (
@@ -99,6 +105,18 @@ const Footer = () => {
                   Ernakulam, 682018.
                 </address>
               </div>
+
+              {/* <div className="mt-4 text-sm text-primary-foreground/80">
+                <Link
+                  to="https://www.google.com/maps/place/Red+Moments+Personalised+and+Corporate+Gift+Store/@9.9891955,76.2740507,17z/data=!3m1!4b1!4m6!3m5!1s0x3b080d5267a11d0d:0x67bd460cad2291ae!8m2!3d9.9891955!4d76.2766256!16s%2Fg%2F11c5t4mk6v?entry=ttu&g_ep=EgoyMDI2MDMyMy4xIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 font-semibold hover:underline"
+                >
+                  <i className="fas fa-map-marker-alt"></i>
+                  Visit Store on Google Maps
+                </Link>
+              </div> */}
 
               <div className="flex items-center gap-2">
                 <i className="fas fa-phone text-base"></i>
