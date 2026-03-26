@@ -8,6 +8,9 @@ import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CatalogGallery from "@/components/CatalogGallery";
+import CatalogPreviewModal from "@/components/CatalogPreviewModal";
+import { catalogPdfs, type CatalogPdf } from "@/data/catalogs";
 
 const shuffleArray = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -75,6 +78,13 @@ const Shop = () => {
     modifier(params);
     setSearchParams(params);
   };
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    if (typeof window === "undefined") {
+      return ITEMS_PER_PAGE;
+    }
+    return window.innerWidth < 640 ? 4 : ITEMS_PER_PAGE;
+  });
+  const [activeCatalog, setActiveCatalog] = useState<CatalogPdf | null>(null);
 
   const filtered = useMemo(() => {
     let result = products;
@@ -297,6 +307,12 @@ const Shop = () => {
             </button>
           ))}
         </div>
+
+        {/* <CatalogGallery
+          catalogs={catalogPdfs}
+          onPreview={(catalog) => setActiveCatalog(catalog)}
+          className="mb-8 rounded-[32px] border border-border bg-card/70 p-6 shadow-sm"
+        /> */}
        
         {isDiaries && (
           <>
@@ -503,6 +519,12 @@ const Shop = () => {
         )}
           </div>
         </div>
+      )}
+      {activeCatalog && (
+        <CatalogPreviewModal
+          catalog={activeCatalog}
+          onClose={() => setActiveCatalog(null)}
+        />
       )}
       {!isLoading && <Footer />}
     </div>

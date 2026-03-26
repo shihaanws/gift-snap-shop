@@ -111,38 +111,7 @@ const subNavItems = [
       },
     ],
   },
-  // {
-  //   label: "Drinkware",
-  //   groups: [
-  //     { title: "Bottles", items: ["Steel 750ml", "Copper Edition", "Thermal Flask", "Smart Bottle"] },
-  //     { title: "Mugs", items: ["Travel Mug", "Ceramic Mug", "Vacuum Tumbler", "Sipper Cup"] },
-  //     { title: "Branding", items: ["Laser Engraving", "UV Print", "Custom Sleeve", "Gift Box Pack"] },
-  //   ],
-  // },
-  // {
-  //   label: "Office Essentials",
-  //   groups: [
-  //     { title: "Diaries", items: ["A5 Planner", "Undated Journal", "Hardbound Pro", "Pocket Notes"] },
-  //     { title: "Pens", items: ["Metal Pen", "Roller Pen", "Signature Set", "Stylus Pen"] },
-  //     { title: "Desk", items: ["Clock Stand", "Pen Holder", "Table Organizer", "Desk Utility"] },
-  //   ],
-  // },
-  // {
-  //   label: "Tech Gifts",
-  //   groups: [
-  //     { title: "Charging", items: ["Wireless Pad", "Power Bank", "Cable Kit", "Multi Charger"] },
-  //     { title: "Audio", items: ["Mini Speaker", "Earbuds Case", "Bluetooth Pod", "Sound Bar Mini"] },
-  //     { title: "Utility", items: ["USB Hub", "Card Reader", "Smart Stand", "Mouse Pad Pro"] },
-  //   ],
-  // },
-  // {
-  //   label: "By Occasion",
-  //   groups: [
-  //     { title: "Celebration", items: ["Anniversary Gifts", "Reward Packs", "Milestone Box", "Team Festive"] },
-  //     { title: "Campaigns", items: ["Conference Kit", "Expo Swag", "Sales Gifting", "Partner Box"] },
-  //     { title: "Custom", items: ["MOQ Packs", "Brand Collection", "Event Bundle", "Combo Builder"] },
-  //   ],
-  // },
+ 
 ];
 
 function getInitials(name?: string) {

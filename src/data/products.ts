@@ -44,6 +44,19 @@ export const categories: Category[] = [
     image: giftCorporate,
   },
   {
+    id: "newcat",
+    name: "Sublimation Mugs",
+    description: "Fresh curated mugs and novelty gifts",
+    image: "/mug-thumb.png",
+  },
+  {
+    id: "aluminium-frames",
+    name: "Aluminium Frames",
+    description:
+      "Anodized aluminium frames with brushed inserts for certificates and awards",
+    image: "/aluminium-thumb.png",
+  },
+  {
     id: "business-card-holders",
     name: "Business Card Holders",
     description: "Executive holders that elevate brand-first impressions",
@@ -55,6 +68,7 @@ export const categories: Category[] = [
     description: "Steel and premium calendars with rotating month plates",
     image: giftCorporate,
   },
+
   {
     id: "pens",
     name: "Pens",
@@ -99,20 +113,6 @@ export const categories: Category[] = [
     description: "Executive diaries for meetings and planning",
     image: giftWedding,
   },
-  
-  // {
-  //   id: "bags",
-  //   name: "Laptop & Office Bags",
-  //   description: "Durable branded bags for daily business use",
-  //   image: giftThankyou,
-  // },
-
-  // {
-  //   id: "bottles",
-  //   name: "Bottles & Tumblers",
-  //   description: "Reusable drinkware with custom logo options",
-  //   image: productSpa,
-  // },
 
   {
     id: "discounted-items",
@@ -120,12 +120,6 @@ export const categories: Category[] = [
     description: "Exclusive deals on our most popular products",
     image: productFlowers,
   },
-  // {
-  //   id: "accessories",
-  //   name: "Desk Accessories",
-  //   description: "Functional office accessories with branding",
-  //   image: giftCorporate,
-  // },
 ];
 
 export const products: Product[] = [
@@ -927,5 +921,48 @@ export const products: Product[] = [
     category: "accessories",
     images: [giftWedding, productCandle],
     variants: ["Rectangle", "Wave Edge", "Premium Walnut"],
+  },
+  {
+    id: "newcat-signature-mug",
+    name: "NewCat Signature Mug",
+    price: 599,
+    description:
+      "Dummy mug product that represents the NewCat launch collection, with dual-tone finish and logo area.",
+    category: "newcat",
+    images: ["/images/newcat-thumbnail.jpg"],
+    variants: ["Matte Black", "Glossy Red"],
+    productCode: "NEWCAT-01",
+    material: "Ceramic",
+    minOrderQty: 24,
+  },
+  {
+    id: "newcat-dual-mug",
+    name: "NewCat Dual Finish Mug",
+    price: 699,
+    description:
+      "Dummy second product for the NewCat collection with two-toned matte/gloss finish and corporate-ready packaging.",
+    category: "newcat",
+    images: [
+      "https://images.unsplash.com/photo-1523473827531-3900e61e91a9?auto=format&fit=crop&w=800&q=80",
+    ],
+    variants: ["Matte Black + Gold", "Glossy White + Black"],
+    productCode: "NEWCAT-02",
+    material: "Ceramic",
+    minOrderQty: 12,
+  },
+  {
+    id: "newcat-ombre-mug",
+    name: "NewCat Ombre Mug",
+    price: 749,
+    description:
+      "Third placeholder product for NewCat—a gradient-finish mug ideal for launch packs.",
+    category: "newcat",
+    images: [
+      "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&w=800&q=80",
+    ],
+    variants: ["Ombre Blue", "Ombre Coral"],
+    productCode: "NEWCAT-03",
+    material: "Ceramic",
+    minOrderQty: 18,
   },
 ];

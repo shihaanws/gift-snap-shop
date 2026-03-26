@@ -10,35 +10,47 @@ const GIFT_SETS_HOMEPAGE_IMAGE =
 const shortNames: Record<string, string> = {
   "business-card-holders": "Card Holders",
   "desktop-lifetime-calenders": "Calendars",
+  "aluminium-frames": "Frames",
   "gift-sets": "Gift Sets",
   "wooden-engravings": "Engravings",
   "personalized-gifts": "Personalized",
   "wooden-products": "Desk Decor",
   "diaries": "Diaries",
     "discounted-items": "Discounted",
+  "newcat": "New Cat",
 
 };
 
 const ALL_CATEGORY_IMAGE ="https://2.imimg.com/data2/MW/RO/MY-/4-1000x1000.jpg"
+
+const NEW_CATEGORY = {
+  id: "newcat",
+  name: "Sublimation Mugs",
+  description: "Fresh curated gift ideas",
+  image:   "/mug-thumb.png",
+
+};
 
 const CategoryGrid = () => {
   const { products } = useProducts();
   const { categories } = useCategories();
 
   const categoriesWithAll = useMemo(() => {
-    const hasAll = categories.some((cat) => cat.id === "all");
-    if (hasAll) {
-      return categories;
+    const base = categories.some((cat) => cat.id === "all")
+      ? [...categories]
+      : [
+          {
+            id: "all",
+            name: "All Products",
+            description: "Browse every product",
+            image: ALL_CATEGORY_IMAGE,
+          },
+          ...categories,
+        ];
+    if (!base.some((cat) => cat.id === NEW_CATEGORY.id)) {
+      base.push(NEW_CATEGORY);
     }
-    return [
-      {
-        id: "all",
-        name: "All Products",
-        description: "Browse every product",
-        image: ALL_CATEGORY_IMAGE,
-      },
-      ...categories,
-    ];
+    return base;
   }, [categories]);
 
   const categoryImageById = useMemo(() => {
@@ -59,6 +71,7 @@ const CategoryGrid = () => {
     // "https://m.media-amazon.com/images/I/71YplvYxbYL._AC_SX679_.jpg";
     map["keychains"] =
       "https://seedballs.in/cdn/shop/files/Premiummetalkeychainforpromotionalbrandingandbulkorders.png?v=1766291952";
+    map[NEW_CATEGORY.id] = NEW_CATEGORY.image;
     return map;
   }, [products, categoriesWithAll]);
 
@@ -73,41 +86,49 @@ const CategoryGrid = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
-        {categoriesWithAll.map((cat, i) => (
-          <motion.div
-            key={cat.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-          >
-            <Link
-              to={`/shop?category=${cat.id}`}
-              className="group block relative overflow-hidden rounded-2xl border border-border/60 shadow-lg shadow-black/5 bg-white h-52 md:h-64"
+        {categoriesWithAll.map((cat, i) => {
+          let href = `/shop?category=${cat.id}`;
+          if (cat.id === NEW_CATEGORY.id) {
+            href = "/newcat";
+          } else if (cat.id === "aluminium-frames") {
+            href = "/aluminium-frames";
+          }
+          return (
+            <motion.div
+              key={cat.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <img
-                src={categoryImageById[cat.id]}
-                alt={cat.name}
-                className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-110 md:object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center text-center gap-1 p-3 md:p-4">
-                <h3
-                  className="bg-white/90 px-3 py-1 font-display text-lg md:text-2xl font-semibold text-foreground rounded-full shadow-sm leading-normal whitespace-nowrap overflow-hidden text-ellipsis"
-                  style={{ maxWidth: "92%" }}
-                >
-                  <span className="md:hidden">
-                    {shortNames[cat.id] ?? cat.name}
-                  </span>
-                  <span className="hidden md:inline">
-                    {cat.name}
-                  </span>
-                </h3>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
+              <Link
+                to={href}
+                className="group block relative overflow-hidden rounded-2xl border border-border/60 shadow-lg shadow-black/5 bg-white h-52 md:h-64"
+              >
+                <img
+                  src={categoryImageById[cat.id]}
+                  alt={cat.name}
+                  className="absolute inset-0 h-full w-full object-contain transition-transform duration-700 group-hover:scale-110 md:object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center text-center gap-1 p-3 md:p-4">
+                  <h3
+                    className="bg-white/90 px-3 py-1 font-display text-lg md:text-2xl font-semibold text-foreground rounded-full shadow-sm leading-normal whitespace-nowrap overflow-hidden text-ellipsis"
+                    style={{ maxWidth: "92%" }}
+                  >
+                    <span className="md:hidden">
+                      {shortNames[cat.id] ?? cat.name}
+                    </span>
+                    <span className="hidden md:inline">
+                      {cat.name}
+                    </span>
+                  </h3>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
       </div>
     </section>
