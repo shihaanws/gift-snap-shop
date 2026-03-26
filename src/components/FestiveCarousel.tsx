@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Carousel,
@@ -11,6 +12,10 @@ const imageModules = import.meta.glob("../assets/carousel-images/*.{png,jpg,jpeg
   import: "default",
 });
 
+const slideLinks: Record<string, string> = {
+  "111": "/sublimation-mugs",
+};
+
 const slides = Object.entries(imageModules)
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([path, image], index) => {
@@ -20,6 +25,7 @@ const slides = Object.entries(imageModules)
       id: `${label}-${index}`,
       image: String(image),
       alt: label,
+      link: slideLinks[label],
     };
   });
 
@@ -69,11 +75,24 @@ const FestiveCarousel = () => {
           {slides.map((slide) => (
             <CarouselItem key={slide.id} className="pl-0 basis-full">
               <div className="relative h-[135px] w-full overflow-hidden sm:h-[155px] md:h-[175px] lg:h-[295px]">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="h-full w-full"
-                />
+                {slide.link ? (
+                  <Link
+                    to={slide.link}
+                    className="absolute inset-0 block"
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.alt}
+                      className="h-full w-full"
+                    />
+                  </Link>
+                ) : (
+                  <img
+                    src={slide.image}
+                    alt={slide.alt}
+                    className="h-full w-full"
+                  />
+                )}
                 {/* <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/30 to-black/10" /> */}
               </div>
             </CarouselItem>
