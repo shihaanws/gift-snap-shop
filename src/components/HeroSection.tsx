@@ -32,12 +32,15 @@ const HeroSection = () => {
             <span className="text-primary">and Mementos</span>
           </h1>
           <p className="mx-auto mb-8 max-w-xl text-lg text-muted-foreground md:mx-0">
-            Impress teams, clients, and partners with curated premium gifting experiences.
-            We handle customization, branding, and delivery across locations.
+            Impress teams, clients, and partners with curated premium gifting
+            experiences. We handle customization, branding, and delivery across
+            locations.
           </p>
           <div className="flex flex-wrap justify-center gap-4 md:justify-start">
             <Link
-              to="/shop"
+              to="https://wa.me/9074145962"
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 font-medium text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:opacity-95"
             >
               Request Bulk Quote
@@ -85,8 +88,12 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.7 }}
             className="absolute -bottom-6 left-6 rounded-xl border border-border/80 bg-background/90 px-4 py-3 shadow-lg backdrop-blur-md"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Recent Campaign</p>
-            <p className="font-display text-xl text-foreground">1,200 Kits Delivered</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              Recent Campaign
+            </p>
+            <p className="font-display text-xl text-foreground">
+              1,200 Kits Delivered
+            </p>
           </motion.div>
         </motion.div>
       </div>

@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Menu, X, DownloadIcon, ChevronDown, LogOut, Search as SearchIcon } from "lucide-react";
+import {
+  ShoppingBag,
+  Menu,
+  X,
+  DownloadIcon,
+  ChevronDown,
+  LogOut,
+  Search as SearchIcon,
+} from "lucide-react";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
@@ -49,14 +57,28 @@ const subNavItems = [
   {
     label: "Gift Sets",
     groups: [
-      { title: "Giftset Types", items: ["2 in 1 Gift Set", "3 in 1 Gift Set", "4 in 1 Gift Set", "5 in 1 Gift Set", "6 in 1 Gift Set"] },
+      {
+        title: "Giftset Types",
+        items: [
+          "2 in 1 Gift Set",
+          "3 in 1 Gift Set",
+          "4 in 1 Gift Set",
+          "5 in 1 Gift Set",
+          "6 in 1 Gift Set",
+        ],
+      },
       // { title: "Festival Packs", items: ["Diwali Deluxe", "New Year Pack", "Onam Hamper", "Holiday Box"] },
       // { title: "Joining Kits", items: ["Starter Kit", "Welcome Box", "Employee Delight", "Team Bundle"] },
     ],
   },
   {
     label: "Keychains",
-    groups: [{ title: "Keychain Styles", items: ["Wooden Keychains", "Metal Keychains"] }],
+    groups: [
+      {
+        title: "Keychain Styles",
+        items: ["Wooden Keychains", "Metal Keychains"],
+      },
+    ],
   },
   {
     label: "Pens",
@@ -150,219 +172,251 @@ const Navbar = () => {
     <>
       <nav className="sticky top-0 z-50 border-b border-white/20 bg-[white]/95 backdrop-blur-md">
         <div className="border-b border-white/10 bg-primary">
-        <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs text-white/80">
-          <p className="hidden sm:block">Bulk corporate gifting for teams, clients, and events</p>
-          <a
-            href="https://wa.me/9074145962"
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold text-gold-light transition hover:text-white"
-          >
-            WhatsApp for bulk quote
-          </a>
-        </div>
-      </div>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:hidden">
-          <button
-            className="text-foreground hover:text-primary"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-          <Link to="/" className="flex items-center justify-center">
-            <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-12 w-auto" />
-          </Link>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setMobileSearchOpen(true)}
-              aria-label="Search products"
-              className="rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
+          <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs text-white/80">
+            <p className="hidden sm:block">
+              Bulk corporate gifting for teams, clients, and events
+            </p>
+            <a
+              href="https://wa.me/9074145962"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-gold-light transition hover:text-white"
             >
-              <SearchIcon className="h-4 w-4" />
-            </button>
-            <Link
-              to="/cart"
-              className="relative inline-flex items-center justify-center rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
-              aria-label="View cart"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              {itemCount > 0 && (
-                <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
+              WhatsApp for bulk quote
+            </a>
           </div>
         </div>
-
-        <div className="hidden md:flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/EMOTIONS.png" alt="Emotions Unlimited" className="h-16 w-auto my-6" />
-          </Link>
-          <div className="flex items-center gap-5 flex-1 ml-8 min-w-0">
-            <NavLink
-              to="/about"
-              className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
-              activeClassName="text-primary"
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16 md:hidden">
+            <button
+              className="text-foreground hover:text-primary"
+              onClick={() => setMobileOpen(!mobileOpen)}
             >
-              About Us
-            </NavLink>
-            {/* <NavLink
+              {mobileOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+            <Link to="/" className="flex items-center justify-center">
+              <img
+                src="/EMOTIONS.png"
+                alt="Emotions Unlimited"
+                className="h-12 w-auto"
+              />
+            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setMobileSearchOpen(true)}
+                aria-label="Search products"
+                className="rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
+              >
+                <SearchIcon className="h-4 w-4" />
+              </button>
+              <Link
+                to="/cart"
+                className="relative inline-flex items-center justify-center rounded-full border border-white/40 bg-white/80 p-2 text-[#0E2A4A] transition hover:opacity-90"
+                aria-label="View cart"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                {itemCount > 0 && (
+                  <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center justify-between h-20">
+            <Link to="/" className="flex items-center gap-2">
+              <img
+                src="/EMOTIONS.png"
+                alt="Emotions Unlimited"
+                className="h-16 w-auto my-6"
+              />
+            </Link>
+            <div className="flex items-center gap-5 flex-1 ml-8 min-w-0">
+              <NavLink
+                to="/about"
+                className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
+                activeClassName="text-primary"
+              >
+                About Us
+              </NavLink>
+              {/* <NavLink
               to="/manage-products"
               className="whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary"
               activeClassName="text-primary"
             >
               Manage Products
             </NavLink> */}
-            <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
-              <SearchBar />
+              <div className="ml-auto hidden lg:block w-full max-w-[280px] xl:max-w-sm mr-4">
+                <SearchBar />
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            {/* <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+            <div className="flex items-center gap-3">
+              {/* <Link to="/shop?category=corporate" className="hidden xl:flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
               <DownloadIcon className="w-4 h-4" />
               Download Brochure
             </Link> */}
-            {!isAuthenticated ? (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
-                >
-                  Login
-                </Link>
-              </div>
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="inline-flex items-center rounded-full border border-white/40 bg-white p-0.5 text-[#0E2A4A] transition hover:opacity-90"
-                    aria-label="Open user menu"
+              {!isAuthenticated ? (
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/login"
+                    className="rounded-lg border border-primary/50 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
                   >
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-[#0E2A4A] text-xs font-semibold text-white">
-                        {getInitials(user?.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel className="truncate">{user?.name ?? "User"}</DropdownMenuLabel>
-                  {user?.email && <DropdownMenuLabel className="pt-0 text-xs font-normal text-muted-foreground">{user.email}</DropdownMenuLabel>}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => {
-                      void logout();
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-            <Link
-              to="/cart"
-              className="relative inline-flex items-center justify-center rounded-lg border border-white/40 bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
-              aria-label="View cart"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              {itemCount > 0 && (
-                <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
-                  {itemCount}
-                </span>
+                    Login
+                  </Link>
+                </div>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded-full border border-white/40 bg-white p-0.5 text-[#0E2A4A] transition hover:opacity-90"
+                      aria-label="Open user menu"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-[#0E2A4A] text-xs font-semibold text-white">
+                          {getInitials(user?.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel className="truncate">
+                      {user?.name ?? "User"}
+                    </DropdownMenuLabel>
+                    {user?.email && (
+                      <DropdownMenuLabel className="pt-0 text-xs font-normal text-muted-foreground">
+                        {user.email}
+                      </DropdownMenuLabel>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        void logout();
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div
-        ref={subNavWrapperRef}
-        className="relative hidden border-t border-border bg-white shadow-sm md:block"
-        onMouseLeave={() => setOpenSubNav(null)}
-      >
-        <div className="container mx-auto px-4">
-          <div
-            ref={subNavBarRef}
-            className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none"
-          >
-            {subNavItems.map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                onMouseEnter={(e) => {
-                  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-                  const wrapper = subNavWrapperRef.current?.getBoundingClientRect();
-                  const wrapperLeft = wrapper?.left ?? 0;
-                  const buttonCenter = rect.left + rect.width / 2;
-                  setSubNavOffset(buttonCenter - wrapperLeft);
-                  setOpenSubNav(item.label);
-                }}
-                className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
-                  openSubNav === item.label ? "text-[#0E2A4A]" : "text-[#0E2A4A]/75 hover:text-[#0E2A4A]"
-                }`}
+              <Link
+                to="/cart"
+                className="relative inline-flex items-center justify-center rounded-lg border border-white/40 bg-white px-3 py-2 text-sm font-medium text-[#0E2A4A] transition hover:opacity-90"
+                aria-label="View cart"
               >
-                {item.label}
-                <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-            ))}
+                <ShoppingBag className="h-4 w-4" />
+                {itemCount > 0 && (
+                  <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
 
-        <AnimatePresence>
-          {openSubNav && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.18 }}
-              className="absolute top-full z-[70]"
-              style={{ left: `${subNavOffset - 80}px`, transform: "translateX(-50%)" }}
+        <div
+          ref={subNavWrapperRef}
+          className="relative hidden border-t border-border bg-white shadow-sm md:block"
+          onMouseLeave={() => setOpenSubNav(null)}
+        >
+          <div className="container mx-auto px-4">
+            <div
+              ref={subNavBarRef}
+              className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none"
             >
-              <div className="border border-border bg-white shadow-lg rounded-b-xl">
-                <div
-                  className={`grid gap-6 px-6 py-5 ${
-                    openSubNav === "Gift Sets"
-                      ? "grid-cols-1 min-w-[200px]"
-                      : openSubNav === "Keychains"
-                      ? "grid-cols-1 min-w-[320px]"
-                      : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
+              {subNavItems.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onMouseEnter={(e) => {
+                    const rect = (
+                      e.currentTarget as HTMLElement
+                    ).getBoundingClientRect();
+                    const wrapper =
+                      subNavWrapperRef.current?.getBoundingClientRect();
+                    const wrapperLeft = wrapper?.left ?? 0;
+                    const buttonCenter = rect.left + rect.width / 2;
+                    setSubNavOffset(buttonCenter - wrapperLeft);
+                    setOpenSubNav(item.label);
+                  }}
+                  className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
+                    openSubNav === item.label
+                      ? "text-[#0E2A4A]"
+                      : "text-[#0E2A4A]/75 hover:text-[#0E2A4A]"
                   }`}
                 >
-                  {subNavItems
-                    .find((item) => item.label === openSubNav)
-                    ?.groups.map((group) => (
-                      <div key={group.title}>
-                        <p className="mb-2 text-sm font-semibold text-foreground">{group.title}</p>
-                        <div className="space-y-0.5">
-                          {group.items.map((entry) => {
-                            const target = linkForEntry(entry, openSubNav ?? "");
-                            return (
-                              <Link
-                                key={entry}
-                                to={target}
-                                className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
-                              >
-                                {entry}
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+                  {item.label}
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </button>
+              ))}
+            </div>
+          </div>
 
+          <AnimatePresence>
+            {openSubNav && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+                className="absolute top-full z-[70]"
+                style={{
+                  left: `${subNavOffset - 80}px`,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                <div className="border border-border bg-white shadow-lg rounded-b-xl">
+                  <div
+                    className={`grid gap-6 px-6 py-5 ${
+                      openSubNav === "Gift Sets"
+                        ? "grid-cols-1 min-w-[200px]"
+                        : openSubNav === "Keychains"
+                          ? "grid-cols-1 min-w-[320px]"
+                          : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
+                    }`}
+                  >
+                    {subNavItems
+                      .find((item) => item.label === openSubNav)
+                      ?.groups.map((group) => (
+                        <div key={group.title}>
+                          <p className="mb-2 text-sm font-semibold text-foreground">
+                            {group.title}
+                          </p>
+                          <div className="space-y-0.5">
+                            {group.items.map((entry) => {
+                              const target = linkForEntry(
+                                entry,
+                                openSubNav ?? "",
+                              );
+                              return (
+                                <Link
+                                  key={entry}
+                                  to={target}
+                                  className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
+                                >
+                                  {entry}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </nav>
 
       <AnimatePresence>
@@ -397,22 +451,42 @@ const Navbar = () => {
               </div>
               <SearchBar />
               <div className="mt-4 flex flex-col gap-3">
-                <Link onClick={() => setMobileOpen(false)} to="/" className="text-sm font-medium text-white">
+                <Link
+                  onClick={() => setMobileOpen(false)}
+                  to="/"
+                  className="text-sm font-medium text-white"
+                >
                   Home
                 </Link>
-                <Link onClick={() => setMobileOpen(false)} to="/shop?category=corporate" className="text-sm font-medium text-white">
+                {/* <Link
+                  onClick={() => setMobileOpen(false)}
+                  to="/shop?category=corporate"
+                  className="text-sm font-medium text-white"
+                >
                   Bulk Solutions
-                </Link>
-                <Link onClick={() => setMobileOpen(false)} to="/shop" className="text-sm font-medium text-white">
+                </Link> */}
+                <Link
+                  onClick={() => setMobileOpen(false)}
+                  to="/shop"
+                  className="text-sm font-medium text-white"
+                >
                   Catalog
                 </Link>
-                <Link onClick={() => setMobileOpen(false)} to="/about" className="text-sm font-medium text-white">
+                <Link
+                  onClick={() => setMobileOpen(false)}
+                  to="/about"
+                  className="text-sm font-medium text-white"
+                >
                   About Us
                 </Link>
                 {/* <Link onClick={() => setMobileOpen(false)} to="/manage-products" className="text-sm font-medium text-white">
                   Manage Products
                 </Link> */}
-                <Link onClick={() => setMobileOpen(false)} to="/cart" className="text-sm font-medium text-white">
+                <Link
+                  onClick={() => setMobileOpen(false)}
+                  to="/cart"
+                  className="text-sm font-medium text-white"
+                >
                   Cart ({itemCount})
                 </Link>
               </div>
@@ -449,12 +523,18 @@ const Navbar = () => {
                 )}
               </div>
               <div className="mt-6 rounded-lg border border-white/15 p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">Sub Categories</p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/70">
+                  Categories
+                </p>
                 <div className="grid grid-cols-2 gap-2">
                   {subNavItems.map((item) => (
                     <Link
                       key={item.label}
-                      to={item.label.toLowerCase().includes("gift") ? "/shop?category=gift-sets" : `/shop?category=${slugify(item.label)}`}
+                      to={
+                        item.label.toLowerCase().includes("gift")
+                          ? "/shop?category=gift-sets"
+                          : `/shop?category=${slugify(item.label)}`
+                      }
                       onClick={() => setMobileOpen(false)}
                       className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-medium text-white"
                     >
@@ -463,10 +543,13 @@ const Navbar = () => {
                   ))}
                 </div>
               </div>
+
               <Link
-                to="/shop?category=corporate"
+                to="https://wa.me/9074145962"
+                target="_blank"
+                rel="noreferrer"
                 onClick={() => setMobileOpen(false)}
-                className="mt-5 rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground"
+                className="mt-5 block w-full rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground"
               >
                 Request Bulk Quote
               </Link>
@@ -501,7 +584,9 @@ const Navbar = () => {
                 onClick={(event) => event.stopPropagation()}
               >
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-lg font-semibold text-foreground">Search products</p>
+                  <p className="text-lg font-semibold text-foreground">
+                    Search products
+                  </p>
                   <button
                     type="button"
                     onClick={() => setMobileSearchOpen(false)}

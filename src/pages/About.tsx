@@ -39,17 +39,17 @@ const About = () => {
             </div>
 
             <div className="mt-6 flex flex-col items-center gap-3">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-nowrap items-center justify-center gap-3 overflow-hidden">
                 <img
                   src="/redmoments-logo.jpeg"
                   alt="Red Moments logo"
-                  className="h-28 w-auto object-contain"
+                  className="h-20 min-w-0 w-auto max-w-[45%] object-contain sm:h-28 sm:max-w-full"
                 />
                 <span className="text-2xl font-semibold text-muted-foreground">×</span>
                 <img
                   src="/EMOTIONS.png"
                   alt="Emotions Unlimited logo"
-                  className="h-16 w-auto object-contain"
+                  className="h-14 min-w-0 w-auto max-w-[35%] object-contain sm:h-16 sm:max-w-full"
                 />
               </div>
               <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
