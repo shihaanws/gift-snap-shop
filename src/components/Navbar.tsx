@@ -8,7 +8,7 @@ import {
   LogOut,
   Search as SearchIcon,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useMemo, useRef, useState, type MouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "./SearchBar";
 import FestiveCarousel from "./FestiveCarousel";
@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCategories } from "@/hooks/use-categories";
 
 function slugify(text: string) {
   return text
@@ -53,6 +54,27 @@ function linkForEntry(entry: string, parentLabel: string) {
   return `/shop?category=${slugify(entry)}`;
 }
 
+const ALL_CATEGORIES_LABEL = "All Categories";
+const NAVBAR_ALL_CATEGORY_IMAGE = "https://2.imimg.com/data2/MW/RO/MY-/4-1000x1000.jpg";
+const NAVBAR_NEW_CATEGORY = {
+  id: "sublimation-mugs",
+  name: "Sublimation Mugs",
+  description: "Fresh curated gift ideas",
+  image: "/mug-thumb.png",
+};
+const NAVBAR_SHORT_NAMES: Record<string, string> = {
+  "business-card-holders": "Card Holders",
+  "desktop-lifetime-calenders": "Calendars",
+  "aluminium-frames": "Frames",
+  "gift-sets": "Gift Sets",
+  "wooden-engravings": "Engravings",
+  "personalized-gifts": "Personalized",
+  "wooden-products": "Desk Decor",
+  "diaries": "Diaries",
+  "discounted-items": "Discounted",
+  "sublimation-mugs": "Mugs",
+};
+
 const subNavItems = [
   {
     label: "Gift Sets",
@@ -67,8 +89,6 @@ const subNavItems = [
           "6 in 1 Gift Set",
         ],
       },
-      // { title: "Festival Packs", items: ["Diwali Deluxe", "New Year Pack", "Onam Hamper", "Holiday Box"] },
-      // { title: "Joining Kits", items: ["Starter Kit", "Welcome Box", "Employee Delight", "Team Bundle"] },
     ],
   },
   {
@@ -127,6 +147,50 @@ function getInitials(name?: string) {
   return `${first}${second}`.toUpperCase();
 }
 
+const NavbarCategoryPanel = () => {
+  const { categories } = useCategories();
+
+  const categoriesWithAll = useMemo(() => {
+    const base = categories.some((cat) => cat.id === "all")
+      ? [...categories]
+      : [
+          {
+            id: "all",
+            name: "All Products",
+            description: "Browse every product",
+            image: NAVBAR_ALL_CATEGORY_IMAGE,
+          },
+          ...categories,
+        ];
+    if (!base.some((cat) => cat.id === NAVBAR_NEW_CATEGORY.id)) {
+      base.push(NAVBAR_NEW_CATEGORY);
+    }
+    return base;
+  }, [categories]);
+
+  return (
+    <div className="grid grid-cols-1 gap-2 px-6 py-6 md:grid-cols-2 lg:grid-cols-3">
+      {categoriesWithAll.map((cat) => {
+        let href = `/shop?category=${cat.id}`;
+        if (cat.id === "sublimation-mugs") {
+          href = "/sublimation-mugs";
+        } else if (cat.id === "aluminium-frames") {
+          href = "/aluminium-frames";
+        }
+        return (
+          <Link
+            key={cat.id}
+            to={href}
+            className="block rounded-lg border border-border/60 bg-white px-4 py-3 text-left text-sm font-semibold text-foreground transition hover:border-primary"
+          >
+            {NAVBAR_SHORT_NAMES[cat.id] ?? cat.name}
+          </Link>
+        );
+      })}
+    </div>
+  );
+};
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -134,6 +198,14 @@ const Navbar = () => {
   const [subNavOffset, setSubNavOffset] = useState(0);
   const subNavBarRef = useRef<HTMLDivElement>(null);
   const subNavWrapperRef = useRef<HTMLDivElement>(null);
+  const handleNavHover = (label: string, event: MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const wrapper = subNavWrapperRef.current?.getBoundingClientRect();
+    const wrapperLeft = wrapper?.left ?? 0;
+    const buttonCenter = rect.left + rect.width / 2;
+    setSubNavOffset(buttonCenter - wrapperLeft);
+    setOpenSubNav(label);
+  };
   const { itemCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -303,21 +375,23 @@ const Navbar = () => {
               ref={subNavBarRef}
               className="flex h-11 items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none"
             >
+              <button
+                type="button"
+                onMouseEnter={(e) => handleNavHover(ALL_CATEGORIES_LABEL, e)}
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
+                  openSubNav === ALL_CATEGORIES_LABEL
+                    ? "text-[#0E2A4A]"
+                    : "text-[#0E2A4A]/75 hover:text-[#0E2A4A]"
+                }`}
+              >
+                {ALL_CATEGORIES_LABEL}
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
               {subNavItems.map((item) => (
                 <button
                   key={item.label}
                   type="button"
-                  onMouseEnter={(e) => {
-                    const rect = (
-                      e.currentTarget as HTMLElement
-                    ).getBoundingClientRect();
-                    const wrapper =
-                      subNavWrapperRef.current?.getBoundingClientRect();
-                    const wrapperLeft = wrapper?.left ?? 0;
-                    const buttonCenter = rect.left + rect.width / 2;
-                    setSubNavOffset(buttonCenter - wrapperLeft);
-                    setOpenSubNav(item.label);
-                  }}
+                  onMouseEnter={(e) => handleNavHover(item.label, e)}
                   className={`inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] transition-colors ${
                     openSubNav === item.label
                       ? "text-[#0E2A4A]"
@@ -345,42 +419,46 @@ const Navbar = () => {
                 }}
               >
                 <div className="border border-border bg-white shadow-lg rounded-b-xl">
-                  <div
-                    className={`grid gap-6 px-6 py-5 ${
-                      openSubNav === "Gift Sets"
-                        ? "grid-cols-1 min-w-[200px]"
-                        : openSubNav === "Keychains"
-                          ? "grid-cols-1 min-w-[320px]"
-                          : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
-                    }`}
-                  >
-                    {subNavItems
-                      .find((item) => item.label === openSubNav)
-                      ?.groups.map((group) => (
-                        <div key={group.title}>
-                          <p className="mb-2 text-sm font-semibold text-foreground">
-                            {group.title}
-                          </p>
-                          <div className="space-y-0.5">
-                            {group.items.map((entry) => {
-                              const target = linkForEntry(
-                                entry,
-                                openSubNav ?? "",
-                              );
-                              return (
-                                <Link
-                                  key={entry}
-                                  to={target}
-                                  className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
-                                >
-                                  {entry}
-                                </Link>
-                              );
-                            })}
+                  {openSubNav === ALL_CATEGORIES_LABEL ? (
+                    <NavbarCategoryPanel />
+                  ) : (
+                    <div
+                      className={`grid gap-6 px-6 py-5 ${
+                        openSubNav === "Gift Sets"
+                          ? "grid-cols-1 min-w-[200px]"
+                          : openSubNav === "Keychains"
+                            ? "grid-cols-1 min-w-[320px]"
+                            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 min-w-[480px]"
+                      }`}
+                    >
+                      {subNavItems
+                        .find((item) => item.label === openSubNav)
+                        ?.groups.map((group) => (
+                          <div key={group.title}>
+                            <p className="mb-2 text-sm font-semibold text-foreground">
+                              {group.title}
+                            </p>
+                            <div className="space-y-0.5">
+                              {group.items.map((entry) => {
+                                const target = linkForEntry(
+                                  entry,
+                                  openSubNav ?? "",
+                                );
+                                return (
+                                  <Link
+                                    key={entry}
+                                    to={target}
+                                    className="block py-0.5 text-sm leading-tight text-muted-foreground transition-colors hover:text-foreground"
+                                  >
+                                    {entry}
+                                  </Link>
+                                );
+                              })}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                  </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}

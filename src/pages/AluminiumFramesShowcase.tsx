@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Minus, Plus, ShoppingCart, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  DownloadIcon,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Share2,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
+import { catalogPdfs } from "@/data/catalogs";
 
 const detailProduct = {
   id: "aluminium-frame-detail",
@@ -26,6 +35,7 @@ const AluminiumFramesShowcase = () => {
   const [quantity, setQuantity] = useState(detailProduct.minOrderQty);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [sharing, setSharing] = useState(false);
+  const catalogPdf = catalogPdfs.find((item) => item.id === "aluminium-frames");
 
   const goToPreviousImage = () => {
     setSelectedImageIndex((current) =>
@@ -76,17 +86,29 @@ const AluminiumFramesShowcase = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto flex flex-col gap-2 px-1 py-2 lg:flex-row lg:items-start">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition mb-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to home
-        </Link>
-        <div className="flex w-full flex-col gap-4 lg:w-4/5">
-          <div className="flex flex-col gap-4 lg:flex-row">
-            <div className="relative flex-1 overflow-hidden rounded-[32px] border border-border bg-white shadow-xl">
+      <main className="container mx-auto flex flex-col gap-2 px-1 py-2">
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+          {catalogPdf && (
+            <a
+              href={catalogPdf.pdfUrl}
+              download
+              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow hover:bg-amber-400 transition"
+            >
+              <DownloadIcon className="h-4 w-4" />
+              Download Catalog
+            </a>
+          )}
+        </div>
+        <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start">
+          <div className="flex flex-1 flex-col gap-4">
+            <div className="relative overflow-hidden rounded-[32px] border border-border bg-white shadow-xl">
               <img
                 src={heroImage}
                 alt={detailProduct.name}
@@ -127,80 +149,80 @@ const AluminiumFramesShowcase = () => {
                 </button>
               ))}
             </div>
-          </div>
-          <div className="flex gap-3 lg:hidden">
-            {detailProduct.images.map((imageUrl, index) => (
-              <button
-                key={`frame-mobile-${imageUrl}`}
-                type="button"
-                onClick={() => setSelectedImageIndex(index)}
-                className={`h-14 w-14 rounded-2xl border transition ${
-                  selectedImageIndex === index
-                    ? "border-primary scale-105"
-                    : "border-border/60"
-                }`}
-              >
-                <img
-                  src={imageUrl}
-                  alt={`${detailProduct.name} thumbnail ${index + 1}`}
-                  className="h-full w-full rounded-2xl object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="flex w-full flex-col gap-6 lg:w-3/5">
-          <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground">
-              Aluminium Frames
-            </p>
-            <h1 className="font-display text-4xl font-bold text-foreground">
-              {detailProduct.name}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {detailProduct.description}
-            </p>
-          </div>
-          <div className="space-y-4 rounded-2xl border border-border bg-white/80 p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
-                Price
-              </span>
-              <span className="text-3xl font-semibold text-foreground">
-                ₹{detailProduct.price.toFixed(2)}
-              </span>
+            <div className="flex gap-3 lg:hidden">
+              {detailProduct.images.map((imageUrl, index) => (
+                <button
+                  key={`frame-mobile-${imageUrl}`}
+                  type="button"
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={`h-14 w-14 rounded-2xl border transition ${
+                    selectedImageIndex === index
+                      ? "border-primary scale-105"
+                      : "border-border/60"
+                  }`}
+                >
+                  <img
+                    src={imageUrl}
+                    alt={`${detailProduct.name} thumbnail ${index + 1}`}
+                    className="h-full w-full rounded-2xl object-cover"
+                  />
+                </button>
+              ))}
             </div>
-            <div className="text-sm text-muted-foreground">
-              Product code: {detailProduct.productCode}
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">
-                Quantity
-                <span className="text-xs text-muted-foreground ml-2">
-                  (Min {detailProduct.minOrderQty})
-                </span>
+          </div>
+          <div className="flex w-full flex-col gap-6 lg:w-3/5">
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground">
+                Aluminium Frames
               </p>
-              <div className="flex items-center gap-3 rounded-lg border border-border px-3 py-2 w-fit">
-                <button
-                  onClick={() =>
-                    setQuantity(
-                      Math.max(detailProduct.minOrderQty, quantity - 1),
-                    )
-                  }
-                  className="text-muted-foreground"
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-                <span className="font-semibold">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="text-muted-foreground"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
+              <h1 className="font-display text-4xl font-bold text-foreground">
+                {detailProduct.name}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {detailProduct.description}
+              </p>
+            </div>
+            <div className="space-y-4 rounded-2xl border border-border bg-white/80 p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
+                  Price
+                </span>
+                <span className="text-3xl font-semibold text-foreground">
+                  ₹{detailProduct.price.toFixed(2)}
+                </span>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Product code: {detailProduct.productCode}
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">
+                  Quantity
+                  <span className="text-xs text-muted-foreground ml-2">
+                    (Min {detailProduct.minOrderQty})
+                  </span>
+                </p>
+                <div className="flex items-center gap-3 rounded-lg border border-border px-3 py-2 w-fit">
+                  <button
+                    onClick={() =>
+                      setQuantity(
+                        Math.max(detailProduct.minOrderQty, quantity - 1),
+                      )
+                    }
+                    className="text-muted-foreground"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="font-semibold">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="text-muted-foreground"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
-          <div className="hidden sm:grid gap-3">
+            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-2 gap-3">
               <button
                 onClick={handleAddToCart}
                 className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-semibold"
