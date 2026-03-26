@@ -404,9 +404,9 @@ const Shop = () => {
         </div> */}
 
         {isGiftSets && bundleOptions.length > 0 && (
-          <div className="mb-6 flex flex-wrap items-center gap-4 justify-between">
+          <div className="mb-2 flex flex-wrap items-center gap-4 justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">
+              <span className="hidden text-sm text-muted-foreground sm:inline-flex">
                 Bundle size:
               </span>
               <Tabs
