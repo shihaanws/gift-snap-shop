@@ -369,7 +369,7 @@ const Shop = () => {
         )}
 
         {activeCategoryNormalized === "keychains" && (
-          <div className="mb-6 flex flex-wrap items-center gap-2">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="text-sm text-muted-foreground ">
               Keychain style:
             </span>

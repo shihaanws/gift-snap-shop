@@ -112,7 +112,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             </span>
           )} */}
           <p className="text-sm font-semibold text-gold tracking-wide uppercase">
-            {product.productCode ?? "PROD_CODE"}
+            {product.productCode ?? ""}
           </p>
           {product.price > 0 && (
             <p className="text-foreground font-semibold">
