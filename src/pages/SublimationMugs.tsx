@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Minus, Plus, ShoppingCart, Share2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -6,7 +7,7 @@ import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
 
 const detailProduct = {
-  id: "newcat-mug-detail",
+  id: "sublimation-mugs-mug-detail",
   name: "Engraving UV Sticker Sublimation Mugs",
   description:
     "Dual-tone ceramic mug with premium gloss finish, branded for corporate gifting & events.",
@@ -41,7 +42,7 @@ const NewCatShowcase = () => {
     typeof window !== "undefined"
       ? window.location.origin
       : "https://emotionplus.in";
-  const productLink = `${origin}/newcat`;
+  const productLink = `${origin}/sublimation-mugs`;
   const whatsappMessage = encodeURIComponent(
     `Hello! I want to order "${detailProduct.name}" (${detailProduct.productCode}) from your NewCat collection. ${productLink}`,
   );
@@ -74,7 +75,14 @@ const NewCatShowcase = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <main className="container mx-auto flex flex-col gap-12 px-4 py-8 lg:flex-row lg:items-start">
+      <main className="container mx-auto flex flex-col gap-2 px-1 py-2 lg:flex-row lg:items-start">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition mb-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to home
+        </Link>
         <div className="flex w-full flex-col gap-4 lg:w-2/5">
           <div className="flex flex-col gap-4 lg:flex-row">
             <div className="relative flex-1 overflow-hidden rounded-[32px] border border-border bg-white shadow-xl">
@@ -192,7 +200,7 @@ const NewCatShowcase = () => {
                 </button>
               </div>
             </div>
-            <div className="grid gap-3">
+          <div className="hidden sm:grid gap-3">
               <button
                 onClick={handleAddToCart}
                 className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-semibold"
@@ -226,12 +234,41 @@ const NewCatShowcase = () => {
                 Enquire via WhatsApp
               </a>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground hidden sm:block">
               WhatsApp opens with your order details automatically filled.
             </p>
           </div>
         </div>
       </main>
+      <div className="sticky bottom-0 left-0 right-0 z-40 sm:hidden bg-background border-t border-border px-4 py-3 flex flex-col gap-2">
+        <button
+          onClick={handleAddToCart}
+          className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-xl font-semibold text-sm"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          Add to Cart
+        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-3 rounded-xl font-semibold text-sm"
+          >
+            <i className="fab fa-whatsapp text-base" aria-hidden="true" />
+            Order Now
+          </a>
+          <a
+            href={enquiryUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 flex items-center justify-center gap-2 border border-border px-4 py-3 rounded-xl font-semibold text-sm text-foreground"
+          >
+            <Share2 className="h-4 w-4" />
+            Enquire Now
+          </a>
+        </div>
+      </div>
 
       <Footer />
     </div>

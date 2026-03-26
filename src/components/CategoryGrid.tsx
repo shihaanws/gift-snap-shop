@@ -16,15 +16,15 @@ const shortNames: Record<string, string> = {
   "personalized-gifts": "Personalized",
   "wooden-products": "Desk Decor",
   "diaries": "Diaries",
-    "discounted-items": "Discounted",
-  "newcat": "New Cat",
+  "discounted-items": "Discounted",
+  "sublimation-mugs": "Mugs",
 
 };
 
 const ALL_CATEGORY_IMAGE ="https://2.imimg.com/data2/MW/RO/MY-/4-1000x1000.jpg"
 
 const NEW_CATEGORY = {
-  id: "newcat",
+  id: "sublimation-mugs",
   name: "Sublimation Mugs",
   description: "Fresh curated gift ideas",
   image:   "/mug-thumb.png",
@@ -88,8 +88,8 @@ const CategoryGrid = () => {
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
         {categoriesWithAll.map((cat, i) => {
           let href = `/shop?category=${cat.id}`;
-          if (cat.id === NEW_CATEGORY.id) {
-            href = "/newcat";
+          if (cat.id === "sublimation-mugs") {
+            href = "/sublimation-mugs";
           } else if (cat.id === "aluminium-frames") {
             href = "/aluminium-frames";
           }

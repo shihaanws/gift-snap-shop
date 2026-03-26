@@ -18,7 +18,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
 import { AuthProvider, useAuth } from "./hooks/use-auth";
-import NewCatShowcase from "./pages/NewCatShowcase";
+import NewCatShowcase from "./pages/SublimationMugs";
 import AluminiumFramesShowcase from "./pages/AluminiumFramesShowcase";
 
 const queryClient = new QueryClient();
@@ -50,7 +50,7 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/newcat" element={<NewCatShowcase />} />
+                  <Route path="/sublimation-mugs" element={<NewCatShowcase />} />
                   <Route path="/aluminium-frames" element={<AluminiumFramesShowcase />} />
                   <Route
                     path="/manage-products"

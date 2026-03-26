@@ -44,7 +44,7 @@ export const categories: Category[] = [
     image: giftCorporate,
   },
   {
-    id: "newcat",
+    id: "sublimation-mugs",
     name: "Sublimation Mugs",
     description: "Fresh curated mugs and novelty gifts",
     image: "/mug-thumb.png",
@@ -923,12 +923,12 @@ export const products: Product[] = [
     variants: ["Rectangle", "Wave Edge", "Premium Walnut"],
   },
   {
-    id: "newcat-signature-mug",
+    id: "sublimation-mugs-signature-mug",
     name: "NewCat Signature Mug",
     price: 599,
     description:
       "Dummy mug product that represents the NewCat launch collection, with dual-tone finish and logo area.",
-    category: "newcat",
+    category: "sublimation-mugs",
     images: ["/images/newcat-thumbnail.jpg"],
     variants: ["Matte Black", "Glossy Red"],
     productCode: "NEWCAT-01",
@@ -936,12 +936,12 @@ export const products: Product[] = [
     minOrderQty: 24,
   },
   {
-    id: "newcat-dual-mug",
+    id: "sublimation-mugs-dual-mug",
     name: "NewCat Dual Finish Mug",
     price: 699,
     description:
       "Dummy second product for the NewCat collection with two-toned matte/gloss finish and corporate-ready packaging.",
-    category: "newcat",
+    category: "sublimation-mugs",
     images: [
       "https://images.unsplash.com/photo-1523473827531-3900e61e91a9?auto=format&fit=crop&w=800&q=80",
     ],
@@ -951,12 +951,12 @@ export const products: Product[] = [
     minOrderQty: 12,
   },
   {
-    id: "newcat-ombre-mug",
+    id: "sublimation-mugs-ombre-mug",
     name: "NewCat Ombre Mug",
     price: 749,
     description:
       "Third placeholder product for NewCat—a gradient-finish mug ideal for launch packs.",
-    category: "newcat",
+    category: "sublimation-mugs",
     images: [
       "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&w=800&q=80",
     ],
