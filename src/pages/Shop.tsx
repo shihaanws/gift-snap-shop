@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMemo, useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -85,6 +85,33 @@ const Shop = () => {
     return window.innerWidth < 640 ? 4 : ITEMS_PER_PAGE;
   });
   const [activeCatalog, setActiveCatalog] = useState<CatalogPdf | null>(null);
+  const navigate = useNavigate();
+  const SPECIAL_ROUTES: Record<string, string> = {
+    "aluminium-frames": "/aluminium-frames",
+    "sublimation-mugs": "/sublimation-mugs",
+  };
+
+  const handleCategorySelection = (categoryId: string) => {
+    const specialRoute = SPECIAL_ROUTES[categoryId];
+    if (specialRoute) {
+      navigate(specialRoute);
+      return;
+    }
+    if (categoryId === "all") {
+      setSearchParams({});
+      return;
+    }
+    updateSearchParams((params) => {
+      params.set("category", categoryId);
+      params.delete("bundle");
+      if (categoryId !== "keychains") {
+        params.delete("style");
+      }
+      if (categoryId !== "diaries") {
+        params.delete("subcategory");
+      }
+    });
+  };
 
   const filtered = useMemo(() => {
     let result = products;
@@ -243,21 +270,7 @@ const Shop = () => {
               className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
               value={activeCategory === "all" ? "all" : activeCategory}
               onChange={(event) => {
-                const value = event.target.value;
-                if (value === "all") {
-                  setSearchParams({});
-                  return;
-                }
-                updateSearchParams((params) => {
-                  params.set("category", value);
-                  params.delete("bundle");
-                  if (value !== "keychains") {
-                    params.delete("style");
-                  }
-                  if (value !== "diaries") {
-                    params.delete("subcategory");
-                  }
-                });
+                handleCategorySelection(event.target.value);
               }}
             >
               <option value="all">All products</option>
@@ -273,7 +286,7 @@ const Shop = () => {
         {/* Category filters - desktop/tablet only */}
         <div className="hidden md:flex flex-wrap gap-2 mb-4">
           <button
-            onClick={() => setSearchParams({})}
+            onClick={() => handleCategorySelection("all")}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeCategory === "all"
                 ? "bg-primary text-primary-foreground"
@@ -285,18 +298,7 @@ const Shop = () => {
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => {
-                updateSearchParams((params) => {
-                  params.set("category", cat.id);
-                  params.delete("bundle");
-                  if (cat.id !== "keychains") {
-                    params.delete("style");
-                  }
-                  if (cat.id !== "diaries") {
-                    params.delete("subcategory");
-                  }
-                });
-              }}
+              onClick={() => handleCategorySelection(cat.id)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               normalizeCategory(cat.id) === activeCategoryNormalized
                 ? "bg-primary text-primary-foreground"
