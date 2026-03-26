@@ -204,14 +204,14 @@ const SublimationMugs = () => {
               </p>
             </div>
             <div className="space-y-4 rounded-2xl border border-border bg-white/80 p-6 shadow-sm">
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
                   Price
                 </span>
                 <span className="text-3xl font-semibold text-foreground">
                   ₹{detailProduct.price.toFixed(2)}
                 </span>
-              </div>
+              </div> */}
               <div className="text-sm text-muted-foreground">
                 Product code: {detailProduct.productCode}
               </div>
