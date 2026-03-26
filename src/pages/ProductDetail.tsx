@@ -173,25 +173,58 @@ const ProductDetail = () => {
 
   const productLink = buildProductUrl(product.id);
 
+  const shareLinkToClipboard = async (text: string) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    if (typeof document === "undefined") {
+      throw new Error("Clipboard not available");
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "absolute";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  };
+
   const handleShare = async () => {
     if (!product) return;
 
+    let copied = false;
     try {
-      if (navigator.share) {
+      await shareLinkToClipboard(productLink);
+      copied = true;
+    } catch {
+      // ignore copy failure; share may still work
+    }
+
+    if (navigator.share) {
+      try {
         await navigator.share({
           title: product.name,
           text: `Check out this product: ${product.name}`,
           url: productLink,
         });
-        toast.success("Product link shared");
+        toast.success(
+          copied ? "Product link shared and copied" : "Product link shared",
+        );
         return;
+      } catch {
+        // share failed; fall back to clipboard message if copy succeeded
       }
-
-      await navigator.clipboard.writeText(productLink);
-      toast.success("Product link copied");
-    } catch {
-      toast.error("Unable to share right now");
     }
+
+    if (copied) {
+      toast.success("Product link copied");
+      return;
+    }
+
+    toast.error("Unable to share right now");
   };
   const whatsappMessage = encodeURIComponent(
     [
@@ -531,23 +564,18 @@ const ProductDetail = () => {
 
           {/* DESKTOP ACTION BUTTONS */}
 
-          <div className="mt-3 hidden sm:grid sm:grid-cols-3 gap-3">
+          <div className="mt-3 hidden sm:grid gap-3 md:grid-cols-2">
             <button
               onClick={handleAddToCart}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg"
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-semibold w-full"
             >
               <ShoppingCart className="w-4 h-4" />
               Add to Cart
             </button>
 
-            <button className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2">
-              <Heart className="w-4 h-4" />
-              Wishlist
-            </button>
-
             <button
               onClick={handleShare}
-              className="flex items-center justify-center gap-2 border rounded-lg px-4 py-2"
+              className="flex items-center justify-center gap-2 border border-border px-4 py-3 rounded-lg font-semibold text-foreground w-full"
             >
               <Share2 className="w-4 h-4" />
               Share

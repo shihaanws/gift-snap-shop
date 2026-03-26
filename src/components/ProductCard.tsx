@@ -40,9 +40,11 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     ? "object-contain"
     : "object-cover";
   const isPenCard = normalizedCategory === "pens";
+  
   const cardAspectClass = isPenCard
     ? "aspect-[796/900]"
-    : "aspect-[4/5] sm:aspect-square";
+    : "aspect-[9/10] sm:aspect-square";
+  
   const shouldAnimate = !reduceMotion && index < 24; // avoid costly animations on long lists
   const [imageLoaded, setImageLoaded] = useState(false);
   const isWoodenProduct =
@@ -103,7 +105,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             {isInCart ? "Go to Cart" : "Add to Cart"}
           </button>
         </div>
-        <div className="mt-1 space-y-1">
+        <div className="mt-1 flex items-center justify-between gap-3 text-sm">
           {/* {isWoodenProduct && (
             <span className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Wooden Products
@@ -112,10 +114,12 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
           <p className="text-sm font-semibold text-gold tracking-wide uppercase">
             {product.productCode ?? "PROD_CODE"}
           </p>
-          <p className="text-foreground font-semibold">
-            <span className="font-serif text-lg leading-tight">₹</span>{" "}
-            {product.price.toFixed(2)}
-          </p>
+          {product.price > 0 && (
+            <p className="text-foreground font-semibold">
+              <span className="text-lg leading-tight">₹</span>{" "}
+              {product.price.toFixed(2)}
+            </p>
+          )}
         </div>
       </div>
     </motion.div>

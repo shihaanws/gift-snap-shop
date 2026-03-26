@@ -8,14 +8,6 @@ import { useProducts } from "@/hooks/use-products";
 import { useCategories } from "@/hooks/use-categories";
 import { DownloadIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 
 const shuffleArray = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -222,7 +214,7 @@ const Shop = () => {
         </div>
       ) : (
         <div className="flex-1">
-          <div className="container mx-auto px-1 py-4">
+          <div className="container mx-auto px-1 py-2">
             {/* Desktop heading */}
             <div className="hidden md:block mb-4">
               <h1 className="font-display text-3xl font-bold text-foreground mb-1">
@@ -233,26 +225,8 @@ const Shop = () => {
           </p>
         </div>
 
-        {/* Mobile breadcrumb + category selector */}
-        <div className="md:hidden mb-4 space-y-2">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>
-                  {activeCategory === "all"
-                    ? "All products"
-                    : categories.find(
-                        (cat) => normalizeCategory(cat.id) === activeCategoryNormalized
-                      )?.name ?? "Products"}
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-
+        {/* Mobile category selector */}
+        <div className="md:hidden mb-2">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground shrink-0">Category:</span>
             <select
