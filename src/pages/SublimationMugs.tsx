@@ -8,6 +8,8 @@ import {
   Plus,
   ShoppingCart,
   Share2,
+  ZoomIn,
+  X,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -33,6 +35,7 @@ const SublimationMugs = () => {
   const [quantity, setQuantity] = useState(detailProduct.minOrderQty);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [sharing, setSharing] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const catalogPdf = catalogPdfs.find((item) => item.id === "corporate-mugs");
 
   const goToPreviousImage = () => {
@@ -79,6 +82,8 @@ const SublimationMugs = () => {
   };
 
   const heroImage = detailProduct.images[selectedImageIndex];
+  const openZoom = () => setZoomOpen(true);
+  const closeZoom = () => setZoomOpen(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,32 +110,46 @@ const SublimationMugs = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="relative flex-1 overflow-hidden rounded-[32px] border border-border bg-white shadow-xl">
-                <img
-                  src={heroImage}
-                  alt={detailProduct.name}
-                  className="h-[70vh] w-full object-contain lg:h-[80vh]"
-                />
-                <button
-                  type="button"
-                  onClick={goToPreviousImage}
-                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white text-foreground shadow-lg transition hover:scale-110 hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 lg:flex-row">
+                <div
+                  className="relative flex-1 overflow-hidden rounded-[32px] border border-border bg-white shadow-xl cursor-zoom-in group"
+                  onClick={openZoom}
                 >
-                  <ArrowLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={goToNextImage}
-                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white text-foreground shadow-lg transition hover:scale-110 hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="hidden lg:flex flex-col gap-3">
-                {detailProduct.images.map((imageUrl, index) => (
+                  <img
+                    src={heroImage}
+                    alt={detailProduct.name}
+                    className="h-[70vh] w-full object-contain lg:h-[80vh]"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="rounded-full bg-black/60 p-3 text-white opacity-0 transition group-hover:opacity-100">
+                      <ZoomIn className="h-6 w-6" />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      goToPreviousImage();
+                    }}
+                    className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white text-foreground shadow-lg transition hover:scale-110 hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      goToNextImage();
+                    }}
+                    className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/60 bg-white text-foreground shadow-lg transition hover:scale-110 hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="hidden lg:flex flex-col gap-3">
+                  {detailProduct.images.map((imageUrl, index) => (
                   <button
                     key={`thumb-${imageUrl}`}
                     type="button"
@@ -264,6 +283,27 @@ const SublimationMugs = () => {
             </div>
           </div>
         </div>
+        {zoomOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+            <div className="relative max-h-full w-full max-w-[90vw]">
+              <div className="flex h-full w-full items-center justify-center overflow-auto rounded-3xl bg-white/5 p-2">
+                <img
+                  src={heroImage}
+                  alt={`Zoomed ${detailProduct.name}`}
+                  className="max-h-[90vh] max-w-[90vw] rounded-3xl object-contain"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={closeZoom}
+                aria-label="Close zoomed image"
+                className="absolute top-4 right-4 rounded-full bg-white/90 p-2 text-foreground shadow-lg transition hover:bg-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
       <div className="sticky bottom-0 left-0 right-0 z-40 sm:hidden bg-background border-t border-border px-4 py-3 flex flex-col gap-2">
