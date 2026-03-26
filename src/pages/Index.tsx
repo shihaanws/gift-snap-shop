@@ -19,11 +19,11 @@ const Index = () => {
       <Navbar />
       <FestiveCarousel />
       <CategoryGrid />
-      <CatalogGallery
+      {/* <CatalogGallery
         catalogs={catalogPdfs}
         onPreview={(catalog) => setActiveCatalog(catalog)}
         className="mx-auto mb-8 max-w-6xl rounded-[32px] border border-border bg-card/70 p-6 shadow-sm"
-      />
+      /> */}
       {/* <QuoteBanner /> */}
       {/* <HeroSection /> */}
       <FeaturedProducts />
