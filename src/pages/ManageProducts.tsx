@@ -967,7 +967,7 @@ const ManageProducts = () => {
                     </label>
                   </div>
 
-                  <label className="text-sm space-y-1 block">
+                  {/* <label className="text-sm space-y-1 block">
                     <span className="text-muted-foreground">Master Carton</span>
                     <input
                       value={form.masterCarton}
@@ -977,7 +977,7 @@ const ManageProducts = () => {
                       placeholder="Master Carton:20pcs | Weight:22kg | Size:72X56X62CM"
                       className="w-full rounded-lg border border-border bg-background px-3 py-2"
                     />
-                  </label>
+                  </label> */}
 
                   <label className="text-sm space-y-1 block">
                     <span className="text-muted-foreground">Customized</span>

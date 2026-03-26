@@ -480,14 +480,14 @@ const ProductDetail = () => {
                     {product.material || "N/A"}
                   </td>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Master Carton
                   </td>
                   <td className="py-2">
                     {product.masterCarton || "N/A"}
                   </td>
-                </tr>
+                </tr> */}
                 <tr>
                   <td className="py-2 font-medium text-muted-foreground">
                     Customized
